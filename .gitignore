@@ -1,0 +1,7 @@
+# Ignorar archivos temporales de Office y temporales de extracción
+temp_*/
+Dobot_PPTX_Extracted/
+xpdf/
+xpdf.zip
+*.lnk
+*.exe

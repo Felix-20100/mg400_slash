@@ -1,0 +1,276 @@
+﻿SLIDE 1
+  TEXT: DobotStudio Pro Guía de Usuario            (Mg400 y M1 Pro) Uriel Jovany Arellano Oliver
+  IMAGES: ../media/image3.png, ../media/image2.png
+--------------------------------------------------------------------------------
+SLIDE 10
+  TEXT: BARRA DE HERRAMIENTAS SUPERIOR jul.-25 Mg400/M1 Pro 10 4 Botón de registro de alarmas:  Aparecerán si hubo colisión o un problema y mandara una alerta. 5 Estado habilitado: Es donde podrás prender y apagar los motores del dobot. 6 Deslizador de velocidad:  Arrastra el deslizador azul o haz clic en l
+  IMAGES: ../media/image3.png, ../media/image20.png
+--------------------------------------------------------------------------------
+SLIDE 11
+  TEXT: Registro de Alarmas S i te aparece una alarma puedes hacer doble clic en la información de la alarma para ver la causa y la solución, luego haz clic en borrar alarma. jul.-25 Mg400/M1 Pro 11 Si se activa una alarma mientras el robot está en funcionamiento, el icono de alarma cambiará a un símbolo de
+  IMAGES: ../media/image22.png, ../media/image21.png, ../media/image3.png, ../media/image23.png
+--------------------------------------------------------------------------------
+SLIDE 12
+  TEXT: ESTADO HABILITADO El brazo robótico solo puede funcionar cuando está habilitado, se encuentra en la parte superior a la derecha. Cuando el botón de habilitación está en rojo se encuentra deshabilitado. E l brazo robótico está deshabilitado. Haz clic en el botón, y aparecerá la ventana "Establecer pa
+  IMAGES: ../media/image25.png, ../media/image24.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 13
+  TEXT: PARAMETROS DE CARGA jul.-25 Mg400/M1 Pro 13 Cuando el botón está verde, el robot está activo. Si se desactiva, cambia a azul. Azul parpadeando indica modo arrastre. Si se presiona el botón de emergencia, el robot se apaga (ícono rojo). Para reactivarlo, se debe resetear manualmente el botón físico, 
+  IMAGES: ../media/image3.png, ../media/image26.png
+--------------------------------------------------------------------------------
+SLIDE 14
+  TEXT: PANEL DE CONTROL jul.-25 Mg400/M1 Pro 14 Descripción 1 Haz clic para ocultar el panel o para que aparezca de nuevo. 2 Mantén presionado el botón para mover el robot a su postura inicial. 3 Haz clic para abrir la página de ajustes. 4 Haz clic para plegar el panel de control, y haz clic de nuevo para 
+  IMAGES: ../media/image3.png, ../media/image27.png
+--------------------------------------------------------------------------------
+SLIDE 15
+  TEXT: PANEL DE CONTROL jul.-25 Mg400/M1 Pro 15 5 Usa la lista desplegable junto a "sistema de coordenadas del usuario" o "de la herramienta" para elegir el índice del sistema de coordenadas que necesitas. 6 Muestra el movimiento del brazo robótico en tiempo real cuando lo estés moviendo manualmente o ejec
+  IMAGES: ../media/image3.png, ../media/image27.png
+--------------------------------------------------------------------------------
+SLIDE 16
+  TEXT: CONFIGURACIÓN BÁSICA En la página de Configuración Básica puedes ver las especificaciones del dispositivo y establecer la postura del robot, aquí es donde ajustas los parámetros fundamentales para que todo funcione como quieres. Postura inicial:  La postura inicial es una postura autodefinida, que p
+  IMAGES: ../media/image29.png, ../media/image28.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 17
+  TEXT: Configuración de ip jul.-25 Mg400/M1 Pro 17 En la configuración básica, puedes mover el robot a su postura predeterminada manteniendo presionado el botón asignado. En la configuración de comunicación, puedes cambiar la IP del robot usando la interfaz LAN2, que admite TCP, UDP y Modbus.  Es posible m
+  IMAGES: ../media/image3.png, ../media/image30.png
+--------------------------------------------------------------------------------
+SLIDE 18
+  TEXT: Posición inicial jul.-25 Mg400/M1 Pro 18 Puedes ingresar los ángulos de todas las articulaciones, o mover el robot a una postura específica y hacer clic en obtener postura actual para obtener los ángulos actuales de todas las articulaciones, después de confirmar todos los ángulos de las articulacion
+  IMAGES: ../media/image3.png, ../media/image28.png
+--------------------------------------------------------------------------------
+SLIDE 19
+  TEXT: Configuración de WiFi Creando un sistema de coordenadas del usuario Haz clic en Agregar jul.-25 Mg400/M1 Pro 19 El sistema del robot puede comunicarse con equipos externos a través de WiFi.  Puedes modificar el nombre y la contraseña del WiFi y luego reiniciar el controlador para que los cambios sur
+  IMAGES: ../media/image32.png, ../media/image31.png, ../media/image3.png, ../media/image33.png
+--------------------------------------------------------------------------------
+SLIDE 2
+  TEXT: Propósito jul.-25 Mg400/M1 Pro 2 Propósito:   Descripción  de las funciones y operaciones de DobotStudio Pro para controlar robots de cuatro ejes (MG400 y M1Pro),   Esto ayudara  la facilitación de comprender y utilizar plenamente el software.
+  IMAGES: ../media/image5.jpeg, ../media/image4.jpeg, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 20
+  TEXT: Configuración de puntos jul.-25 Mg400/M1 Pro 20 Selecciona "Configuración de dos puntos“ E n la página "Agregar Marco del Usuario: índice1".
+  IMAGES: ../media/image3.png, ../media/image34.png
+--------------------------------------------------------------------------------
+SLIDE 21
+  TEXT: Parámetros de Movimiento Los parámetros de movimiento te permiten ajustar cómo se mueve el robot según tus necesidades. Velocidad:  Ajusta la rapidez con la que se mueve el robot. Aceleración:  Modifica cómo de rápido aumenta la velocidad del robot. Velocidad de rotación:  Cambia la rapidez con la q
+  IMAGES: ../media/image3.png, ../media/image35.png
+--------------------------------------------------------------------------------
+SLIDE 22
+  TEXT: Configuración de reproducción Puedes establecer la velocidad, aceleración y sacudida en el sistema de coordenadas de las articulaciones y el sistema de coordenadas cartesianas. Después de configurar los parámetros haga clic en guardar. Haciendo clic en el botón de restaurar valores predeterminados, 
+  IMAGES: ../media/image37.png, ../media/image36.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 23
+  TEXT: Configuración de Salto Modo de Movimiento: Salto  Si el modo de movimiento es Salto durante la reproducción, necesitas configurar: Puedes configurar hasta  10 conjuntos de parámetros  de Salto. Para modificar un conjunto: Selecciona un conjunto de parámetros. Haz clic en  Modificar  o  haz doble cli
+  IMAGES: ../media/image3.png, ../media/image38.png
+--------------------------------------------------------------------------------
+SLIDE 24
+  TEXT: Configuración parámetros y seguridad En la  selección de parámetros de salto , puedes elegir uno o varios conjuntos de parámetros para usarlos en la programación. Se utiliza el índice  Arch  para llamarlos durante el proceso. En la  configuración de seguridad , la  detección de colisiones  protege a
+  IMAGES: ../media/image39.png
+--------------------------------------------------------------------------------
+SLIDE 25
+  TEXT: Configuración de señal Configuración de la Señal de Continuación Modo Pausa:  Puedes configurar la  señal de continuación .                                                                   Por defecto, es la misma señal utilizada en el  Control Remoto.                                      Sincroniz
+  IMAGES: ../media/image3.png, ../media/image40.png
+--------------------------------------------------------------------------------
+SLIDE 26
+  TEXT: Señal de colisión Si configuras la  Señal de Colisión , el brazo robótico activará el  puerto DO correspondiente  después de detenerse a causa de una colisión. Al habilitar la  Detección de Colisiones , el nivel de seguridad se mostrará en el panel de conexión en la barra de herramientas superior. j
+  IMAGES: ../media/image3.png, ../media/image18.png
+--------------------------------------------------------------------------------
+SLIDE 27
+  TEXT: Modo Detener Al detectar una colisión: Aparecerá una   ventana emergente. El brazo robótico   detendrá su funcionamiento . Resolución del Problema Necesitas resolver la causa de la colisión y hacer clic en  Reiniciar.  Aparecerá nuevamente un  mensaje emergente después de un minuto. jul.-25 Mg400/M1
+  IMAGES: ../media/image3.png, ../media/image41.png
+--------------------------------------------------------------------------------
+SLIDE 28
+  TEXT: Control Remoto Equipos externos pueden enviar comandos a un robot para  controlar y ejecutar  un archivo de programa enseñado.  Modos de Control Remoto disponibles: Modo de I/O remoto. jul.-25 Mg400/M1 Pro 28
+  IMAGES: ../media/image3.png, ../media/image42.png
+--------------------------------------------------------------------------------
+SLIDE 29
+  TEXT: sistema de control En modo I/O remoto, conecta un equipo externo, activa el modo y aplica. Solo funciona la parada de emergencia. Los equipos externos controlan el robot vía modo Modbus remoto conectándose por LAN2, con IPs en el mismo segmento de red. jul.-25 Mg400/M1 Pro 29
+  IMAGES: ../media/image3.png, ../media/image43.png
+--------------------------------------------------------------------------------
+SLIDE 3
+  TEXT: DobotStudio Pro es compatible con Windows 7, 10 y 11. Permite la conexión por cable. Para la conexión, se debe conectar el cable de red al puerto LAN del robot y configurar la IP de la PC en el mismo rango que el controlador (IP predeterminada: LAN1 – 192.168.1.6, LAN2 – 192.168.2.6). Conexión a eth
+  IMAGES: ../media/image3.png, ../media/image6.png
+--------------------------------------------------------------------------------
+SLIDE 30
+  TEXT: Modbus jul.-25 Mg400/M1 Pro 30 Modo Remote-Modbus:  Configura el modo actual como Remote-Modbus y selecciona el proyecto offline a ejecutar. Configuración Avanzada (opcional):  Permite iniciar múltiples proyectos configurando direcciones de registro en la lista de proyectos opcionales. Ejecución:  I
+  IMAGES: ../media/image3.png, ../media/image43.png
+--------------------------------------------------------------------------------
+SLIDE 31
+  TEXT: Modbus Activar el Modo Remote-Modbus:  Haz clic en  Aplicar  para que el brazo robótico entre en el modo remoto Modbus. Solo estará disponible el comando de parada de emergencia.                                  Iniciar Movimiento:  Activa la señal de inicio desde el equipo externo. El robot se move
+  IMAGES: ../media/image3.png, ../media/image44.png
+--------------------------------------------------------------------------------
+SLIDE 32
+  TEXT: Calibración m1 Pro jul.-25 Mg400/M1 Pro 32 La calibración manual en el M1 Pro se utiliza cuando se necesita mayor precisión absoluta. Consiste en mover el robot al mismo punto con distintas orientaciones del brazo, asegurando que las coordenadas de la articulación J2 sean axisimétricas. Si no lo son
+  IMAGES: ../media/image3.png, ../media/image45.png
+--------------------------------------------------------------------------------
+SLIDE 33
+  TEXT: Calibración m1 Pro jul.-25 Mg400/M1 Pro 33 Ajustar el ángulo de J2 ayuda a mejorarla. Para usar la función de calibración en el punto de inicio es necesario ingresar la contraseña de administrador, que por defecto es 888888. Posición Izquierda:  Mueve el robot a un punto en dirección izquierda y haz
+  IMAGES: ../media/image3.png, ../media/image45.png
+--------------------------------------------------------------------------------
+SLIDE 34
+  TEXT: Configuración de firmware Proceso:  Importa el firmware más reciente desde la página de actualización de firmware. Importar Firmware:  Haz clic en  Open  para importar el firmware más reciente desde tu equipo local y haz clic en  Update.                                                               
+  IMAGES: ../media/image3.png, ../media/image46.png
+--------------------------------------------------------------------------------
+SLIDE 35
+  TEXT: Calibración de Inicio Calibración de Inicio Cuándo realizarla:  Si se reemplazan partes del brazo robótico (motores, reductores, etc.). Si el robot ha sufrido un golpe y la posición inicial cambia.                                                  Propósito:  Restablecer el punto de inicio. Solo real
+  IMAGES: ../media/image3.png, ../media/image47.png
+--------------------------------------------------------------------------------
+SLIDE 36
+  TEXT: Ajustar el Bloque de Calibración jul.-25 Mg400/M1 Pro 36 Para la calibración de inicio, puedes utilizar el  bloque de calibración  como se muestra en el ejemplo correspondiente. Colocar el Bloque de Calibración: Coloca el bloque de calibración en la posición indicada (lo más cerca posible de la plac
+  IMAGES: ../media/image49.png, ../media/image48.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 37
+  TEXT: Ajustar el Bloque de Calibración Para ajustar el bloque de calibración, se debe colocar la ranura convexa en la base del bloque dentro del espacio indicado, asegurándose de que el lado corto esté orientado hacia el brazo superior.  Luego, se presiona el botón de enseñanza manual y se arrastran los e
+  IMAGES: ../media/image3.png, ../media/image50.png
+--------------------------------------------------------------------------------
+SLIDE 38
+  TEXT: Ajustar el Bloque de Calibración Coloca el bloque de calibración en la posición indicada, en el ángulo entre el brazo superior y el antebrazo. Asegúrate de que el lado largo del bloque de calibración esté  paralelo y cercano al brazo superior .  Configurar el Eje J3:  Utiliza el tablero de movimient
+  IMAGES: ../media/image3.png, ../media/image51.png
+--------------------------------------------------------------------------------
+SLIDE 39
+  TEXT: Configuración i/o jul.-25 Mg400/M1 Pro 39 No. Descripción 1 Ocultar o Mostrar Panel: Haz clic para ocultar el panel, y selecciona I/O en la barra de herramientas derecha para mostrarlo. 2 Añadir I/O Extendido: Permite monitorear la comunicación Modbus. 3 Configurar Alias o Visibilidad: Ajusta el ali
+  IMAGES: ../media/image3.png, ../media/image52.png
+--------------------------------------------------------------------------------
+SLIDE 4
+  TEXT: Conexión a ethernet jul.-25 Mg400/M1 Pro 4 Paso 2. Entrar en Redes e internet Paso 3. Dar clic en centro de redes Paso 4. Clic en cambiar configuración.
+  IMAGES: ../media/image8.png, ../media/image7.png, ../media/image3.png, ../media/image9.png
+--------------------------------------------------------------------------------
+SLIDE 40
+  TEXT: Conexión Modbus Para agregar una extensión I/O, primero debes ingresar el  ID , el  nombre , la  IP  y el  puerto Modbus , que por lo general es el  502 .  Especifica la  dirección de inicio  y la  cantidad de entradas (DI) y salidas (DO)  que deseas utilizar.  Una vez que hayas completado estos dat
+  IMAGES: ../media/image3.png, ../media/image53.png
+--------------------------------------------------------------------------------
+SLIDE 41
+  TEXT: CONFIGURACION I/O Para configurar las I/O, comienza por  marcar las entradas y salidas  que deseas visualizar en la  pantalla de monitoreo .  Esto te permitirá hacer seguimiento en tiempo real. Luego, puedes asignarles un  alias o nombre personalizado  para identificarlas de forma más clara y rápida
+  IMAGES: ../media/image3.png, ../media/image53.png
+--------------------------------------------------------------------------------
+SLIDE 42
+  TEXT: Uso de I/O en programación Puedes usar las entradas y salidas (I/O) con alias desde programación por bloques o scripts, facilitando su identificación.   Desde la sección  Controller I/O   o   Tool I/O  puedes: Activar o desactivar salidas digitales (DO)  con un interruptor. Ver el estado de entradas
+  IMAGES: ../media/image3.png, ../media/image54.png
+--------------------------------------------------------------------------------
+SLIDE 43
+  TEXT: Simulación de Entradas Para pruebas, puedes simular una entrada: Haz clic en la entrada. Elige  "Ficticio" &gt; "Transformación DI" . La entrada se pondrá  verde , indicando una señal simulada. Sin transformación, se mostrará su estado real. jul.-25 Mg400/M1 Pro 43
+  IMAGES: ../media/image3.png, ../media/image54.png
+--------------------------------------------------------------------------------
+SLIDE 44
+  TEXT: entradas digitales jul.-25 Mg400/M1 Pro 44 No. Descripción. 1 Ocultar o mostrar el panel: Haz clic en este botón para ocultar el panel. Si necesitas volver a verlo, haz clic en "Modbus" desde la barra lateral derecha. 2 Conectar esclavo Modbus: Haz clic aquí para iniciar la conexión con un dispositi
+  IMAGES: ../media/image3.png, ../media/image55.png
+--------------------------------------------------------------------------------
+SLIDE 45
+  TEXT: Conexión modbus jul.-25 Mg400/M1 Pro 45 IP del esclavo (Slave IP):  Es la dirección IP del dispositivo al que te conectarás. Ejemplo:  192.168.1.10 . Puerto (Port):  Número de puerto para la comunicación. Generalmente es  502 , aunque puede variar según el equipo. ID del esclavo (Slave ID):  Número 
+  IMAGES: ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 46
+  TEXT: Funciones Dirección y cantidad (Address / Quantity): Dirección:  Registro desde donde empieza la lectura o escritura. Cantidad:  Cuántos registros se manejarán desde esa dirección. Ejemplo: leer 2 registros desde la dirección 100. jul.-25 Mg400/M1 Pro 46 Función:  Elige el tipo de operación que dese
+  IMAGES: ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 47
+  TEXT: TASA DE ESCANEO Nota.  Un  esclavo Modbus  es un  dispositivo que recibe órdenes  de un maestro en una red de comunicación Modbus.  Imagina que tienes una red con un PLC (maestro) y varios sensores de temperatura (esclavos) conectados: El PLC le dice a un sensor: "Oye, ¿cuál es tu temperatura ahora?
+  IMAGES: ../media/image3.png, ../media/image56.png
+--------------------------------------------------------------------------------
+SLIDE 48
+  TEXT: Variable Global El módulo de  Variable Global  permite  crear y revisar variables  que pueden usarse en  todo el programa del robot . Una  variable global  es accesible desde cualquier parte del proyecto, ya sea en  bloques  o en  scripts , y puedes llamarla por su  nombre  una vez definida. jul.-25
+  IMAGES: ../media/image3.png, ../media/image57.png
+--------------------------------------------------------------------------------
+SLIDE 49
+  TEXT: Variables  a  usar en DobotStudio Pro: jul.-25 Mg400/M1 Pro 49 bool:  Valor verdadero o falso (ej. encendido/apagado). float:  Número decimal con precisión (ej. 3.14, -0.75). int:  Número entero (ej. 5, -3, 100). string:  Texto o cadena de caracteres (ej. "Inicio"). point:  Posición del robot (puede
+  IMAGES: ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 5
+  TEXT: Conexión a ethernet jul.-25 Mg400/M1 Pro 5 Paso 5. Clic en Ethernet Paso 6. Clic en Propiedades Paso 7.  Doble clic en TCP/IPv4 Paso 8. Configurar la IP
+  IMAGES: ../media/image11.png, ../media/image10.png, ../media/image3.png, ../media/image13.png, ../media/image12.png
+--------------------------------------------------------------------------------
+SLIDE 50
+  TEXT: GLOBAL HOLD Esta opción  permite que una  variable global conserve su valor  incluso si el robot se  apaga y se vuelve a encender . Es útil para  guardar estados importantes  que deben mantenerse entre sesiones. jul.-25 Mg400/M1 Pro 50
+  IMAGES: ../media/image3.png, ../media/image58.png
+--------------------------------------------------------------------------------
+SLIDE 51
+  TEXT: Opciones en la programación jul.-25 Mg400/M1 Pro 51 Descripción.  1 Nombre del proyecto actual: Muestra el nombre del proyecto que estás editando. 2 Gestión de archivos y acciones: Puedes abrir,  guardar,  deshacer o rehacer cambios. Además, desde el menú Archivo (File) puedes convertir un programa 
+  IMAGES: ../media/image3.png, ../media/image59.png
+--------------------------------------------------------------------------------
+SLIDE 52
+  TEXT: Opciones en la programación jul.-25 Mg400/M1 Pro 52 4 Bloques de programación: Aquí se encuentran los bloques organizados por colores y categorías. Puedes hacer clic en la parte superior derecha del módulo para ver más información sobre cada bloque 5  Panel de Puntos (Points): Al hacer clic, puedes 
+  IMAGES: ../media/image3.png, ../media/image59.png
+--------------------------------------------------------------------------------
+SLIDE 53
+  TEXT: jul.-25 Mg400/M1 Pro 53 No. Descripción   Modo de edición Activa la opción para seleccionar varios bloques a la vez. Una vez activado, puedes copiar o eliminar varios bloques juntos. Para salir del modo de edición, haz clic en “Cancelar selección” o realiza otra acción en el área de programación.   
+  IMAGES: ../media/image61.png, ../media/image60.png, ../media/image3.png, ../media/image62.png
+--------------------------------------------------------------------------------
+SLIDE 54
+  TEXT: Íconos del área de programación jul.-25 Mg400/M1 Pro 54     Zoom Puedes acercar, alejar o restablecer el nivel de zoom del área donde estás programando.     Mover por los bloques Estos botones te permiten: Volver al inicio de los bloques. Centrar los bloques en pantalla. Ir al final del programa   E
+  IMAGES: ../media/image64.png, ../media/image63.png, ../media/image3.png, ../media/image65.png
+--------------------------------------------------------------------------------
+SLIDE 55
+  TEXT: Puntos (Points ) jul.-25 Mg400/M1 Pro 55 No. Descripción. 1 Ocultar / mostrar panel de puntos: Haz clic para ocultar el panel de puntos. Si quieres verlo de nuevo, haz clic en “Points” en la barra lateral derecha. Si hay cambios sin guardar, el ícono cambiará para avisarte. 2 Modo de movimiento (Run
+  IMAGES: ../media/image3.png, ../media/image66.png
+--------------------------------------------------------------------------------
+SLIDE 56
+  TEXT: Puntos (Points ) jul.-25 Mg400/M1 Pro 56 3 Importar o exportar lista de puntos: Puedes importar un archivo con puntos guardados, o exportar la lista actual para guardarla como respaldo. 4 Plegar/desplegar el panel: Haz clic para ocultar o mostrar el área de control del panel de puntos. 5 Área de ges
+  IMAGES: ../media/image3.png, ../media/image66.png
+--------------------------------------------------------------------------------
+SLIDE 57
+  TEXT: Programación en código jul.-25 Mg400/M1 Pro 57 Guarda tu proyecto y haz clic en  "Debug"  para entrar en modo depuración. Puedes crear un  punto de interrupción (breakpoint)  haciendo clic en el número de línea del código; el programa se detendrá allí. Cuando el programa está detenido: Haz clic en  
+  IMAGES: ../media/image3.png, ../media/image67.png
+--------------------------------------------------------------------------------
+SLIDE 58
+  TEXT: Ejecución de programa Haz clic en  "Start"  después de guardar el proyecto. El programa empezará a ejecutarse y verás un  registro (log)  de lo que está haciendo. Si necesitas pausar, haz clic en  "Pause" . El botón cambiará a  "Resume" , y al hacer clic en él el programa seguirá desde donde se paus
+  IMAGES: ../media/image3.png, ../media/image68.png
+--------------------------------------------------------------------------------
+SLIDE 59
+  TEXT: Mover el robot con script jul.-25 Mg400/M1 Pro 59 Paso 1: Abrir el panel de Puntos (Points) Mueve el brazo robótico a la primera posición deseada. Haz clic en  “Add”  para guardar ese punto como  P1 . P aso 2: Mover el brazo a otro punto Lleva el brazo a una segunda posición diferente. Haz clic en  
+  IMAGES: ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 6
+  TEXT: Paso 2:  Haz clic en Instalación en un clic para instalar. puesta en marcha jul.-25 Mg400/M1 Pro 6 Paso 3:  Después de la instalación, haz clic en "Experimentar ahora".   Paso 1. Haz doble clic en el instalador de  DobotStudio Pro  y selecciona el idioma deseado.
+  IMAGES: ../media/image15.png, ../media/image14.png, ../media/image3.png, ../media/image16.png
+--------------------------------------------------------------------------------
+SLIDE 60
+  TEXT: Pasos a seguir Paso 3: Escribir el script:  Agrega un ciclo para que el robot se mueva continuamente entre P1 y P2: jul.-25 Mg400/M1 Pro 60 while(true)  crea un ciclo infinito. MovJ(P1)  mueve el robot al punto P1. MovJ(P2)  lo mueve al punto P2.
+  IMAGES: ../media/image3.png, ../media/image69.png
+--------------------------------------------------------------------------------
+SLIDE 61
+  TEXT: Paso 5: Ejecutar el programa Haz clic en  “Start”  y el robot comenzará a moverse entre P1 y P2 sin detenerse. jul.-25 Mg400/M1 Pro 61 Paso 4: Guardar el proyecto Haz clic en  “Save” . Escribe un nombre para el proyecto y confirma con  “OK” . Pasos a seguir
+  IMAGES: ../media/image71.png, ../media/image70.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 62
+  TEXT: Practica con Dobotblockly E n la pantalla principal de  dobotstudio pro , haz clic en el botón  “conectar”  que aparece en la parte superior. E n la parte superior derecha aparecerá el botón para encender los motores y debemos  habilitarlos . jul.-25 Mg400/M1 Pro 62
+  IMAGES: ../media/image73.png, ../media/image72.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 63
+  TEXT: Práctica con Dobotblockly Una vez que el robot esté conectado, haz clic en  “DobotBlockly”  (en la parte superior del programa). Esto te llevará al entorno de programación por bloques. jul.-25 Mg400/M1 Pro 63 Dar en OK Diapositiva referenciada en la pagina 13
+  IMAGES: ../media/image75.png, ../media/image74.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 64
+  TEXT: Practica con Dobotblockly En el  panel derecho , haz clic en la opción  “Points”  para abrir el panel de puntos. Mueve el brazo robótico a la primera posición deseada (por ejemplo, donde va a recoger algo), luego haz clic en  “Add”  para  guardar ese punto  (se llamará P1 por ejemplo). jul.-25 Mg400
+  IMAGES: ../media/image77.png, ../media/image76.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 65
+  TEXT: Practica con Dobotblockly jul.-25 Mg400/M1 Pro 65 Después, mueve el brazo a la segunda posición (como el lugar donde soltará la pieza) y haz clic nuevamente en  “Add”  para  guardar el segundo punto  (P2). Haz clic en  “Save”  para guardar los puntos que acabas de registrar. Agregar los bloques que 
+  IMAGES: ../media/image3.png, ../media/image78.png
+--------------------------------------------------------------------------------
+SLIDE 66
+  TEXT: Practica con Dobotblockly jul.-25 Mg400/M1 Pro 66         Cuando tengamos los bloques que ocupemos y poner en los puntos que queremos poner en start.  Dar clic en save y nombrarlo.       Una vez que lo nombren dar de nuevo en start y se ejecutara.
+  IMAGES: ../media/image71.png, ../media/image79.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 67
+  TEXT: jul.-25 Mg400/M1 Pro 67 Paso 1: Abre la configuración Ve al menú  Settings &gt; Remote Control . Paso 2: Selecciona el modo En el campo  “Current mode” , selecciona  Remote I/O . Paso 3: Carga tu proyecto Haz clic en  “Open” . Selecciona el proyecto que ya guardaste anteriormente en  DobotBlockly . 
+  IMAGES: ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 68
+  TEXT: Pasos para activar el Modo Remote I/O Paso 4: Configura las entradas y salidas Haz clic en  “Modify” . Asigna las señales según tu escena. Ejemplo de configuración: DI11  → Botón de inicio DI12  → Botón de paro DO11  → Luz de estado en ejecución DO12  → Luz de alarma jul.-25 Mg400/M1 Pro 68
+  IMAGES: ../media/image3.png, ../media/image80.png
+--------------------------------------------------------------------------------
+SLIDE 69
+  TEXT: Pasos para activar el Modo Remote I/O Paso 5: Aplica los cambios Haz clic en  “Apply”  para activar el modo remoto mediante entradas y salidas físicas. ¿Qué pasa después? Una vez activado el modo, simplemente  presiona el botón físico de inicio (DI11)  y el robot  comenzará a ejecutar el proyecto au
+  IMAGES: ../media/image3.png, ../media/image80.png
+--------------------------------------------------------------------------------
+SLIDE 7
+  TEXT: Paso 4:  Inicia DobotStudio Pro. Selecciona un dispositivo y haz clic en Conectar. Paso 5:  Después en la parte superior veras una pestaña que dice conectar que deberán darle clic.  Después de la conexión, verás la información de aviso emergente en la interfaz de DobotStudio Pro y el estado de la co
+  IMAGES: ../media/image18.png, ../media/image17.png, ../media/image3.png
+--------------------------------------------------------------------------------
+SLIDE 8
+  TEXT: Menú de programación  jul.-25 Mg400/M1 Pro 8 Descripción 1 Barra de herramientas superior 2 Proyectos recientes 3 Panel de programación 4 Movimientos del dobot, entradas y salidas, ModBus,  etc
+  IMAGES: ../media/image3.png, ../media/image19.png
+--------------------------------------------------------------------------------
+SLIDE 9
+  TEXT: Nm Descripción 1 Haz clic para: Ajustes: Abre la página de ajustes. Idioma: Selecciona un idioma. Ayuda: Accede a funciones de ayuda, como documentos, herramientas de depuración, etc. Verificar actualizaciones: Mira la información de la versión del software. Acerca de: Ve los componentes del softwar
+  IMAGES: ../media/image3.png, ../media/image20.png
+--------------------------------------------------------------------------------
