@@ -278,6 +278,109 @@
             border-left: 4px solid #db2777;
         }
 
+        /* Nuevos active states para Prácticas */
+        .active-sub.ex-active {
+            color: #34d399 !important; /* emerald-400 */
+            background-color: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid #34d399;
+        }
+        .active-sub.sug-active {
+            color: #fbbf24 !important; /* amber-400 */
+            background-color: rgba(245, 158, 11, 0.15);
+            border-left: 4px solid #fbbf24;
+        }
+        html:not(.dark) .active-sub.ex-active {
+            color: #059669 !important; /* emerald-600 */
+            background-color: rgba(16, 185, 129, 0.08);
+            border-left: 4px solid #059669;
+        }
+        html:not(.dark) .active-sub.sug-active {
+            color: #d97706 !important; /* amber-600 */
+            background-color: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid #d97706;
+        }
+
+        /* Estilos de Brillitos (Sparkles) */
+        .sparkle-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100000;
+            transform: translate(-50%, -50%);
+            animation: sparkle-fade-out 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            will-change: transform, opacity;
+        }
+        .sparkle-star {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        @keyframes sparkle-fade-out {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(var(--final-scale, 1.2)) rotate(var(--rot, 360deg));
+                opacity: 0;
+            }
+        }
+
+        /* Paleta de Comandos (Slash Menu) */
+        .command-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10vh;
+        }
+        .command-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .command-card {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-20px) scale(0.95);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+        .dark .command-card {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        html:not(.dark) .command-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(15, 23, 42, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        .command-overlay.show .command-card {
+            transform: translateY(0) scale(1);
+        }
+        .command-item {
+            transition: all 0.15s ease;
+            border-left: 4px solid transparent;
+        }
+        .command-item.selected, .command-item:hover {
+            background-color: rgba(139, 92, 246, 0.2);
+            border-left-color: #8b5cf6;
+        }
+        html:not(.dark) .command-item.selected, html:not(.dark) .command-item:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            border-left-color: #6d28d9;
+        }
+
         /* Lenguajes */
         .lang-en { display: none !important; }
         html[lang="en"] .lang-es { display: none !important; }
@@ -285,6 +388,152 @@
     </style>
 </head>
 <body>
+
+    <!-- Botón Flotante para Menú de Comandos (Slash) en Móviles/Tabletas -->
+    <div class="fixed bottom-6 left-6 z-50">
+        <button onclick="openCommandPalette()" class="w-14 h-14 rounded-full glass-card flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-800 transition-all text-violet-500 dark:text-violet-400 shadow-lg hover:scale-105">
+            <span class="text-xl font-black">/</span>
+        </button>
+    </div>
+
+    <!-- Modal de Paleta de Comandos -->
+    <div id="command-overlay" class="command-overlay" onclick="closeCommandPalette(event)">
+        <div class="command-card p-4 flex flex-col gap-4" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700/50 pb-3">
+                <i class="fas fa-terminal text-violet-400 text-lg"></i>
+                <input type="text" id="command-search" placeholder="Escribe un comando o busca... (ej: /hardware)" class="w-full bg-transparent border-none text-slate-800 dark:text-white focus:outline-none text-base placeholder-slate-400 dark:placeholder-slate-500" oninput="filterCommands()" onkeydown="handleCommandKeydown(event)">
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-850 px-2 py-0.5 rounded font-mono">ESC</span>
+            </div>
+            
+            <div id="command-list" class="flex flex-col gap-1 max-h-[350px] overflow-y-auto pr-1">
+                <!-- Comando: Inicio -->
+                <div onclick="executeCommand('/inicio')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer selected" data-command="/inicio /home">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-home text-blue-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Ir a Inicio</span><span class="lang-en">Go to Home</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/inicio, /home</span>
+                        </div>
+                    </div>
+                    <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono">⏎ Enter</span>
+                </div>
+
+                <!-- Comando: Hardware -->
+                <div onclick="executeCommand('/hardware')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/hardware /robot /red">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-robot text-violet-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">MG400 (Robot y Red)</span><span class="lang-en">MG400 (Robot & Network)</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/hardware, /robot</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Software -->
+                <div onclick="executeCommand('/software')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/software /dobotstudio /sw">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-desktop text-cyan-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">DobotStudio Pro (SW)</span><span class="lang-en">DobotStudio Pro (SW)</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/software, /sw</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Blockly -->
+                <div onclick="executeCommand('/blockly')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/blockly /bloques /codigos">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-cubes text-pink-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Códigos por Bloques</span><span class="lang-en">Blockly Codes</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/blockly, /bloques</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Ejemplos -->
+                <div onclick="executeCommand('/ejemplos')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/ejemplos /practicas /pick-place">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-tasks text-emerald-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Prácticas de Ejemplos</span><span class="lang-en">Example Practices</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/ejemplos, /practicas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Sugeridas -->
+                <div onclick="executeCommand('/sugeridas')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/sugeridas /retos /laboratorios">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-graduation-cap text-amber-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Prácticas Sugeridas</span><span class="lang-en">Suggested Practices</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/sugeridas, /retos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Tema -->
+                <div onclick="executeCommand('/tema')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/tema /oscuro /claro /theme /dark /light">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-adjust text-slate-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Cambiar Tema (Claro / Oscuro)</span><span class="lang-en">Toggle Theme (Light / Dark)</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/tema, /dark, /light</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Idioma -->
+                <div onclick="executeCommand('/idioma')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/idioma /ingles /espanol /language /english /spanish">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-language text-slate-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Cambiar Idioma (Español / Inglés)</span><span class="lang-en">Switch Language (ES / EN)</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/idioma, /language</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: GIFs -->
+                <div onclick="executeCommand('/gifs')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/gifs /multimedia /imagenes">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-image text-emerald-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Guía: Cómo meter GIFs</span><span class="lang-en">Guide: How to embed GIFs</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/gifs, /multimedia</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Videos -->
+                <div onclick="executeCommand('/videos')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/videos /reproductor">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-video text-emerald-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Guía: Cómo meter Videos</span><span class="lang-en">Guide: How to embed Videos</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/videos, /reproductor</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comando: Audio -->
+                <div onclick="executeCommand('/audio')" class="command-item p-3 rounded-xl flex items-center justify-between cursor-pointer" data-command="/audio /sonidos">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-volume-up text-emerald-500 w-6 text-center"></i>
+                        <div>
+                            <h5 class="text-slate-800 dark:text-white text-sm font-bold"><span class="lang-es">Guía: Cómo meter Audio</span><span class="lang-en">Guide: How to embed Audio</span></h5>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">/audio, /sonidos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-[10px] text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-700/50 pt-2 flex justify-between">
+                <span><span class="lang-es">Usa ↑ ↓ para navegar, Enter para seleccionar</span><span class="lang-en">Use ↑ ↓ to navigate, Enter to select</span></span>
+                <span>/</span>
+            </div>
+        </div>
+    </div>
 
     <!-- Menú Hamburguesa Global -->
     <div class="fixed top-6 right-6 z-50">
@@ -307,6 +556,14 @@
             <button onclick="switchView('view-blockly'); toggleMenu();" class="w-full text-left p-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold transition-all flex items-center gap-3">
                 <i class="fas fa-cubes text-pink-500"></i> 
                 <span class="lang-es">Códigos por Bloques</span><span class="lang-en">Block Codes (Blockly)</span>
+            </button>
+            <button onclick="switchView('view-practicas-ejemplos'); toggleMenu();" class="w-full text-left p-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold transition-all flex items-center gap-3">
+                <i class="fas fa-tasks text-emerald-500"></i> 
+                <span class="lang-es">Prácticas de Ejemplos</span><span class="lang-en">Example Practices</span>
+            </button>
+            <button onclick="switchView('view-practicas-sugeridas'); toggleMenu();" class="w-full text-left p-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold transition-all flex items-center gap-3">
+                <i class="fas fa-graduation-cap text-amber-500"></i> 
+                <span class="lang-es">Prácticas Sugeridas</span><span class="lang-en">Suggested Practices</span>
             </button>
             
             <hr class="border-slate-200 dark:border-slate-700 my-2">
@@ -345,6 +602,79 @@
                 <span class="lang-es">Universidad Politécnica de Tulancingo</span>
                 <span class="lang-en">Polytechnic University of Tulancingo</span>
             </p>
+        </div>
+
+        <!-- Tarjetas Interactivas de Navegación -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl w-full mx-auto mt-6 mb-24 px-4 z-20 relative">
+            <!-- Tarjeta 1: Hardware -->
+            <div onclick="switchView('view-hardware')" class="glass-card bg-gradient-to-br from-violet-900/30 via-slate-900/40 to-violet-950/20 border-violet-500/30 hover:border-violet-500 p-6 flex flex-col items-center text-center cursor-pointer group transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-violet-500/20 group-hover:bg-violet-500/20">
+                    <i class="fas fa-robot text-violet-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 font-tech group-hover:text-violet-400 transition-colors">
+                    <span class="lang-es">MG400 Robot</span><span class="lang-en">MG400 Robot</span>
+                </h3>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-[200px]">
+                    <span class="lang-es">Hardware, conexiones de red, planos físicos y calibración.</span>
+                    <span class="lang-en">Hardware, network connections, plans and calibration.</span>
+                </p>
+            </div>
+
+            <!-- Tarjeta 2: Software -->
+            <div onclick="switchView('view-software')" class="glass-card bg-gradient-to-br from-cyan-900/30 via-slate-900/40 to-cyan-950/20 border-cyan-500/30 hover:border-cyan-500 p-6 flex flex-col items-center text-center cursor-pointer group transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-cyan-500/20 group-hover:bg-cyan-500/20">
+                    <i class="fas fa-desktop text-cyan-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 font-tech group-hover:text-cyan-400 transition-colors">
+                    <span class="lang-es">DobotStudio Pro</span><span class="lang-en">DobotStudio Pro</span>
+                </h3>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-[200px]">
+                    <span class="lang-es">Entorno de software, coordenadas, jogging y programación LUA.</span>
+                    <span class="lang-en">Software environment, coordinates, jogging and LUA programming.</span>
+                </p>
+            </div>
+
+            <!-- Tarjeta 3: Blockly -->
+            <div onclick="switchView('view-blockly')" class="glass-card bg-gradient-to-br from-pink-900/30 via-slate-900/40 to-pink-950/20 border-pink-500/30 hover:border-pink-500 p-6 flex flex-col items-center text-center cursor-pointer group transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-pink-500/20 group-hover:bg-pink-500/20">
+                    <i class="fas fa-cubes text-pink-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 font-tech group-hover:text-pink-400 transition-colors">
+                    <span class="lang-es">Bloques Blockly</span><span class="lang-en">Blockly Blocks</span>
+                </h3>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-[200px]">
+                    <span class="lang-es">Diccionario interactivo completo de bloques de programación lógica.</span>
+                    <span class="lang-en">Complete interactive dictionary of logical programming blocks.</span>
+                </p>
+            </div>
+
+            <!-- Tarjeta 4: Prácticas de Ejemplos -->
+            <div onclick="switchView('view-practicas-ejemplos')" class="glass-card bg-gradient-to-br from-emerald-900/30 via-slate-900/40 to-emerald-950/20 border-emerald-500/30 hover:border-emerald-500 p-6 flex flex-col items-center text-center cursor-pointer group transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-emerald-500/20 group-hover:bg-emerald-500/20">
+                    <i class="fas fa-tasks text-emerald-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 font-tech group-hover:text-emerald-400 transition-colors">
+                    <span class="lang-es">Ejemplos Prácticos</span><span class="lang-en">Practical Examples</span>
+                </h3>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-[200px]">
+                    <span class="lang-es">Programas reales paso a paso y guía multimedia interactiva.</span>
+                    <span class="lang-en">Step-by-step real programs and interactive media guide.</span>
+                </p>
+            </div>
+
+            <!-- Tarjeta 5: Prácticas Sugeridas -->
+            <div onclick="switchView('view-practicas-sugeridas')" class="glass-card bg-gradient-to-br from-amber-900/30 via-slate-900/40 to-amber-950/20 border-amber-500/30 hover:border-amber-500 p-6 flex flex-col items-center text-center cursor-pointer group transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-amber-500/20 group-hover:bg-amber-500/20">
+                    <i class="fas fa-graduation-cap text-amber-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 font-tech group-hover:text-amber-400 transition-colors">
+                    <span class="lang-es">Prácticas Sugeridas</span><span class="lang-en">Suggested Practices</span>
+                </h3>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-[200px]">
+                    <span class="lang-es">Retos académicos avanzados, CNC, Modbus y visión artificial.</span>
+                    <span class="lang-en">Advanced academic challenges, CNC, Modbus and computer vision.</span>
+                </p>
+            </div>
         </div>
 
         <!-- Footer Profesional -->
@@ -2381,6 +2711,445 @@
     </div>
 
 
+    <!-- ========================================== -->
+    <!-- VISTA 4: PRÁCTICAS DE EJEMPLOS             -->
+    <!-- ========================================== -->
+    <div id="view-practicas-ejemplos" class="view-section min-h-screen pb-20">
+        <!-- Header Fijo -->
+        <header class="fixed top-0 w-full z-50 glass-card !rounded-none !border-x-0 !border-t-0 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <i class="fas fa-tasks text-emerald-400 text-2xl sm:text-3xl animate-pulse"></i>
+                <div>
+                    <h2 class="font-tech text-sm sm:text-xl font-bold text-white leading-tight">
+                        <span class="lang-es">Prácticas de Ejemplos</span><span class="lang-en">Example Practices</span>
+                    </h2>
+                    <span class="text-[10px] sm:text-xs text-emerald-300 block">
+                        <span class="lang-es">Programas Reales y Guía Multimedia</span><span class="lang-en">Real Programs & Media Guide</span>
+                    </span>
+                </div>
+            </div>
+            <button onclick="switchView('view-home')" class="bg-emerald-600/50 hover:bg-emerald-500 border border-emerald-400 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-white transition-colors flex items-center gap-1 sm:gap-2">
+                <i class="fas fa-home"></i> <span class="hidden sm:inline"><span class="lang-es">Inicio</span><span class="lang-en">Home</span></span>
+            </button>
+        </header>
+
+        <div class="max-w-[1400px] mx-auto pt-28 px-4 flex flex-col xl:flex-row gap-8">
+            <!-- Mini-Menú Lateral -->
+            <aside class="xl:w-80 flex-shrink-0 w-full">
+                <div class="sticky top-24 xl:top-32 glass-card p-4 xl:p-6 border-l-4 border-l-emerald-500 overflow-x-auto xl:overflow-x-visible">
+                    <h4 class="font-bold text-sm uppercase text-slate-400 mb-6 tracking-widest border-b border-slate-700 pb-2 hidden xl:block">
+                        <span class="lang-es">Ejemplos</span><span class="lang-en">Examples</span>
+                    </h4>
+                    <ul class="flex flex-row xl:flex-col gap-2 xl:gap-4 min-w-max xl:min-w-0">
+                        <li><a href="#ej-pick-place" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-emerald-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-boxes w-5 xl:w-8 text-center text-xs xl:text-lg text-emerald-500"></i> <span class="lang-es">Pick & Place</span><span class="lang-en">Pick & Place</span></a></li>
+                        <li><a href="#ej-sensor" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-emerald-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-traffic-light w-5 xl:w-8 text-center text-xs xl:text-lg text-emerald-500"></i> <span class="lang-es">Clasificación</span><span class="lang-en">Sorting</span></a></li>
+                        <li><a href="#ej-curva" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-emerald-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-draw-polygon w-5 xl:w-8 text-center text-xs xl:text-lg text-emerald-500"></i> <span class="lang-es">Rutas Curvas</span><span class="lang-en">Curved Paths</span></a></li>
+                        <li><a href="#ej-multimedia" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-emerald-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-photo-video w-5 xl:w-8 text-center text-xs xl:text-lg text-emerald-500"></i> <span class="lang-es">Guía Multimedia</span><span class="lang-en">Media Guide</span></a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Contenido Principal -->
+            <main class="flex-1 space-y-16">
+                <!-- Pick & Place -->
+                <section id="ej-pick-place" class="glass-card p-10 scroll-mt-32 active-sub-section">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-boxes text-emerald-400"></i>
+                        <span class="lang-es">Ejemplo 1: Pick and Place Básico (Paletizado)</span><span class="lang-en">Example 1: Basic Pick & Place</span>
+                    </h3>
+                    <p class="text-slate-300 text-base mb-6 leading-relaxed">
+                        <span class="lang-es">Este ejercicio práctico enseña a mover bloques de madera/plástico desde un punto de descarga inicial (Pick) hasta una cuadrícula de paletizado de destino (Place).</span>
+                        <span class="lang-en">This practical exercise teaches how to move wooden/plastic blocks from an initial pick position to a target palletizing grid.</span>
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-black/40 p-6 rounded-xl border border-emerald-500/20">
+                            <h4 class="text-lg font-bold text-emerald-300 mb-3"><span class="lang-es">Puntos de Coordenadas Grabados (World)</span><span class="lang-en">Recorded Coordinates (World)</span></h4>
+                            <ul class="text-sm font-mono text-slate-300 space-y-2 list-disc pl-5">
+                                <li><strong>P_Seguro (Home):</strong> X = 250.00, Y = 0.00, Z = 120.00, R = 0.00</li>
+                                <li><strong>P_Pick_Arriba:</strong> X = 200.00, Y = -150.00, Z = 50.00, R = 0.00</li>
+                                <li><strong>P_Pick_Abajo:</strong> X = 200.00, Y = -150.00, Z = 15.00, R = 0.00</li>
+                                <li><strong>P_Place_Arriba:</strong> X = 200.00, Y = 150.00, Z = 50.00, R = 0.00</li>
+                                <li><strong>P_Place_Abajo:</strong> X = 200.00, Y = 150.00, Z = 15.00, R = 0.00</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-black/50 p-6 rounded-xl border border-emerald-500/30">
+                            <h4 class="text-lg font-bold text-emerald-300 mb-3"><span class="lang-es">Script en LUA equivalente</span><span class="lang-en">Equivalent LUA Script</span></h4>
+                            <pre class="text-xs font-mono text-slate-300 bg-slate-950/60 p-4 rounded-lg overflow-x-auto leading-relaxed">
+-- Código LUA para ciclo infinito de Pick and Place
+ResetCMD()
+SetCollisionLevel(2) -- Sensibilidad media ante choques
+SetPayload(0.2) -- Carga de la pinza neumática (200 gramos)
+
+while true do
+    -- Mover a posición segura
+    MovJ(P_Seguro, {SpeedJ=50, AccJ=50})
+    
+    -- Ir sobre el punto de sujeción (Pick)
+    MovJ(P_Pick_Arriba, {SpeedJ=80, AccJ=80})
+    MovL(P_Pick_Abajo, {SpeedL=30, AccL=30}) -- Bajada lineal lenta por seguridad
+    
+    -- Activar pinza (DO1 en ON, DO2 en OFF para sujetar)
+    DO(1, 1)
+    DO(2, 0)
+    Sleep(500) -- Esperar 0.5s a que cierre físicamente
+    
+    -- Subir linealmente
+    MovL(P_Pick_Arriba, {SpeedL=50, AccL=50})
+    
+    -- Ir hacia la zona de descarga (Place)
+    MovJ(P_Place_Arriba, {SpeedJ=80, AccJ=80})
+    MovL(P_Place_Abajo, {SpeedL=30, AccL=30})
+    
+    -- Soltar pieza (DO1 en OFF, DO2 en ON para abrir pinza)
+    DO(1, 0)
+    DO(2, 1)
+    Sleep(500)
+    
+    -- Subir y apagar salidas neumáticas para reposo
+    MovL(P_Place_Arriba, {SpeedL=50, AccL=50})
+    DO(2, 0) -- Cerrar electroválvula
+end</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Clasificación -->
+                <section id="ej-sensor" class="glass-card p-10 scroll-mt-32">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-traffic-light text-emerald-400"></i>
+                        <span class="lang-es">Ejemplo 2: Clasificación de Piezas con Sensor Óptico</span><span class="lang-en">Example 2: Sensor-Based Sorting</span>
+                    </h3>
+                    <p class="text-slate-300 text-base mb-6 leading-relaxed">
+                        <span class="lang-es">El brazo espera a que una pieza pase por una cinta transportadora. Si un sensor fotoeléctrico (DI1) detecta la pieza, el robot la recoge y evalúa su color o tamaño mediante una cámara (DI2) para colocarla en la rampa de piezas aprobadas o rechazadas.</span>
+                        <span class="lang-en">The arm waits for a part to pass on a conveyor. If a photoelectric sensor (DI1) detects the part, the robot picks it and checks its color/size via camera (DI2) to place it in the approved or rejected ramp.</span>
+                    </p>
+
+                    <div class="bg-black/50 p-6 rounded-xl border border-emerald-500/30">
+                        <h4 class="text-lg font-bold text-emerald-300 mb-3">
+                            <span class="lang-es">Lógica de Script (LUA)</span><span class="lang-en">Script Logic (LUA)</span>
+                        </h4>
+                        <pre class="text-xs font-mono text-slate-300 bg-slate-950/60 p-4 rounded-lg overflow-x-auto leading-relaxed">
+-- Ciclo de clasificación inteligente
+while true do
+    -- Ir a posición de espera sobre la banda
+    MovJ(P_Espera_Banda, {SpeedJ=60})
+    
+    -- Esperar a que el sensor DI1 en la banda detecte pieza (24V en DI1)
+    while DI(1) == 0 do
+        Sleep(50) -- Bucle de espera no bloqueante
+    end
+    
+    -- Detener la cinta (DO3 en OFF)
+    DO(3, 0)
+    
+    -- Bajar y sujetar
+    MovL(P_Pick_Banda, {SpeedL=30})
+    DO(1, 1) -- Activar ventosa de vacío
+    Sleep(400)
+    MovL(P_Espera_Banda, {SpeedL=50})
+    
+    -- Decisión de Clasificación
+    if DI(2) == 1 then
+        -- Cámara confirma pieza CORRECTA -> Rampa A
+        MovJ(P_Rampa_A_Arriba, {SpeedJ=80})
+        MovL(P_Rampa_A_Abajo, {SpeedL=40})
+        DO(1, 0) -- Apagar vacío
+        Sleep(300)
+    else
+        -- Cámara confirma pieza DEFECTUOSA -> Rampa B
+        MovJ(P_Rampa_B_Arriba, {SpeedJ=80})
+        MovL(P_Rampa_B_Abajo, {SpeedL=40})
+        DO(1, 0) -- Apagar vacío
+        Sleep(300)
+    end
+    
+    -- Encender la banda de nuevo para traer la siguiente pieza (DO3 en ON)
+    DO(3, 1)
+end</pre>
+                    </div>
+                </section>
+
+                <!-- Rutas Curvas -->
+                <section id="ej-curva" class="glass-card p-10 scroll-mt-32">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-draw-polygon text-emerald-400"></i>
+                        <span class="lang-es">Ejemplo 3: Trayectoria Continua (Engranado/Curvas)</span><span class="lang-en">Example 3: Continuous Path & Curved Trajectories</span>
+                    </h3>
+                    <p class="text-slate-300 text-base mb-6 leading-relaxed">
+                        <span class="lang-es">Para aplicaciones como soldadura, pegado de empaques o dibujo, el robot debe moverse de forma fluida. Este código muestra cómo desactivar las paradas bruscas entre puntos usando la función de Trayectoria Continua `CP()`.</span>
+                        <span class="lang-en">For applications like welding, gluing, or drawing, the robot must move fluidly. This code shows how to disable abrupt stops between points using the Continuous Path `CP()` function.</span>
+                    </p>
+
+                    <div class="bg-black/50 p-6 rounded-xl border border-emerald-500/30">
+                        <h4 class="text-lg font-bold text-emerald-300 mb-3"><span class="lang-es">Script en LUA</span><span class="lang-en">LUA Script</span></h4>
+                        <pre class="text-xs font-mono text-slate-300 bg-slate-950/60 p-4 rounded-lg overflow-x-auto leading-relaxed">
+-- Ejemplo de dibujo de arco suave
+ResetCMD()
+CP(50) -- Activa trayectoria continua al 50% de suavizado (redondeo de esquinas)
+
+MovJ(P_Dibujo_Inicio, {SpeedJ=50})
+DO(1, 1) -- Encender herramienta de dibujo/marcado
+
+-- Trazar un arco circular pasando por P_Centro hacia P_Fin
+Arc3(P_Centro, P_Fin, {SpeedL=40, AccL=40})
+
+-- Regresar trazando línea recta con CP activo
+MovL(P_Dibujo_Inicio, {SpeedL=40})
+
+DO(1, 0) -- Apagar herramienta
+CP(0) -- Desactivar CP para retornar a movimientos de parada exacta</pre>
+                    </div>
+                </section>
+
+                <!-- Guía Multimedia -->
+                <section id="ej-multimedia" class="glass-card p-10 scroll-mt-32 border-b-4 border-b-emerald-500">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-photo-video text-emerald-400 animate-pulse"></i>
+                        <span class="lang-es">Guía de Integración Multimedia (GIFs, Videos y Audio)</span><span class="lang-en">Multimedia Integration Guide (GIFs, Videos & Audio)</span>
+                    </h3>
+                    
+                    <div class="bg-emerald-500/10 border-l-4 border-l-emerald-500 p-6 rounded-r-xl mb-8">
+                        <h4 class="text-xl font-bold text-emerald-400 mb-2"><span class="lang-es">¡Sí, puedes meter GIFs, Videos y Audio!</span><span class="lang-en">Yes, you can embed GIFs, Videos & Audio!</span></h4>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            <span class="lang-es">Este manual es un sitio web HTML5 puro, lo que significa que tienes soporte nativo completo para cualquier archivo multimedia. Solo debes guardarlos en tu carpeta del proyecto (se recomienda colocarlos dentro de la carpeta <code class="bg-black/60 px-1.5 py-0.5 rounded text-emerald-400">media/</code>) y enlazarlos mediante rutas relativas.</span>
+                            <span class="lang-en">This manual is a pure HTML5 website, which means you have full native support for any media files. Simply save them in your project directory (ideally inside the <code class="bg-black/60 px-1.5 py-0.5 rounded text-emerald-400">media/</code> folder) and reference them via relative paths.</span>
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                        <!-- Tarjeta GIFs -->
+                        <div class="bg-black/40 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-lg font-bold text-emerald-300 mb-2"><i class="fas fa-image mr-2"></i> <span class="lang-es">1. Insertar GIFs Animados</span><span class="lang-en">1. Insert Animated GIFs</span></h4>
+                                <p class="text-xs text-slate-400 mb-4">
+                                    <span class="lang-es">Ideal para mostrar movimientos repetitivos del brazo robótico o flujos de software sin necesidad de controles de reproducción.</span>
+                                    <span class="lang-en">Ideal for showing repetitive robotic arm movements or software workflows without needing playback controls.</span>
+                                </p>
+                            </div>
+                            <div class="mt-auto">
+                                <code class="block text-[10px] font-mono bg-black/60 p-2 rounded text-slate-300 mb-3">&lt;img src="./media/mi-animacion.gif" alt="Efecto" class="rounded-xl w-full"&gt;</code>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Videos -->
+                        <div class="bg-black/40 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-lg font-bold text-emerald-300 mb-2"><i class="fas fa-video mr-2"></i> <span class="lang-es">2. Insertar Videos (MP4/WebM)</span><span class="lang-en">2. Insert Videos (MP4/WebM)</span></h4>
+                                <p class="text-xs text-slate-400 mb-4">
+                                    <span class="lang-es">Usa la etiqueta nativa <code class="text-emerald-400 font-mono">&lt;video&gt;</code>. Puedes agregar el atributo <code class="text-emerald-400 font-mono">controls</code> para permitir pausar, adelantar o ajustar volumen.</span>
+                                    <span class="lang-en">Use the native <code class="text-emerald-400 font-mono">&lt;video&gt;</code> tag. Add the <code class="text-emerald-400 font-mono">controls</code> attribute to allow pause, fast forward, or volume adjustment.</span>
+                                </p>
+                            </div>
+                            <div class="mt-auto">
+                                <code class="block text-[10px] font-mono bg-black/60 p-2 rounded text-slate-300 mb-3">&lt;video src="./media/tutorial.mp4" controls class="rounded-xl w-full"&gt;&lt;/video&gt;</code>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Audio -->
+                        <div class="bg-black/40 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-lg font-bold text-emerald-300 mb-2"><i class="fas fa-volume-up mr-2"></i> <span class="lang-es">3. Insertar Audio (MP3/WAV)</span><span class="lang-en">3. Insert Audio (MP3/WAV)</span></h4>
+                                <p class="text-xs text-slate-400 mb-4">
+                                    <span class="lang-es">Ideal para agregar guías narradas por voz o alertas de sonido industriales para prácticas de laboratorio.</span>
+                                    <span class="lang-en">Ideal for adding voice narrated guides or industrial sound alerts for lab practices.</span>
+                                </p>
+                            </div>
+                            <div class="mt-auto">
+                                <code class="block text-[10px] font-mono bg-black/60 p-2 rounded text-slate-300 mb-3">&lt;audio src="./media/alarma.mp3" controls class="w-full"&gt;&lt;/audio&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reproductores de Muestra (Demo Interactiva) -->
+                    <div class="border-t border-slate-700/50 pt-8">
+                        <h4 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-play-circle text-emerald-400"></i>
+                            <span class="lang-es">Demostración Interactiva de Reproductores</span><span class="lang-en">Interactive Players Demo</span>
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Demo 1: GIF Animado con Error Boundary -->
+                            <div class="bg-slate-900/60 border border-slate-700 p-5 rounded-2xl flex flex-col items-center">
+                                <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-3">GIF Viewer</span>
+                                <div class="w-full aspect-[4/3] rounded-xl bg-black/40 border border-slate-700 flex items-center justify-center relative overflow-hidden">
+                                    <img src="./media/image76.png" class="w-full h-full object-cover opacity-75" alt="Simulación GIF" onerror="this.src='espanol.jpeg';">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-3 text-center">
+                                        <p class="text-xs text-white font-bold"><span class="lang-es">Demostración de GIF Animado</span><span class="lang-en">Animated GIF Demo</span></p>
+                                        <span class="text-[9px] text-slate-400"><span class="lang-es">(Toca para ver cómo cargará)</span><span class="lang-en">(Tap to see how it loads)</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Demo 2: Video Player -->
+                            <div class="bg-slate-900/60 border border-slate-700 p-5 rounded-2xl flex flex-col items-center">
+                                <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-3">HTML5 Video Player</span>
+                                <div class="w-full aspect-[4/3] rounded-xl bg-black border border-slate-700 flex flex-col items-center justify-center p-4 text-center relative">
+                                    <!-- Fallback visual muy estético -->
+                                    <i class="fas fa-video-slash text-4xl text-slate-600 mb-2 animate-pulse"></i>
+                                    <span class="text-[11px] text-slate-300 font-bold"><span class="lang-es">Reproductor de Video Listo</span><span class="lang-en">Video Player Ready</span></span>
+                                    <p class="text-[9px] text-slate-500 mt-2 max-w-[200px]">
+                                        <span class="lang-es">Coloca un video en <code class="bg-slate-800 text-emerald-400 p-0.5 rounded text-[8px]">media/demo.mp4</code> para reproducir.</span>
+                                        <span class="lang-en">Place a video in <code class="bg-slate-800 text-emerald-400 p-0.5 rounded text-[8px]">media/demo.mp4</code> to play.</span>
+                                    </p>
+                                    <video src="./media/demo.mp4" controls class="absolute inset-0 w-full h-full rounded-xl opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity bg-black" onerror="this.style.pointerEvents='none';"></video>
+                                </div>
+                            </div>
+
+                            <!-- Demo 3: Audio Player -->
+                            <div class="bg-slate-900/60 border border-slate-700 p-5 rounded-2xl flex flex-col justify-between items-center">
+                                <div class="w-full text-center">
+                                    <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-3 block">HTML5 Audio Player</span>
+                                    <div class="w-full bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-center gap-3">
+                                        <button class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform" onclick="const a = this.closest('.bg-slate-900\/60').querySelector('audio'); if(a.paused){a.play(); this.querySelector('i').className='fas fa-pause';}else{a.pause(); this.querySelector('i').className='fas fa-play';}">
+                                            <i class="fas fa-play text-xs"></i>
+                                        </button>
+                                        <div class="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="w-1/3 h-full bg-emerald-400"></div>
+                                        </div>
+                                        <span class="text-[10px] text-slate-400">0:12 / 0:45</span>
+                                    </div>
+                                </div>
+                                <div class="w-full mt-4">
+                                    <!-- Player real invisible para no romper maquetación pero funcional -->
+                                    <audio src="./media/alarma.mp3" controls class="w-full mt-2" style="max-height: 35px;"></audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VISTA 5: PRÁCTICAS SUGERIDAS               -->
+    <!-- ========================================== -->
+    <div id="view-practicas-sugeridas" class="view-section min-h-screen pb-20">
+        <!-- Header Fijo -->
+        <header class="fixed top-0 w-full z-50 glass-card !rounded-none !border-x-0 !border-t-0 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <i class="fas fa-graduation-cap text-amber-400 text-2xl sm:text-3xl animate-pulse"></i>
+                <div>
+                    <h2 class="font-tech text-sm sm:text-xl font-bold text-white leading-tight">
+                        <span class="lang-es">Prácticas Sugeridas</span><span class="lang-en">Suggested Practices</span>
+                    </h2>
+                    <span class="text-[10px] sm:text-xs text-amber-300 block">
+                        <span class="lang-es">Laboratorios y Retos Académicos Avanzados</span><span class="lang-en">Advanced Academic Challenges</span>
+                    </span>
+                </div>
+            </div>
+            <button onclick="switchView('view-home')" class="bg-amber-600/50 hover:bg-amber-500 border border-amber-400 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-white transition-colors flex items-center gap-1 sm:gap-2">
+                <i class="fas fa-home"></i> <span class="hidden sm:inline"><span class="lang-es">Inicio</span><span class="lang-en">Home</span></span>
+            </button>
+        </header>
+
+        <div class="max-w-[1400px] mx-auto pt-28 px-4 flex flex-col xl:flex-row gap-8">
+            <!-- Mini-Menú Lateral -->
+            <aside class="xl:w-80 flex-shrink-0 w-full">
+                <div class="sticky top-24 xl:top-32 glass-card p-4 xl:p-6 border-l-4 border-l-amber-500 overflow-x-auto xl:overflow-x-visible">
+                    <h4 class="font-bold text-sm uppercase text-slate-400 mb-6 tracking-widest border-b border-slate-700 pb-2 hidden xl:block">
+                        <span class="lang-es">Retos de Laboratorio</span><span class="lang-en">Lab Challenges</span>
+                    </h4>
+                    <ul class="flex flex-row xl:flex-col gap-2 xl:gap-4 min-w-max xl:min-w-0">
+                        <li><a href="#sug-cnc" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-amber-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-tools w-5 xl:w-8 text-center text-xs xl:text-lg text-amber-500"></i> <span class="lang-es">Carga CNC</span><span class="lang-en">CNC Tending</span></a></li>
+                        <li><a href="#sug-paletizado" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-amber-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-th w-5 xl:w-8 text-center text-xs xl:text-lg text-amber-500"></i> <span class="lang-es">Paletizado 3x3</span><span class="lang-en">3x3 Palletizing</span></a></li>
+                        <li><a href="#sug-modbus" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-amber-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-network-wired w-5 xl:w-8 text-center text-xs xl:text-lg text-amber-500"></i> <span class="lang-es">Red Modbus</span><span class="lang-en">Modbus Lab</span></a></li>
+                        <li><a href="#sug-vision" class="whitespace-nowrap flex items-center gap-2 p-2 text-slate-300 hover:text-amber-400 transition-colors font-bold text-sm xl:text-lg"><i class="fas fa-eye w-5 xl:w-8 text-center text-xs xl:text-lg text-amber-500"></i> <span class="lang-es">Control Visual</span><span class="lang-en">Visual Control</span></a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Contenido Principal -->
+            <main class="flex-1 space-y-16">
+                <!-- CNC Tending -->
+                <section id="sug-cnc" class="glass-card p-10 scroll-mt-32 active-sub-section">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-tools text-amber-400 animate-pulse"></i>
+                        <span class="lang-es">Práctica 1: Alimentación y Carga de Máquina Torno/CNC</span><span class="lang-en">Practice 1: CNC Machine Tending</span>
+                    </h3>
+                    <div class="bg-amber-500/10 border-l-4 border-l-amber-500 p-5 rounded-r-xl mb-6">
+                        <h4 class="font-bold text-amber-400 mb-1"><span class="lang-es">Objetivo Académico:</span><span class="lang-en">Academic Objective:</span></h4>
+                        <p class="text-slate-300 text-sm">
+                            <span class="lang-es">Integrar el cobot MG400 con el ciclo de arranque y seguridad de una celda de maquinado CNC simulada por señales de I/O digitales.</span>
+                            <span class="lang-en">Integrate the MG400 cobot with the start and safety cycle of a simulated CNC machining cell using digital I/O signals.</span>
+                        </p>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3"><span class="lang-es">Requisitos del Reto:</span><span class="lang-en">Challenge Requirements:</span></h4>
+                    <ol class="list-decimal pl-5 space-y-3 text-slate-400 text-sm">
+                        <li><span class="lang-es">El robot debe estar en reposo hasta recibir la señal <strong>DI1</strong> ("CNC Listo para Cargar").</span><span class="lang-en">The robot must be idle until receiving signal <strong>DI1</strong> ("CNC Ready to Load").</span></li>
+                        <li><span class="lang-es">Activar salida <strong>DO1</strong> ("Abrir mordazas/puerta CNC") y esperar 2 segundos.</span><span class="lang-en">Activate output <strong>DO1</strong> ("Open jaws/CNC door") and wait 2 seconds.</span></li>
+                        <li><span class="lang-es">Ejecutar la trayectoria lineal `MovL` para entrar en la mordaza del CNC y soltar la materia prima.</span><span class="lang-en">Execute `MovL` linear trajectory to enter the CNC jaw and release the raw material.</span></li>
+                        <li><span class="lang-es">Apagar <strong>DO1</strong> (mordazas sujetan pieza) y retirar el brazo a zona segura.</span><span class="lang-en">Turn OFF <strong>DO1</strong> (jaws clamp piece) and retreat arm to safe zone.</span></li>
+                        <li><span class="lang-es">Activar salida <strong>DO2</strong> durante 0.5s ("Pulso de Inicio de Ciclo CNC") para arrancar la máquina.</span><span class="lang-en">Activate output <strong>DO2</strong> for 0.5s ("CNC Cycle Start Pulse") to start the machine.</span></li>
+                    </ol>
+                </section>
+
+                <!-- Paletizado 3x3 -->
+                <section id="sug-paletizado" class="glass-card p-10 scroll-mt-32">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-th text-amber-400 animate-pulse"></i>
+                        <span class="lang-es">Práctica 2: Paletizado Complejo de Matriz 3x3</span><span class="lang-en">Practice 2: Complex 3x3 Palletizing Matrix</span>
+                    </h3>
+                    <div class="bg-amber-500/10 border-l-4 border-l-amber-500 p-5 rounded-r-xl mb-6">
+                        <h4 class="font-bold text-amber-400 mb-1"><span class="lang-es">Objetivo Académico:</span><span class="lang-en">Academic Objective:</span></h4>
+                        <p class="text-slate-300 text-sm">
+                            <span class="lang-es">Desarrollar lógica algorítmica para evitar grabar 9 puntos individuales. El estudiante calculará las coordenadas de destino dinámicamente usando bucles indexados en LUA.</span>
+                            <span class="lang-en">Develop algorithmic logic to avoid teaching 9 individual points. The student will calculate target coordinates dynamically using indexed loops in LUA.</span>
+                        </p>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-3"><span class="lang-es">Fórmulas LUA Matemáticas Sugeridas:</span><span class="lang-en">Suggested Mathematical LUA Formulas:</span></h4>
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 leading-relaxed mb-6">
+                        dx = (fila - 1) * dist_filas -- ej. dist_filas = 45.0 mm<br>
+                        dy = (columna - 1) * dist_cols -- ej. dist_cols = 45.0 mm<br>
+                        PtoDestino = RelPoint(P_Cero_Palet, {dx, dy, 0, 0})
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        <span class="lang-es"><strong>Reto extra:</strong> Sumar una variable Z dinámica para permitir paletizado de múltiples capas (ej. capa 1 en Z=0, capa 2 en Z=20).</span>
+                        <span class="lang-en"><strong>Extra challenge:</strong> Add a dynamic Z variable to allow multi-layer palletizing (e.g. layer 1 at Z=0, layer 2 at Z=20).</span>
+                    </p>
+                </section>
+
+                <!-- Modbus Lab -->
+                <section id="sug-modbus" class="glass-card p-10 scroll-mt-32">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-network-wired text-amber-400 animate-pulse"></i>
+                        <span class="lang-es">Práctica 3: Enlace e Intercambio de Datos con PLC por Modbus</span><span class="lang-en">Practice 3: PLC Data Exchange over Modbus</span>
+                    </h3>
+                    <p class="text-slate-300 text-base mb-6 leading-relaxed">
+                        <span class="lang-es">Configurar al robot Dobot MG400 en modo Maestro Modbus TCP para comunicarse con un PLC simulador de fábrica.</span>
+                        <span class="lang-en">Configure the Dobot MG400 robot as a Modbus TCP Master to communicate with a simulated factory PLC.</span>
+                    </p>
+                    <h4 class="text-lg font-bold text-white mb-3"><span class="lang-es">Metodología de Desarrollo:</span><span class="lang-en">Development Methodology:</span></h4>
+                    <ul class="list-disc pl-8 space-y-2 text-slate-400 text-sm">
+                        <li><span class="lang-es">Crear la estación Modbus mediante <code class="text-amber-400 font-mono">ModbusCreate("192.168.1.50", 502, 1)</code>.</span><span class="lang-en">Create the Modbus station using <code class="text-amber-400 font-mono">ModbusCreate("192.168.1.50", 502, 1)</code>.</span></li>
+                        <li><span class="lang-es">Leer el registro analógico de velocidad del PLC y asignarlo al slider de velocidad del robot en tiempo de ejecución.</span><span class="lang-en">Read the analog speed register from the PLC and map it to the robot speed slider at runtime.</span></li>
+                        <li><span class="lang-es">Incrementar un Holding Register ("Contador de Piezas") en el PLC cada vez que el robot complete un ciclo.</span><span class="lang-en">Increment a Holding Register ("Parts Counter") on the PLC every time the robot completes a cycle.</span></li>
+                    </ul>
+                </section>
+
+                <!-- Visual Control -->
+                <section id="sug-vision" class="glass-card p-10 scroll-mt-32 border-b-4 border-b-amber-500">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fas fa-eye text-amber-400 animate-pulse"></i>
+                        <span class="lang-es">Práctica 4: Servocontrol Visual por Sockets TCP/IP</span><span class="lang-en">Practice 4: Visual Servoing over TCP/IP Sockets</span>
+                    </h3>
+                    <p class="text-slate-300 text-base mb-6 leading-relaxed">
+                        <span class="lang-es">El reto supremo de automatización: Conectar una cámara de visión artificial (o simulación en Python en la PC) para que tome fotos y envíe por socket TCP/IP las coordenadas X, Y del centro del bloque detectado.</span>
+                        <span class="lang-en">The ultimate automation challenge: Connect an artificial vision camera (or a Python simulation on PC) to take photos and send coordinates X, Y of the detected block center via TCP/IP socket.</span>
+                    </p>
+                    <h4 class="text-lg font-bold text-white mb-3"><span class="lang-es">Protocolo de String sugerido:</span><span class="lang-en">Suggested String Protocol:</span></h4>
+                    <div class="bg-black/40 p-4 rounded-xl border border-slate-700/50 mb-6">
+                        <p class="text-sm font-mono text-slate-300"><span class="text-amber-400">Mensaje recibido:</span> "210.50,-120.40,90.00"</p>
+                        <p class="text-xs text-slate-400 mt-2"><span class="lang-es">El programa del robot debe separar el texto por comas, convertir cada dato a número flotante y mover el efector final al punto dinámico calculado.</span><span class="lang-en">The robot program must split the text by commas, convert each data to float and move the end effector to the calculated dynamic point.</span></p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+
     <script>
         // Generar burbujas mágicas de fondo
         const container = document.getElementById('bubbles');
@@ -2446,7 +3215,7 @@
         // Tema y Lenguaje
         let currentLang = 'es';
         
-        function toggleTheme() {
+        function toggleTheme(closeMenu = true) {
             const html = document.documentElement;
             const isDark = html.classList.toggle('dark');
             const icon = document.getElementById('theme-icon');
@@ -2455,10 +3224,15 @@
             } else {
                 icon.classList.replace('fa-sun', 'fa-moon');
             }
-            toggleMenu();
+            if (closeMenu) {
+                const dropdown = document.getElementById('main-dropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    toggleMenu();
+                }
+            }
         }
 
-        function toggleLanguage() {
+        function toggleLanguage(closeMenu = true) {
             const html = document.documentElement;
             if(currentLang === 'es') {
                 html.setAttribute('lang', 'en');
@@ -2467,7 +3241,12 @@
                 html.setAttribute('lang', 'es');
                 currentLang = 'es';
             }
-            toggleMenu();
+            if (closeMenu) {
+                const dropdown = document.getElementById('main-dropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    toggleMenu();
+                }
+            }
         }
 
         // Inicializar tema si el sistema operativo prefiere oscuro
@@ -2497,7 +3276,7 @@
             setTimeout(() => {
                 targetView.classList.add('active');
                 
-                // Si cambiamos a hardware, software o blockly, activar la subsección deseada
+                // Si cambiamos a hardware, software, blockly o prácticas, activar la subsección deseada
                 if (viewId === 'view-hardware') {
                     const sec = forceSectionId || 'hw-diagrama';
                     navigateToHash('#' + sec);
@@ -2506,6 +3285,12 @@
                     navigateToHash('#' + sec);
                 } else if (viewId === 'view-blockly') {
                     const sec = forceSectionId || 'blk-eventos';
+                    navigateToHash('#' + sec);
+                } else if (viewId === 'view-practicas-ejemplos') {
+                    const sec = forceSectionId || 'ej-pick-place';
+                    navigateToHash('#' + sec);
+                } else if (viewId === 'view-practicas-sugeridas') {
+                    const sec = forceSectionId || 'sug-cnc';
                     navigateToHash('#' + sec);
                 } else {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2553,20 +3338,22 @@
                     const href = a.getAttribute('href');
                     if (href === hash) {
                         a.classList.add('active-sub');
+                        a.classList.remove('hw-active', 'sw-active', 'blk-active', 'ex-active', 'sug-active');
                         if (viewId === 'view-hardware') {
                             a.classList.add('hw-active');
-                            a.classList.remove('sw-active', 'blk-active');
                         } else if (viewId === 'view-blockly') {
                             a.classList.add('blk-active');
-                            a.classList.remove('hw-active', 'sw-active');
+                        } else if (viewId === 'view-practicas-ejemplos') {
+                            a.classList.add('ex-active');
+                        } else if (viewId === 'view-practicas-sugeridas') {
+                            a.classList.add('sug-active');
                         } else {
                             a.classList.add('sw-active');
-                            a.classList.remove('hw-active', 'blk-active');
                         }
                         // Desplazar suavemente el elemento activo al centro si se desborda en horizontal en móviles
                         a.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                     } else {
-                        a.classList.remove('active-sub', 'hw-active', 'sw-active', 'blk-active');
+                        a.classList.remove('active-sub', 'hw-active', 'sw-active', 'blk-active', 'ex-active', 'sug-active');
                     }
                 });
 
@@ -2575,8 +3362,192 @@
             }
         }
 
+        // ==========================================
+        // LÓGICA DE LA PALETA DE COMANDOS (SLASH MENU)
+        // ==========================================
+        let activeCommandIndex = 0;
+
+        function openCommandPalette() {
+            const overlay = document.getElementById('command-overlay');
+            const searchInput = document.getElementById('command-search');
+            overlay.classList.add('show');
+            searchInput.value = '';
+            searchInput.focus();
+            filterCommands();
+        }
+
+        function closeCommandPalette(e) {
+            const overlay = document.getElementById('command-overlay');
+            overlay.classList.remove('show');
+        }
+
+        function filterCommands() {
+            const query = document.getElementById('command-search').value.toLowerCase();
+            const items = document.querySelectorAll('.command-item');
+            let visibleItems = [];
+
+            items.forEach(item => {
+                const commandTags = item.getAttribute('data-command').toLowerCase();
+                const textEs = item.querySelector('.lang-es') ? item.querySelector('.lang-es').textContent.toLowerCase() : '';
+                const textEn = item.querySelector('.lang-en') ? item.querySelector('.lang-en').textContent.toLowerCase() : '';
+                
+                if (commandTags.includes(query) || textEs.includes(query) || textEn.includes(query) || query === '') {
+                    item.style.display = 'flex';
+                    visibleItems.push(item);
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('selected');
+                }
+            });
+
+            // Restablecer índice activo
+            activeCommandIndex = 0;
+            visibleItems.forEach((item, idx) => {
+                if (idx === 0) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        function handleCommandKeydown(e) {
+            const items = Array.from(document.querySelectorAll('.command-item')).filter(i => i.style.display !== 'none');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                items[activeCommandIndex].classList.remove('selected');
+                activeCommandIndex = (activeCommandIndex + 1) % items.length;
+                items[activeCommandIndex].classList.add('selected');
+                items[activeCommandIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                items[activeCommandIndex].classList.remove('selected');
+                activeCommandIndex = (activeCommandIndex - 1 + items.length) % items.length;
+                items[activeCommandIndex].classList.add('selected');
+                items[activeCommandIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                items[activeCommandIndex].click();
+            }
+        }
+
+        function executeCommand(cmd) {
+            closeCommandPalette();
+            if (cmd === '/inicio' || cmd === '/home') {
+                switchView('view-home');
+            } else if (cmd === '/hardware') {
+                switchView('view-hardware');
+            } else if (cmd === '/software') {
+                switchView('view-software');
+            } else if (cmd === '/blockly') {
+                switchView('view-blockly');
+            } else if (cmd === '/ejemplos') {
+                switchView('view-practicas-ejemplos');
+            } else if (cmd === '/sugeridas') {
+                switchView('view-practicas-sugeridas');
+            } else if (cmd === '/tema') {
+                toggleTheme(false);
+            } else if (cmd === '/idioma') {
+                toggleLanguage(false);
+            } else if (cmd === '/gifs' || cmd === '/videos' || cmd === '/audio') {
+                switchView('view-practicas-ejemplos');
+                navigateToHash('#ej-multimedia');
+            }
+        }
+
+        // ==========================================
+        // EFECTO DE PARTÍCULAS (BRILLITOS MÁGICOS)
+        // ==========================================
+        function spawnSparkles(e) {
+            // No generar si hacemos clic en inputs de búsqueda o reproductores
+            if (e.target.closest('#command-search') || e.target.closest('video') || e.target.closest('audio') || e.target.closest('button[onclick*="play"]')) {
+                return;
+            }
+
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            // Detectar sección activa para el color
+            let color = '#a78bfa'; // Violeta por defecto
+            const activeView = document.querySelector('.view-section.active');
+            if (activeView) {
+                const id = activeView.id;
+                if (id === 'view-hardware') color = '#a78bfa'; // Violeta
+                else if (id === 'view-software') color = '#22d3ee'; // Cian
+                else if (id === 'view-blockly') color = '#f472b6'; // Rosa
+                else if (id === 'view-practicas-ejemplos') color = '#34d399'; // Esmeralda
+                else if (id === 'view-practicas-sugeridas') color = '#fbbf24'; // Ámbar
+                else if (id === 'view-home') {
+                    // En inicio los brillitos son multicolores mágicos
+                    const colors = ['#a78bfa', '#22d3ee', '#f472b6', '#34d399', '#fbbf24'];
+                    color = colors[Math.floor(Math.random() * colors.length)];
+                }
+            }
+
+            const count = 10 + Math.floor(Math.random() * 6); // 10 a 15 partículitas
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('sparkle-particle');
+                
+                // Tipo de brillito: 50% estrella, 50% círculo
+                const isStar = Math.random() > 0.5;
+                if (isStar) {
+                    particle.classList.add('sparkle-star');
+                }
+                
+                // Tamaño y opacidad
+                const size = 6 + Math.floor(Math.random() * 8); // 6px a 14px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                
+                // Posición inicial
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                // Destino aleatorio (física de explosión de luz)
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 30 + Math.floor(Math.random() * 80); // 30px a 110px de radio
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                const rot = 180 + Math.floor(Math.random() * 360);
+                const finalScale = 0.2 + Math.random() * 0.8;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.setProperty('--rot', `${rot}deg`);
+                particle.style.setProperty('--final-scale', finalScale);
+                
+                document.body.appendChild(particle);
+                
+                // Eliminar después de animar
+                setTimeout(() => {
+                    particle.remove();
+                }, 800);
+            }
+        }
+
         // Interceptar clicks en enlaces internos y delegar a la navegación virtual
         document.addEventListener('DOMContentLoaded', () => {
+            // Escuchar clicks globales para los brillitos
+            window.addEventListener('click', (e) => {
+                spawnSparkles(e);
+            });
+
+            // Escuchar teclado global para la paleta de comandos
+            window.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    openCommandPalette();
+                }
+                if (e.key === 'Escape') {
+                    closeCommandPalette();
+                }
+            });
+
             document.querySelectorAll('a[href^="#"]').forEach(link => {
                 link.addEventListener('click', (e) => {
                     const hash = link.getAttribute('href');
