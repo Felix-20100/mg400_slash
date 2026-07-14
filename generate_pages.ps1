@@ -581,6 +581,8 @@ function Get-PageWrapper {
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="manifest" href="${levelPath}manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
     $globalHead
 </head>
 <body class="$bodyClasses">
@@ -1545,6 +1547,15 @@ function Get-PageWrapper {
             resetSleepTimer();
         });
     </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('${levelPath}sw.js')
+                    .then(reg => console.log('Service Worker registrado con exito', reg))
+                    .catch(err => console.error('Error al registrar el Service Worker', err));
+            });
+        }
+    </script>
 </body>
 </html>
 "@
@@ -1723,9 +1734,10 @@ $homeBody = @"
                 <a href="mailto:ggfelix256@gmail.com" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Email"><i class="fas fa-envelope"></i></a>
                 <a href="https://instagram.com/fernylix_" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="https://github.com/Felix-20100/mg400_slash" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://felix-20100.github.io/mg400_slash/" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Sitio Web"><i class="fas fa-globe"></i></a>
             </div>
             <p class="text-center sm:text-right font-medium tracking-wide">
-                &copy; 2026 Maria Fernanda Garcia Garcia. Todos los derechos reservados.
+                &copy; 2026 Maria Fernanda Garcia Garcia.
             </p>
         </div>
     </footer>

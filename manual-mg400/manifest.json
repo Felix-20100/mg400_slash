@@ -1,0 +1,21 @@
+{
+  "name": "Manual Técnico Dobot MG400",
+  "short_name": "Manual Dobot",
+  "description": "Manual Técnico interactivo del robot industrial Dobot MG400",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "./media/logo_maria.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./media/logo_maria.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
