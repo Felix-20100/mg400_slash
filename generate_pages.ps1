@@ -1,7 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-        <meta charset="UTF-8">
+# Script to generate multi-page static site for Dobot Manual
+Add-Type -AssemblyName System.Drawing
+
+$projectRoot = "c:\Users\garci\Videos\amanual_mg400\manual-mg400"
+if (-not (Test-Path $projectRoot)) {
+    New-Item -ItemType Directory -Force -Path $projectRoot | Out-Null
+}
+
+# 1. Base CSS/JS Template with Mascot Lumi, Light Mode variables, Magic bubbles, and Hotspot z-index fix
+$globalHead = @"
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manual T&eacute;cnico - Dobot MG400</title>
     <!-- Tailwind CSS -->
@@ -547,21 +554,49 @@
             border-color: rgba(212, 175, 55, 0.55) !important;
         }
     </style>
+"@
+
+function Get-PageWrapper {
+    param (
+        [string]$levelPath,
+        [string]$content,
+        [string]$pageTitle = "Manual T&eacute;cnico",
+        [string]$bodyClasses = "pt-24 pb-12",
+        [bool]$showPageTitleHeader = $true
+    )
+
+    $titleHeaderHtml = ""
+    if ($showPageTitleHeader) {
+        $titleHeaderHtml = @"
+    <!-- Page Title Header (Updated dynamically by sidebar clicks) -->
+    <div class="max-w-[1400px] mx-auto pt-20 px-6">
+        <h1 id="page-section-title" class="text-3xl sm:text-5xl font-black text-[#0f172a] dark:text-white transition-all duration-300 border-b border-slate-200 dark:border-white/10 pb-4">
+            $pageTitle
+        </h1>
+    </div>
+"@
+    }
+
+    return @"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    $globalHead
 </head>
-<body class="pt-16 pb-0">
+<body class="$bodyClasses">
 
     <!-- Fixed Header Navbar -->
     <nav class="fixed top-0 left-0 w-full h-16 bg-white/80 dark:bg-slate-900/90 border-b border-slate-200 dark:border-white/10 flex justify-between items-center px-6 z-[9999] backdrop-blur-md">
         <div class="flex items-center gap-3">
-            <a href="index.html" class="flex items-center gap-2">
-                <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-8 w-auto object-contain">
-                <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-8 w-auto object-contain">
+            <a href="${levelPath}index.html" class="flex items-center gap-2">
+                <img src="${levelPath}media/logo_upt.png" alt="Logo UPT" class="logo-upt h-8 w-auto object-contain">
+                <img src="${levelPath}media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-8 w-auto object-contain">
                 <span class="text-[#0f172a] dark:text-white font-tech font-bold text-sm tracking-widest uppercase ml-1">Roco Lab</span>
             </a>
         </div>
         
         <div class="flex items-center gap-4">
-            <a href="index.html" class="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-500 transition-all flex items-center gap-1">
+            <a href="${levelPath}index.html" class="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-500 transition-all flex items-center gap-1">
                 <i class="fas fa-home"></i> <span class="lang-es">Inicio</span>
             </a>
             <button onclick="toggleMenu()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-white transition-all shadow-md">
@@ -573,31 +608,31 @@
     <!-- Dropdown Menu -->
     <div id="main-dropdown" class="fixed top-20 right-6 w-72 bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col gap-2 z-[9999] hidden opacity-0 transition-all duration-300 backdrop-blur-md shadow-2xl max-h-[calc(100vh-5rem)] overflow-y-auto">
         <div class="flex items-center justify-center gap-4 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700/50">
-            <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-10 w-auto object-contain">
-            <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-10 w-auto object-contain">
-            <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-10 w-auto object-contain rounded-full">
+            <img src="${levelPath}media/logo_upt.png" alt="Logo UPT" class="logo-upt h-10 w-auto object-contain">
+            <img src="${levelPath}media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-10 w-auto object-contain">
+            <img src="${levelPath}media/logo_maria.png" alt="Logo MFG" class="logo-maria h-10 w-auto object-contain rounded-full">
         </div>
         
         <h4 class="text-[10px] text-slate-500 uppercase tracking-widest px-2 mb-1">
             <span class="lang-es">Navegaci&oacute;n</span>
         </h4>
-        <a href="index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+        <a href="${levelPath}index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
             <i class="fas fa-home text-blue-500 w-5 text-center"></i> 
             <span class="lang-es">Inicio</span>
         </a>
-        <a href="hardware/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+        <a href="${levelPath}hardware/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
             <i class="fas fa-robot text-purple-500 w-5 text-center"></i> 
             <span class="lang-es">MG400 Robot y Red</span>
         </a>
-        <a href="software/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+        <a href="${levelPath}software/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
             <i class="fas fa-desktop text-cyan-500 w-5 text-center"></i>
             <span class="lang-es">Software General</span>
         </a>
-        <a href="blockly/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+        <a href="${levelPath}blockly/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
             <i class="fas fa-cubes text-pink-500 w-5 text-center"></i> 
             <span class="lang-es">C&oacute;digos por Bloques</span>
         </a>
-        <a href="practicas/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+        <a href="${levelPath}practicas/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
             <i class="fas fa-tasks text-emerald-500 w-5 text-center"></i> 
             <span class="lang-es">Pr&aacute;cticas de Ejemplos</span>
         </a>
@@ -610,110 +645,10 @@
         </button>
     </div>
 
-    
+    $titleHeaderHtml
 
     <!-- Main Content -->
-        <div id="view-home" class="min-h-[80vh] flex flex-col items-center justify-center py-8 px-6 relative z-10 overflow-x-hidden text-center">
-        <div class="bubbles-container" id="bubbles"></div>
-        
-        <div class="text-center max-w-4xl mx-auto animate-[fadeIn_1s_ease-out] relative z-20 px-4 flex flex-col items-center justify-center mt-6">
-            <div class="flex items-center justify-center gap-8 mb-6 w-full">
-                <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
-                <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
-                <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300 rounded-full">
-            </div>
-            
-            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight text-[#0f172a] dark:text-white transition-colors duration-300 drop-shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-                <span class="lang-es">Manual T&eacute;cnico</span> <br class="sm:hidden">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500">Dobot MG400</span>
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl text-slate-655 dark:text-slate-300 font-bold tracking-wide mb-8 max-w-2xl mx-auto">
-                <span class="lang-es">Universidad Polit&eacute;cnica de Tulancingo</span>
-            </p>
-        </div>
-
-        <!-- Redesigned Developer Card (Stunning & Premium!) -->
-        <div class="relative group bg-white/60 dark:bg-slate-900/70 border border-slate-200/50 dark:border-white/10 rounded-3xl p-6 mt-6 mb-16 z-20 backdrop-blur-xl max-w-sm w-full shadow-[0_15px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-5px_rgba(139,92,246,0.15)] hover:border-violet-500/30 transition-all duration-500 transform hover:-translate-y-1">
-            <div class="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-3xl opacity-0 group-hover:opacity-10 transition duration-500 blur"></div>
-            <div class="relative flex items-center gap-4">
-                <div class="relative flex-shrink-0">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur-[2px] opacity-75 group-hover:scale-105 transition-transform duration-500"></div>
-                    <img src="media/logo_maria.png" alt="Maria Fernanda Garcia Garcia" class="relative dev-avatar w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white dark:border-slate-900 shadow-lg object-cover">
-                </div>
-                <div class="text-left flex-1 min-w-0">
-                    <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest text-violet-600 dark:text-violet-400 font-extrabold bg-violet-500/10 dark:bg-violet-400/10 px-2 py-0.5 rounded-full mb-1">
-                        <i class="fas fa-code text-[8px]"></i> Desarrolladora
-                    </span>
-                    <h4 class="text-[#0f172a] dark:text-white font-black text-lg leading-tight tracking-tight truncate">
-                        Maria Fernanda Garcia Garcia
-                    </h4>
-                    <p class="text-xs text-slate-505 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-1.5">
-                        <i class="fas fa-graduation-cap text-violet-500"></i> Ingenier&iacute;a en Rob&oacute;tica
-                    </p>
-                    <p class="text-[10px] text-slate-400 dark:text-slate-550 font-medium">
-                        Universidad Polit&eacute;cnica de Tulancingo
-                    </p>
-                    <div class="mt-2.5">
-                        <a href="https://instagram.com/fernylix_" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-pink-655 dark:text-pink-400 hover:text-pink-500 font-extrabold transition-colors">
-                            <span class="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300">
-                                <i class="fab fa-instagram"></i>
-                            </span>
-                            @fernylix_
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="w-full bg-violet-500/10 dark:bg-violet-950/20 text-[#0f172a] dark:text-white pt-12 pb-6 px-6 sm:px-12 relative z-25 border-t border-slate-200 dark:border-white/10 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200 dark:border-white/10">
-            <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <div class="flex items-center gap-3 mb-4">
-                    <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-12 w-auto object-contain">
-                    <span class="font-tech font-bold text-lg tracking-wider text-violet-600 dark:text-violet-400">ROCO LAB</span>
-                </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4 max-w-xs">
-                    Universidad Polit&eacute;cnica de Tulancingo<br>
-                    Camino a San Isidro s/n, Col. Las Presas,<br>
-                    Tulancingo de Bravo, Hidalgo, M&eacute;xico.
-                </p>
-                <div class="text-xs text-slate-500 dark:text-slate-300">
-                    <strong>Contacto:</strong> <a href="https://instagram.com/fernylix_" target="_blank" class="text-violet-600 dark:text-violet-400 hover:underline">@fernylix_</a>
-                </div>
-            </div>
-
-            <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Instituci&oacute;n</h5>
-                <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
-                    <li><a href="https://www.upt.edu.mx" target="_blank" class="hover:text-violet-500 transition-colors">Universidad Polit&eacute;cnica de Tulancingo</a></li>
-                    <li><a href="#" class="hover:text-violet-500 transition-colors">Ingenier&iacute;a en Rob&oacute;tica</a></li>
-                    <li><a href="#" class="hover:text-violet-500 transition-colors">Laboratorio de Rob&oacute;tica Industrial</a></li>
-                </ul>
-            </div>
-
-            <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Secciones</h5>
-                <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
-                    <li><a href="hardware/index.html" class="hover:text-violet-500 transition-colors">MG400 Robot y Anatom&iacute;a</a></li>
-                    <li><a href="software/index.html" class="hover:text-violet-500 transition-colors">DobotStudio Pro (SW)</a></li>
-                    <li><a href="blockly/index.html" class="hover:text-violet-500 transition-colors">Programaci&oacute;n Blockly</a></li>
-                    <li><a href="practicas/ejemplos/index.html" class="hover:text-violet-500 transition-colors">Pr&aacute;cticas e Inducci&oacute;n</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <div class="flex items-center gap-6 text-lg">
-                <a href="mailto:ggfelix256@gmail.com" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Email"><i class="fas fa-envelope"></i></a>
-                <a href="https://instagram.com/fernylix_" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://github.com/Felix-20100/mg400_slash" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="GitHub"><i class="fab fa-github"></i></a>
-            </div>
-            <p class="text-center sm:text-right font-medium tracking-wide">
-                &copy; 2026 Maria Fernanda Garcia Garcia. Todos los derechos reservados.
-            </p>
-        </div>
-    </footer>
+    $content
 
     <!-- Interactive Mascot Dem -->
     <div id="lumi-container" class="fixed bottom-6 right-6 z-[9990] flex flex-row items-end gap-4 dem-chat-closed group pointer-events-none select-none">
@@ -1187,7 +1122,7 @@
                 { page: 'blockly/index.html', id: 'blk-eventos', title: 'Bloques de Eventos en DobotBlockly', text: 'Los bloques de eventos controlan el inicio y flujo de los programas. Cuando el programa inicia, inicia la ejecucion secuencial. Tambien manejan la deteccion de hilos de ejecucion paralelos.' },
                 { page: 'blockly/index.html', id: 'blk-control', title: 'Bloques de Control y Logicas', text: 'Bloques de control logico en Blockly: Condicionales (si ... entonces ... si no), bucles y ciclos repetitivos (repetir X veces, repetir mientras), esperas de tiempo (Sleep en ms), y bloques para detener programas.' },
                 { page: 'blockly/index.html', id: 'blk-movimiento', title: 'Bloques de Movimiento (MovJ, MovL, Jump, Arc3)', text: 'Configuracion de trayectorias y movimientos del robot: MovJ (movimiento de interpolacion de articulacion punto a punto rapido pero con trayectoria curva), MovL (movimiento lineal interpolado en linea recta lenta), Jump (movimiento de compuerta en arco de salto para Pick and Place), Arc3 (arco circular de tres puntos).' },
-                { page: 'blockly/index.html', id: 'blk-io', title: 'Bloques de Entradas y Salidas (I/O)', text: 'Control de senales electricas digitales y analogicas: Leer entradas digitales (DI), establecer salidas digitales (DO), leer entradas analÃ³gicas (AI) y escribir salidas analÃ³gicas (AO) para activar ventosas de vacio, pinzas neumaticas y sensores opticos.' },
+                { page: 'blockly/index.html', id: 'blk-io', title: 'Bloques de Entradas y Salidas (I/O)', text: 'Control de senales electricas digitales y analogicas: Leer entradas digitales (DI), establecer salidas digitales (DO), leer entradas analógicas (AI) y escribir salidas analógicas (AO) para activar ventosas de vacio, pinzas neumaticas y sensores opticos.' },
                 { page: 'blockly/index.html', id: 'blk-postura', title: 'Bloques de Postura y Desfase', text: 'Bloques para manipular coordenadas de postura y RelPoint (calcular desfase relativo sumando milimetros a un punto origen para apilado o barrido), obtener el valor decimal de un eje cartesiano especifico con GetPose()[3] para Z.' },
                 { page: 'blockly/index.html', id: 'blk-modbus', title: 'Bloques de Modbus e Integracion', text: 'Bloques para leer y escribir registros Modbus (coils y registers) en redes TCP y RTU, interactuar con esclavos Modbus industriales, enviar comandos de control y recibir estados del PLC.' },
                 { page: 'blockly/index.html', id: 'blk-tcp', title: 'Bloques de Comandos TCP', text: 'Bloques para establecer conexiones Socket de red TCP/IP (cliente o servidor), enviar cadenas de texto formateadas y recibir comandos remotos de PC, PLC u otros equipos externos.' },
@@ -1271,7 +1206,7 @@
             }
             
             function redirectToSection(match) {
-                const currentLevelPath = '';
+                const currentLevelPath = '${levelPath}';
                 const targetUrl = currentLevelPath + match.page + '#' + match.id;
                 
                 setTimeout(() => {
@@ -1330,7 +1265,7 @@
                     },
                     {
                         keywords: ['maria', 'fernanda', 'desarrolladora', 'creadora', 'autor', 'creo', 'hizo', 'tulancingo', 'garcia', 'estudiante'],
-                        answer: "Â¡Este incre\u00edble manual t\u00e9cnico interactivo y mi dise\u00f1o chibi fueron creados por Mar\u00eda Fernanda Garc\u00eda Garc\u00eda, estudiante de Ingenier\u00eda en Rob\u00f3tica de la Universidad Polit\u00e9cnica de Tulancingo! \ud83c\udf93",
+                        answer: "¡Este incre\u00edble manual t\u00e9cnico interactivo y mi dise\u00f1o chibi fueron creados por Mar\u00eda Fernanda Garc\u00eda Garc\u00eda, estudiante de Ingenier\u00eda en Rob\u00f3tica de la Universidad Polit\u00e9cnica de Tulancingo! \ud83c\udf93",
                         sectionId: 'view-home'
                     }
                 ];
@@ -1514,7 +1449,7 @@
                 for (let i = 0; i < 6; i++) {
                     const spark = document.createElement('div');
                     spark.className = 'dem-particle';
-                    spark.textContent = 'âœ¨';
+                    spark.textContent = '✨';
                     const rect = lumi.getBoundingClientRect();
                     const originX = rect.left + rect.width / 2;
                     const originY = rect.top + rect.height / 2;
@@ -1612,3 +1547,914 @@
     </script>
 </body>
 </html>
+"@
+}
+
+# 2. Extract Original Content sections from index.html.html (The read-only original file decoded in UTF-8)
+Write-Host "Reading index.html content..."
+$origHTMLPath = "c:\Users\garci\Videos\amanual_mg400\index.html.html"
+$origContent = Get-Content -Raw -Path $origHTMLPath -Encoding UTF8
+
+function Extract-Section {
+    param (
+        [string]$htmlContent,
+        [string]$startId,
+        [string]$endIdBefore
+    )
+    $startToken = "<div id=`"$startId`""
+    $startIndex = $htmlContent.IndexOf($startToken)
+    
+    $endToken = "<div id=`"$endIdBefore`""
+    $endIndex = $htmlContent.IndexOf($endToken)
+    
+    if ($startIndex -ne -1 -and $endIndex -ne -1) {
+        $extracted = $htmlContent.Substring($startIndex, $endIndex - $startIndex)
+        $extracted = $extracted -replace 'class="view-section active[^"]*"\s+style="display:\s*none;?"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+        $extracted = $extracted -replace 'class="view-section[^"]*"\s+style="display:\s*none;?"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+        $extracted = $extracted -replace 'class="view-section active[^"]*"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+        $extracted = $extracted -replace 'class="view-section[^"]*"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+        $extracted = $extracted -replace 'max-h-\[\d+px\]', 'max-h-[650px]'
+        
+        $extracted = $extracted -replace '(?s)<span class="lang-en".*?</span>', ''
+        $extracted = $extracted -replace '(?s)<span class="lang-es">(.*?)</span>', '$1'
+        
+        $extracted = $extracted -replace '(?s)<div class="text-center xl:text-left mb-10">.*?</div>', ''
+
+        $extracted = $extracted.Replace("$([char]0xe1)", "&aacute;")
+        $extracted = $extracted.Replace("$([char]0xe9)", "&eacute;")
+        $extracted = $extracted.Replace("$([char]0xed)", "&iacute;")
+        $extracted = $extracted.Replace("$([char]0xf3)", "&oacute;")
+        $extracted = $extracted.Replace("$([char]0xfa)", "&uacute;")
+        $extracted = $extracted.Replace("$([char]0xf1)", "&ntilde;")
+        $extracted = $extracted.Replace("$([char]0xc1)", "&Aacute;")
+        $extracted = $extracted.Replace("$([char]0xc9)", "&Eacute;")
+        $extracted = $extracted.Replace("$([char]0xcd)", "&Iacute;")
+        $extracted = $extracted.Replace("$([char]0xd3)", "&Oacute;")
+        $extracted = $extracted.Replace("$([char]0xda)", "&Uacute;")
+        $extracted = $extracted.Replace("$([char]0xd1)", "&Ntilde;")
+        $extracted = $extracted.Replace("$([char]0xb0)", "&deg;")
+        $extracted = $extracted.Replace("$([char]0xbf)", "&iquest;")
+        $extracted = $extracted.Replace("$([char]0xa1)", "&iexcl;")
+
+        $extracted = $extracted.Replace("Anatom&iacute;a Colosal del", "Anatom&iacute;a del")
+        $extracted = $extracted.Replace("Anatom&iacute;a Colosal", "Anatom&iacute;a")
+        $extracted = $extracted.Replace("colosal", "")
+        $extracted = $extracted.Replace("Colosal", "")
+
+        return $extracted
+    }
+    return ""
+}
+
+# 3. Create folders and generate standard pages
+Write-Host "Creating Directories..."
+$dirs = @("hardware", "software", "software/iniciar", "software/extras", "software/python", "blockly", "blockly/descripcion", "practicas", "practicas/ejemplos", "practicas/sugeridas", "practicas/paletizado")
+foreach ($dir in $dirs) {
+    $path = Join-Path $projectRoot $dir
+    if (-not (Test-Path $path)) {
+        New-Item -ItemType Directory -Force -Path $path | Out-Null
+    }
+}
+
+# 4. Copy screenshots folders inside projectRoot for self-containment
+Write-Host "Copying blockly and extra screenshot folders inside project root..."
+if (Test-Path "c:\Users\garci\Videos\amanual_mg400\descripcion de bloques") {
+    Copy-Item -Path "c:\Users\garci\Videos\amanual_mg400\descripcion de bloques" -Destination "$projectRoot\" -Recurse -Force | Out-Null
+}
+if (Test-Path "c:\Users\garci\Videos\amanual_mg400\extras dobotstudio pro") {
+    Copy-Item -Path "c:\Users\garci\Videos\amanual_mg400\extras dobotstudio pro" -Destination "$projectRoot\" -Recurse -Force | Out-Null
+}
+
+# 7. Generate Landing Page (index.html)
+Write-Host "Generating index.html..."
+$homeBody = @"
+    <div id="view-home" class="min-h-[80vh] flex flex-col items-center justify-center py-8 px-6 relative z-10 overflow-x-hidden text-center">
+        <div class="bubbles-container" id="bubbles"></div>
+        
+        <div class="text-center max-w-4xl mx-auto animate-[fadeIn_1s_ease-out] relative z-20 px-4 flex flex-col items-center justify-center mt-6">
+            <div class="flex items-center justify-center gap-8 mb-6 w-full">
+                <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
+                <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
+                <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300 rounded-full">
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight text-[#0f172a] dark:text-white transition-colors duration-300 drop-shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                <span class="lang-es">Manual T&eacute;cnico</span> <br class="sm:hidden">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500">Dobot MG400</span>
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl text-slate-655 dark:text-slate-300 font-bold tracking-wide mb-8 max-w-2xl mx-auto">
+                <span class="lang-es">Universidad Polit&eacute;cnica de Tulancingo</span>
+            </p>
+        </div>
+
+        <!-- Redesigned Developer Card (Stunning & Premium!) -->
+        <div class="relative group bg-white/60 dark:bg-slate-900/70 border border-slate-200/50 dark:border-white/10 rounded-3xl p-6 mt-6 mb-16 z-20 backdrop-blur-xl max-w-sm w-full shadow-[0_15px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-5px_rgba(139,92,246,0.15)] hover:border-violet-500/30 transition-all duration-500 transform hover:-translate-y-1">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-3xl opacity-0 group-hover:opacity-10 transition duration-500 blur"></div>
+            <div class="relative flex items-center gap-4">
+                <div class="relative flex-shrink-0">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur-[2px] opacity-75 group-hover:scale-105 transition-transform duration-500"></div>
+                    <img src="media/logo_maria.png" alt="Maria Fernanda Garcia Garcia" class="relative dev-avatar w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white dark:border-slate-900 shadow-lg object-cover">
+                </div>
+                <div class="text-left flex-1 min-w-0">
+                    <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest text-violet-600 dark:text-violet-400 font-extrabold bg-violet-500/10 dark:bg-violet-400/10 px-2 py-0.5 rounded-full mb-1">
+                        <i class="fas fa-code text-[8px]"></i> Desarrolladora
+                    </span>
+                    <h4 class="text-[#0f172a] dark:text-white font-black text-lg leading-tight tracking-tight truncate">
+                        Maria Fernanda Garcia Garcia
+                    </h4>
+                    <p class="text-xs text-slate-505 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-1.5">
+                        <i class="fas fa-graduation-cap text-violet-500"></i> Ingenier&iacute;a en Rob&oacute;tica
+                    </p>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-550 font-medium">
+                        Universidad Polit&eacute;cnica de Tulancingo
+                    </p>
+                    <div class="mt-2.5">
+                        <a href="https://instagram.com/fernylix_" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-pink-655 dark:text-pink-400 hover:text-pink-500 font-extrabold transition-colors">
+                            <span class="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </span>
+                            @fernylix_
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full bg-violet-500/10 dark:bg-violet-950/20 text-[#0f172a] dark:text-white pt-12 pb-6 px-6 sm:px-12 relative z-25 border-t border-slate-200 dark:border-white/10 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200 dark:border-white/10">
+            <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-12 w-auto object-contain">
+                    <span class="font-tech font-bold text-lg tracking-wider text-violet-600 dark:text-violet-400">ROCO LAB</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4 max-w-xs">
+                    Universidad Polit&eacute;cnica de Tulancingo<br>
+                    Camino a San Isidro s/n, Col. Las Presas,<br>
+                    Tulancingo de Bravo, Hidalgo, M&eacute;xico.
+                </p>
+                <div class="text-xs text-slate-500 dark:text-slate-300">
+                    <strong>Contacto:</strong> <a href="https://instagram.com/fernylix_" target="_blank" class="text-violet-600 dark:text-violet-400 hover:underline">@fernylix_</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Instituci&oacute;n</h5>
+                <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                    <li><a href="https://www.upt.edu.mx" target="_blank" class="hover:text-violet-500 transition-colors">Universidad Polit&eacute;cnica de Tulancingo</a></li>
+                    <li><a href="#" class="hover:text-violet-500 transition-colors">Ingenier&iacute;a en Rob&oacute;tica</a></li>
+                    <li><a href="#" class="hover:text-violet-500 transition-colors">Laboratorio de Rob&oacute;tica Industrial</a></li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Secciones</h5>
+                <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                    <li><a href="hardware/index.html" class="hover:text-violet-500 transition-colors">MG400 Robot y Anatom&iacute;a</a></li>
+                    <li><a href="software/index.html" class="hover:text-violet-500 transition-colors">DobotStudio Pro (SW)</a></li>
+                    <li><a href="blockly/index.html" class="hover:text-violet-500 transition-colors">Programaci&oacute;n Blockly</a></li>
+                    <li><a href="practicas/ejemplos/index.html" class="hover:text-violet-500 transition-colors">Pr&aacute;cticas e Inducci&oacute;n</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-6 text-lg">
+                <a href="mailto:ggfelix256@gmail.com" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Email"><i class="fas fa-envelope"></i></a>
+                <a href="https://instagram.com/fernylix_" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://github.com/Felix-20100/mg400_slash" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="text-center sm:text-right font-medium tracking-wide">
+                &copy; 2026 Maria Fernanda Garcia Garcia. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+"@
+$utf8NoBOM = New-Object System.Text.UTF8Encoding($false)
+$htmlHome = Get-PageWrapper -levelPath "" -content $homeBody -pageTitle "Manual T&eacute;cnico Dobot MG400" -bodyClasses "pt-16 pb-0" -showPageTitleHeader $false
+[System.IO.File]::WriteAllText("$projectRoot\index.html", $htmlHome, $utf8NoBOM)
+
+# 8. Extract and Generate Hardware Page (hardware/index.html)
+Write-Host "Extracting Hardware page..."
+$hardwareContent = Extract-Section -htmlContent $origContent -startId "view-hardware" -endIdBefore "view-software"
+$hardwareContent = $hardwareContent -replace '(?s)<header class="fixed top-0 w-full z-50 glass-card.*?</header>', ''
+$hardwareContent = $hardwareContent -replace 'src="robito\.jpeg"', 'src="../robito.jpeg"'
+$hardwareContent = $hardwareContent -replace 'src="ChatGPT%20Image%207%20may%202026%2C%2019_05_14\.png"', 'src="../ChatGPT Image 7 may 2026, 19_05_14.png"'
+$hardwareContent = $hardwareContent -replace 'src="robocito\.jpeg"', 'src="../robocito.jpeg"'
+
+$hardwareHTML = Get-PageWrapper -levelPath "../" -content "<div class='py-8'>$hardwareContent</div>" -pageTitle "MG400 Robot y Red"
+[System.IO.File]::WriteAllText("$projectRoot\hardware\index.html", $hardwareHTML, $utf8NoBOM)
+
+# 9. Extract and Generate Software Page (software/index.html)
+Write-Host "Extracting Software page..."
+$softwareContent = Extract-Section -htmlContent $origContent -startId "view-software" -endIdBefore "view-blockly"
+$softwareContent = $softwareContent -replace '(?s)<header class="fixed top-0 w-full z-50 glass-card.*?</header>', ''
+$softwareContent = $softwareContent -replace 'src="software\.png\.png"', 'src="../software.png.png"'
+
+$softwareContent = $softwareContent -replace '(?s)<li><a href="#sw-programacion".*?</li>', ''
+$softwareContent = $softwareContent -replace '(?s)<li><a href="#sw-alarmas".*?</li>', ''
+$softwareContent = $softwareContent -replace '(?s)<section id="sw-programacion".*?</section>', ''
+$softwareContent = $softwareContent -replace '(?s)<section id="sw-alarmas".*?</section>', ''
+
+$softwareHTML = Get-PageWrapper -levelPath "../" -content "<div class='py-8'>$softwareContent</div>" -pageTitle "Software General"
+[System.IO.File]::WriteAllText("$projectRoot\software\index.html", $softwareHTML, $utf8NoBOM)
+
+# 10. Extract and Generate Blockly Page (blockly/index.html)
+Write-Host "Extracting Blockly page..."
+$blocklyContent = Extract-Section -htmlContent $origContent -startId "view-blockly" -endIdBefore "view-practicas-ejemplos"
+$blocklyContent = $blocklyContent -replace '(?s)<header class="fixed top-0 w-full z-50 glass-card.*?</header>', ''
+$blocklyContent = $blocklyContent -replace 'src="\./media/image', 'src="../media/image'
+
+$blocklyHTML = Get-PageWrapper -levelPath "../" -content "<div class='py-8'>$blocklyContent</div>" -pageTitle "C&oacute;digos por Bloques"
+[System.IO.File]::WriteAllText("$projectRoot\blockly\index.html", $blocklyHTML, $utf8NoBOM)
+
+# 11. Extract and Generate Examples Page (practicas/ejemplos/index.html)
+Write-Host "Extracting Examples page..."
+$examplesContent = Extract-Section -htmlContent $origContent -startId "view-practicas-ejemplos" -endIdBefore "view-practicas-sugeridas"
+$examplesContent = $examplesContent -replace '(?s)<header class="fixed top-0 w-full z-50 glass-card.*?</header>', ''
+$examplesContent = $examplesContent -replace 'src="\./media/image', 'src="../../media/image'
+
+# Remove image76.png placeholder card and replace it with a clean step-by-step text block
+$examplesContent = $examplesContent -replace '(?s)<!-- Demo 1: GIF Animado con Error Boundary -->.*?</div>\s*</div>\s*</div>', '<!-- Demo 1: Transcripcion de Puntos -->
+                            <div class="bg-slate-900/40 border border-slate-700/50 p-6 rounded-2xl">
+                                <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-3 block text-center">Pasos para Registro de Puntos (Teaching)</span>
+                                <ol class="text-xs text-slate-350 space-y-2 list-decimal pl-5">
+                                    <li><strong>Conectar y Habilitar:</strong> Abre DobotStudio Pro, haz clic en "Conectar" y habilita los motores (bot&oacute;n en verde).</li>
+                                    <li><strong>Abrir DobotBlockly:</strong> Haz clic en el bot&oacute;n superior de DobotBlockly para entrar al entorno de programaci&oacute;n.</li>
+                                    <li><strong>Abrir Panel de Puntos:</strong> En la barra lateral derecha, haz clic en la pesta&ntilde;a "Points".</li>
+                                    <li><strong>Registrar Punto Inicial (P1):</strong> Mueve manualmente o con el panel el robot al lugar de recogida y haz clic en "Add".</li>
+                                    <li><strong>Registrar Punto Final (P2):</strong> Mueve el robot a la posici&oacute;n de descarga y haz clic en "Add" de nuevo.</li>
+                                    <li><strong>Guardar Proyecto:</strong> Haz clic en "Save", as&iacute;gnale un nombre (ej. Proyecto1) y confirma con "OK".</li>
+                                </ol>
+                            </div>'
+
+$examplesHTML = Get-PageWrapper -levelPath "../../" -content "<div class='py-8'>$examplesContent</div>" -pageTitle "Pr&aacute;cticas de Ejemplos"
+[System.IO.File]::WriteAllText("$projectRoot\practicas\ejemplos\index.html", $examplesHTML, $utf8NoBOM)
+
+# 12. Extract and Generate Suggested Page (practicas/sugeridas/index.html)
+Write-Host "Extracting Suggested practices page..."
+$startIndex = $origContent.IndexOf("<div id=`"view-practicas-sugeridas`"")
+$endIndex = $origContent.IndexOf("<script>", $startIndex)
+$sugeridasContent = $origContent.Substring($startIndex, $endIndex - $startIndex)
+$sugeridasContent = $sugeridasContent -replace '(?s)<header class="fixed top-0 w-full z-50 glass-card.*?</header>', ''
+$sugeridasContent = $sugeridasContent -replace 'class="view-section active[^"]*"\s+style="display:\s*none;?"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+$sugeridasContent = $sugeridasContent -replace 'class="view-section[^"]*"\s+style="display:\s*none;?"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+$sugeridasContent = $sugeridasContent -replace 'class="view-section active[^"]*"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+$sugeridasContent = $sugeridasContent -replace 'class="view-section[^"]*"', 'class="max-w-[1400px] mx-auto px-4 relative z-10"'
+$sugeridasContent = $sugeridasContent -replace 'max-h-\[\d+px\]', 'max-h-[650px]'
+$sugeridasContent = $sugeridasContent -replace 'src="\./media/image', 'src="../../media/image"'
+
+$sugeridasContent = $sugeridasContent -replace '(?s)<span class="lang-en".*?</span>', ''
+$sugeridasContent = $sugeridasContent -replace '(?s)<span class="lang-es">(.*?)</span>', '$1'
+
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xe1)", "&aacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xe9)", "&eacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xed)", "&iacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xf3)", "&oacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xfa)", "&uacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xf1)", "&ntilde;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xc1)", "&Aacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xc9)", "&Eacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xcd)", "&Iacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xd3)", "&Oacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xda)", "&Uacute;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xd1)", "&Ntilde;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xb0)", "&deg;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xbf)", "&iquest;")
+$sugeridasContent = $sugeridasContent.Replace("$([char]0xa1)", "&iexcl;")
+
+$sugeridasHTML = Get-PageWrapper -levelPath "../../" -content "<div class='py-8'>$sugeridasContent</div>" -pageTitle "Pr&aacute;cticas Sugeridas"
+[System.IO.File]::WriteAllText("$projectRoot\practicas\sugeridas\index.html", $sugeridasHTML, $utf8NoBOM)
+
+# 13. DYNAMICALLY GENERATE NEW PAGES
+Write-Host "Generating Start Software Guide page..."
+$iniciarMediaFolder = "c:\Users\garci\Videos\amanual_mg400\manual-mg400\media\iniciar"
+$iniciarImages = Get-ChildItem -Path $iniciarMediaFolder -Filter *.png | Sort-Object Name
+$iniciarSlidesHtml = ""
+$idx = 1
+foreach ($img in $iniciarImages) {
+    $hideClass = if ($idx -eq 1) { "" } else { "hidden" }
+    $iniciarSlidesHtml += @"
+    <div class="iniciar-slide $hideClass text-center" data-step="$idx">
+        <h4 class="text-cyan-600 dark:text-cyan-400 font-tech font-bold text-lg mb-4">Paso $($idx): Inicializaci&oacute;n de Interfaz</h4>
+        <div class="inline-block relative bg-slate-900/5 dark:bg-slate-900/50 p-2 rounded-2xl border border-slate-200 dark:border-white/5 shadow-2xl">
+            <img src="../../media/iniciar/$($img.Name)" alt="Iniciar Paso $idx" class="max-w-full h-auto rounded-xl max-h-[60vh] object-contain">
+        </div>
+        <p class="text-xs text-slate-400 mt-4 italic">Archivo: $($img.Name)</p>
+    </div>
+"@
+    $idx++
+}
+
+$iniciarContent = @"
+<div class="max-w-6xl mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-8">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto">Sigue esta gu&iacute;a visual paso a paso para abrir la interfaz del software, iniciar conexi&oacute;n con el robot y preparar tu espacio de programaci&oacute;n.</p>
+    </div>
+
+    <div class="glass-card p-6 md:p-10 mb-8 border-l-4 border-l-cyan-500">
+        <div class="min-h-[65vh] flex items-center justify-center relative">
+            $iniciarSlidesHtml
+        </div>
+        
+        <div class="flex items-center justify-between border-t border-slate-200 dark:border-white/10 pt-6 mt-6">
+            <button onclick="prevIniciarSlide()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white px-5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold transition-all flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <span class="text-xs font-tech font-bold text-slate-500 dark:text-slate-400" id="iniciar-counter">Paso 1 de $($iniciarImages.Count)</span>
+            <button onclick="nextIniciarSlide()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2.5 rounded-xl border border-cyan-400 text-xs font-bold transition-all flex items-center gap-2">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+    let currentIniciarSlide = 1;
+    const totalIniciarSlides = $($iniciarImages.Count);
+    
+    function showIniciarSlide(n) {
+        const slides = document.getElementsByClassName('iniciar-slide');
+        if (n > totalIniciarSlides) { currentIniciarSlide = 1; }
+        if (n < 1) { currentIniciarSlide = totalIniciarSlides; }
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.add('hidden');
+        }
+        slides[currentIniciarSlide - 1].classList.remove('hidden');
+        document.getElementById('iniciar-counter').textContent = "Paso " + currentIniciarSlide + " de " + totalIniciarSlides;
+    }
+    function nextIniciarSlide() {
+        currentIniciarSlide++;
+        showIniciarSlide(currentIniciarSlide);
+    }
+    function prevIniciarSlide() {
+        currentIniciarSlide--;
+        showIniciarSlide(currentIniciarSlide);
+    }
+</script>
+"@
+$iniciarHTML = Get-PageWrapper -levelPath "../../" -content $iniciarContent -pageTitle "Iniciar en DobotStudio Pro"
+[System.IO.File]::WriteAllText("$projectRoot\software\iniciar\index.html", $iniciarHTML, $utf8NoBOM)
+
+# 13.2 Extras DobotStudio Pro (software/extras/index.html)
+Write-Host "Generating Extras page..."
+$extrasMediaFolder = "c:\Users\garci\Videos\amanual_mg400\manual-mg400\media\extras"
+$extrasImages = Get-ChildItem -Path $extrasMediaFolder -Filter *.png | Sort-Object Name
+$extrasGridHtml = ""
+$idx = 1
+foreach ($img in $extrasImages) {
+    $extrasGridHtml += @"
+    <div class="glass-card bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 p-4 flex flex-col items-center group hover:border-cyan-500/20 transition-all duration-300 animate-[fadeIn_0.4s_ease-out]">
+        <span class="text-[10px] font-tech text-cyan-600 dark:text-cyan-400 font-bold self-start mb-2 uppercase">Configuraci&oacute;n $idx</span>
+        <div class="w-full relative overflow-hidden rounded-xl bg-slate-100 dark:bg-black/40 flex items-center justify-center aspect-[16/10]">
+            <img src="../../media/extras/$($img.Name)" alt="Config Extra $idx" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500 cursor-pointer" onclick="openModal('../../media/extras/$($img.Name)')">
+        </div>
+        <div class="w-full mt-3 flex items-center justify-between">
+            <span class="text-xs text-slate-555 dark:text-slate-400 truncate pr-2">Pantalla: $($img.Name)</span>
+            <button onclick="openModal('../../media/extras/$($img.Name)')" class="text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 text-xs font-semibold flex items-center gap-1">
+                Ver <i class="fas fa-expand-alt text-[10px]"></i>
+            </button>
+        </div>
+    </div>
+"@
+    $idx++
+}
+
+$extrasContent = @"
+<div class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-10">
+        <p class="text-slate-555 dark:text-slate-400 text-sm max-w-xl mx-auto">Cat&aacute;logo completo de pantallas de configuraci&oacute;n, calibraci&oacute;n avanzada, monitoreo de articulaciones e interfaces adicionales de control en DobotStudio Pro.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        $extrasGridHtml
+    </div>
+</div>
+"@
+$extrasHTML = Get-PageWrapper -levelPath "../../" -content $extrasContent -pageTitle "Configuraciones Extras DobotStudio Pro"
+[System.IO.File]::WriteAllText("$projectRoot\software\extras\index.html", $extrasHTML, $utf8NoBOM)
+
+# 13.3 Programación en Python (software/python/index.html)
+Write-Host "Generating Python programming page..."
+$pythonMediaFolder = "c:\Users\garci\Videos\amanual_mg400\manual-mg400\media\python"
+$pythonImages = Get-ChildItem -Path $pythonMediaFolder -Filter *.png | Sort-Object Name
+$pythonListHtml = ""
+$idx = 1
+foreach ($img in $pythonImages) {
+    $pythonListHtml += @"
+    <div class="glass-card bg-white dark:bg-slate-900/60 p-6 border border-slate-200 dark:border-white/5 flex flex-col gap-4 shadow-xl hover:border-yellow-500/20 transition-all duration-300 animate-[fadeIn_0.5s_ease-out]">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/5 pb-3">
+            <h4 class="text-yellow-600 dark:text-yellow-500 font-tech font-bold text-sm sm:text-base flex items-center gap-2">
+                <i class="fab fa-python"></i> M&oacute;dulo de Script Python - Demo $idx
+            </h4>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-mono">Script_$idx.py</span>
+        </div>
+        <div class="w-full relative bg-slate-100 dark:bg-slate-900 p-2 rounded-xl border border-slate-200 dark:border-white/5 flex items-center justify-center">
+            <img src="../../media/python/$($img.Name)" alt="Python Code $idx" class="w-full h-auto rounded-lg max-h-[70vh] object-contain cursor-zoom-in" onclick="openModal('../../media/python/$($img.Name)')">
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+            Captura de pantalla de la estructura de c&oacute;digo Python utilizada para conectar la API de Dobot, configurar velocidades de articulaci&oacute;n y ejecutar trayectorias.
+        </p>
+    </div>
+"@
+    $idx++
+}
+
+$pythonContent = @"
+<div class="max-w-5xl mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-10">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto font-medium">Gu&iacute;as de c&oacute;digo y configuraci&oacute;n de scripts en Python utilizando la API nativa de Dobot para el control de movimiento y gesti&oacute;n de entradas y salidas.</p>
+    </div>
+
+    <div class="space-y-12">
+        $pythonListHtml
+    </div>
+</div>
+"@
+$pythonHTML = Get-PageWrapper -levelPath "../../" -content $pythonContent -pageTitle "Programaci&oacute;n en Python para Dobot"
+[System.IO.File]::WriteAllText("$projectRoot\software\python\index.html", $pythonHTML, $utf8NoBOM)
+
+# 13.4 Diccionario Interactivo de Bloques (blockly/descripcion/index.html)
+Write-Host "Generating Blockly interactive dictionary..."
+$bloquesMediaFolder = "c:\Users\garci\Videos\amanual_mg400\manual-mg400\media\bloques"
+$subdirs = Get-ChildItem -Path $bloquesMediaFolder | Where-Object { $_.PSIsContainer }
+
+$tabButtonsHtml = ""
+$tabContentsHtml = ""
+$tabIdx = 1
+
+foreach ($subdir in $subdirs) {
+    $dirName = $subdir.Name
+    $cleanTitle = $dirName -replace "bloques de  ", ""
+    $cleanTitle = $cleanTitle -replace "bloques de ", ""
+    $cleanTitle = $cleanTitle -replace "configuracion avanada de movimineto", "Movimiento Avanzado"
+    $cleanTitle = $cleanTitle.Substring(0,1).ToUpper() + $cleanTitle.Substring(1)
+    
+    $activeClassBtn = if ($tabIdx -eq 1) { "bg-pink-600/20 dark:bg-pink-600/30 text-[#0f172a] dark:text-white border-pink-500" } else { "text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white" }
+    $activeClassContent = if ($tabIdx -eq 1) { "" } else { "hidden" }
+    
+    $tabButtonsHtml += @"
+    <button onclick="showTab($tabIdx)" id="tab-btn-$tabIdx" class="w-full text-left p-3.5 rounded-xl border-l-4 $activeClassBtn transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>$cleanTitle</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>
+"@
+
+    $subImages = Get-ChildItem -Path $subdir.FullName -Filter *.png | Sort-Object Name
+    $imagesHtml = ""
+    $imgIdx = 1
+    foreach ($img in $subImages) {
+        $imagesHtml += @"
+        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de $cleanTitle #$imgIdx</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/$dirName/$($img.Name)" alt="Bloque $imgIdx" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/$dirName/$($img.Name)')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>$cleanTitle</strong>.
+            </p>
+        </div>
+"@
+        $imgIdx++
+    }
+
+    $tabContentsHtml += @"
+    <div id="tab-content-$tabIdx" class="tab-pane $activeClassContent space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: $cleanTitle
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>$cleanTitle</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            $imagesHtml
+        </div>
+    </div>
+"@
+    $tabIdx++
+}
+
+$blocklyDescContent = @"
+<div class="max-w-[1500px] mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-10">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto font-medium">Explora las especificaciones t&eacute;cnicas, rangos de par&aacute;metros y funciones l&oacute;gicas de cada bloque de programaci&oacute;n Dobot en nuestra base de conocimientos.</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <aside class="lg:w-80 flex-shrink-0 w-full">
+            <div class="glass-card p-4 sticky top-24 border-l-4 border-l-pink-500 flex flex-col gap-2">
+                <h4 class="font-bold text-xs uppercase text-slate-400 mb-4 tracking-widest border-b border-slate-200 dark:border-slate-700 pb-2 hidden lg:block">Categor&iacute;as de Bloques</h4>
+                <div class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+                    $tabButtonsHtml
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 glass-card p-6 md:p-8 min-h-[60vh]">
+            $tabContentsHtml
+        </main>
+    </div>
+</div>
+
+<script>
+    const totalTabs = $($subdirs.Count);
+    
+    function showTab(tabIdx) {
+        for (let i = 1; i <= totalTabs; i++) {
+            const btn = document.getElementById('tab-btn-' + i);
+            const content = document.getElementById('tab-content-' + i);
+            if (btn && content) {
+                if (i === tabIdx) {
+                    btn.classList.remove('text-slate-500', 'dark:text-slate-400', 'border-transparent');
+                    btn.classList.add('bg-pink-600/20', 'dark:bg-pink-600/30', 'text-[#0f172a]', 'dark:text-white', 'border-pink-500');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.add('text-slate-500', 'dark:text-slate-400', 'border-transparent');
+                    btn.classList.remove('bg-pink-600/20', 'dark:bg-pink-600/30', 'text-[#0f172a]', 'dark:text-white', 'border-pink-500');
+                    content.classList.add('hidden');
+                }
+            }
+        }
+    }
+</script>
+"@
+$blocklyDescHTML = Get-PageWrapper -levelPath "../../" -content $blocklyDescContent -pageTitle "Diccionario Interactivo de Bloques Blockly"
+[System.IO.File]::WriteAllText("$projectRoot\blockly\descripcion\index.html", $blocklyDescHTML, $utf8NoBOM)
+
+# 13.5 Práctica de Paletizado (practicas/paletizado/index.html)
+Write-Host "Generating Palletizing page..."
+
+$paletizadoContent = @"
+<div class="max-w-[1400px] mx-auto px-4 py-8 relative z-10">
+    <!-- Header/Intro -->
+    <div class="text-center mb-12">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-2xl mx-auto font-medium">
+            Esta gu&iacute;a interactiva detalla la teor&iacute;a, configuraci&oacute;n de puntos y el algoritmo paso a paso para programar un ciclo de paletizado tridimensional automatizado.
+        </p>
+    </div>
+
+    <!-- Section 1: Concept & Diagram -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <!-- Left: Text -->
+        <div class="glass-card p-6 md:p-8 flex flex-col justify-center border-l-4 border-l-emerald-500 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
+            <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-cubes text-emerald-500"></i> ¿Qu&eacute; es el Paletizado?
+            </h3>
+            <p class="text-sm text-slate-655 dark:text-slate-300 leading-relaxed mb-4">
+                El proceso de paletizado consiste en apilar o desapilar materiales dispuestos de forma regular y uniformemente espaciados en una cuadr&iacute;cula (matriz).
+            </p>
+            <p class="text-sm text-slate-655 dark:text-slate-300 leading-relaxed mb-4">
+                En la manufactura real, ense&ntilde;ar f&iacute;sicamente cada punto de descarga al robot ser&iacute;a extremadamente ineficiente y propenso a errores. El uso de <strong>bloques de paletizado automatizado</strong> en DobotStudio Pro permite que el software calcule matem&aacute;ticamente cada posici&oacute;n intermedia bas&aacute;ndose en unos pocos puntos gu&iacute;a, simplificando la tarea y aumentando la eficiencia.
+            </p>
+        </div>
+        
+        <!-- Right: Isometric SVG Diagram -->
+        <div class="glass-card p-6 md:p-8 flex items-center justify-center bg-slate-100 dark:bg-slate-900/30 border border-slate-200 dark:border-white/5">
+            <div class="w-full">
+                <h4 class="text-center text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Representaci&oacute;n de Matriz 3D de Paletizado</h4>
+                <!-- Isometric Pallet SVG -->
+                <svg viewBox="0 0 400 300" class="w-full max-w-sm mx-auto drop-shadow-xl text-slate-800 dark:text-slate-200">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981"/>
+                        </marker>
+                    </defs>
+                    <g transform="translate(200, 180)">
+                        <!-- Coordinate Axes -->
+                        <path d="M 0 0 L -100 50" stroke="#ef4444" stroke-width="2" stroke-dasharray="3" />
+                        <path d="M 0 0 L 100 50" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3" />
+                        <path d="M 0 0 L 0 -110" stroke="#10b981" stroke-width="2" stroke-dasharray="3" />
+                        
+                        <!-- Axis Labels -->
+                        <text x="-115" y="60" fill="#ef4444" font-weight="bold" class="text-[10px] font-mono">Eje X (Filas)</text>
+                        <text x="110" y="60" fill="#3b82f6" font-weight="bold" class="text-[10px] font-mono">Eje Y (Columnas)</text>
+                        <text x="-25" y="-115" fill="#10b981" font-weight="bold" class="text-[10px] font-mono">Eje Z (Capas)</text>
+                        
+                        <!-- Box 1 (Back) -->
+                        <g transform="translate(0, -25)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#bdaecd" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#9f86c0" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#5e548e" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+                        <!-- Box 2 (Left) -->
+                        <g transform="translate(-40, -5)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#bdaecd" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#9f86c0" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#5e548e" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+                        <!-- Box 3 (Right) -->
+                        <g transform="translate(40, -5)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#bdaecd" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#9f86c0" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#5e548e" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+                        <!-- Box 4 (Front) -->
+                        <g transform="translate(0, 15)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#bdaecd" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#9f86c0" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#5e548e" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+                        
+                        <!-- Box 5 (Top Left) -->
+                        <g transform="translate(-40, -40)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#e0aaff" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#c77dff" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#9d4edd" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+                        <!-- Box 6 (Top Right) -->
+                        <g transform="translate(40, -40)">
+                            <path d="M 0 -15 L 30 0 L 0 15 L -30 0 Z" fill="#e0aaff" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M -30 0 L 0 15 L 0 35 L -30 20 Z" fill="#c77dff" stroke="#4a3e56" stroke-width="0.8" />
+                            <path d="M 30 0 L 0 15 L 0 35 L 30 20 Z" fill="#9d4edd" stroke="#4a3e56" stroke-width="0.8" />
+                        </g>
+
+                        <!-- Highlights and labels -->
+                        <circle cx="0" cy="30" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="1" />
+                        <path d="M 0 30 L -50 50" stroke="#ef4444" stroke-width="1" stroke-dasharray="1.5" />
+                        <text x="-120" y="55" fill="#ef4444" class="text-[9px] font-bold">Primer Punto (Origen)</text>
+
+                        <circle cx="0" cy="-60" r="4" fill="#10b981" stroke="#ffffff" stroke-width="1" />
+                        <path d="M 0 -60 L 50 -80" stroke="#10b981" stroke-width="1" stroke-dasharray="1.5" />
+                        <text x="55" y="-80" fill="#10b981" class="text-[9px] font-bold">Punto de Preparaci&oacute;n</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Key Reference Points -->
+    <div class="glass-card p-6 md:p-8 mb-12 border-l-4 border-l-emerald-500 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white mb-6 flex items-center gap-2">
+            <i class="fas fa-map-marker-alt text-emerald-500"></i> Puntos de Referencia Clave
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-5 bg-slate-100 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-white/5">
+                <h4 class="text-base font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mb-3">
+                    <i class="fas fa-shield-alt"></i> Punto Seguro (P_Seguro / P1)
+                </h4>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Es una posici&oacute;n a la que el robot debe desplazarse durante las operaciones de ensamblaje o desapilado de piezas, garantizando una transici&oacute;n libre de impactos. Generalmente se define como un punto elevado sobre el punto de recogida, para evitar colisiones con los obst&aacute;culos o contenedores del entorno.
+                </p>
+            </div>
+            <div class="p-5 bg-slate-100 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-white/5">
+                <h4 class="text-base font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mb-3">
+                    <i class="fas fa-dolly"></i> Punto de Recogida (P_Pick / P2)
+                </h4>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Es la posici&oacute;n f&iacute;sica donde se recoge el material. No es necesario ense&ntilde;ar manualmente cada posici&oacute;n del destino; se recomienda configurar el tipo de pila para calcularlas autom&aacute;ticamente. Se asume que una herramienta de agarre (pinza o ventosa) est&aacute; instalada y es controlada mediante la salida digital <strong>DO1</strong> (ON para succionar/sujetar, OFF para soltar).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Pallet Dimensions Configuration -->
+    <div class="glass-card p-6 md:p-8 mb-12 border-l-4 border-l-emerald-500 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white mb-6 flex items-center gap-2">
+            <i class="fas fa-sliders-h text-emerald-500"></i> Configuraci&oacute;n de Dimensiones del Bloque
+        </h3>
+        <p class="text-sm text-slate-655 dark:text-slate-300 leading-relaxed mb-6">
+            Arrastre el bloque de paletizado al &aacute;rea de programaci&oacute;n y haga clic sobre &eacute;l para abrir el panel de propiedades. Seg&uacute;n el patr&oacute;n, elija una configuraci&oacute;n:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 1D -->
+            <div class="p-5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-2xl border-t-4 border-t-emerald-500 flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-emerald-600 dark:text-emerald-400 mb-2">Unidimensional (1D)</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Solo utiliza una fila lineal de posiciones. Se mueve en una &uacute;nica direcci&oacute;n.
+                    </p>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 dark:border-white/5">
+                    <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded">Fila lineal</span>
+                </div>
+            </div>
+            <!-- 2D -->
+            <div class="p-5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-2xl border-t-4 border-t-emerald-500 flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-emerald-600 dark:text-emerald-400 mb-2">Bidimensional (2D)</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Se organiza en filas y columnas dentro de un plano bidimensional. Mapea coordenadas en ejes X e Y.
+                    </p>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 dark:border-white/5">
+                    <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded">Plano X - Y</span>
+                </div>
+            </div>
+            <!-- 3D -->
+            <div class="p-5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-2xl border-t-4 border-t-emerald-500 flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-emerald-600 dark:text-emerald-400 mb-2">Tridimensional (3D)</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Involucra m&uacute;ltiples capas en altura. Mapea coordenadas en ejes X, Y y Z, creando un cubo o paralelep&iacute;pedo volum&eacute;trico.
+                    </p>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 dark:border-white/5">
+                    <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded">Volumen X - Y - Z</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Stepper Timeline & LUA -->
+    <div class="glass-card p-6 md:p-8 border-l-4 border-l-emerald-500 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/5">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white mb-6 flex items-center gap-2">
+            <i class="fas fa-list-ol text-emerald-500"></i> L&oacute;gica del Algoritmo Paso a Paso
+        </h3>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Stepper List -->
+            <div class="lg:col-span-7 space-y-3 max-h-[70vh] overflow-y-auto pr-2" id="stepper-timeline">
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Crear Palet (Crear pallet1)</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Configura el bloque de paletizado tridimensional con filas, columnas y capas.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Inicializar Variable de Ciclos</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Crea una variable num&eacute;rica personalizada y config&uacute;rala en 1 para registrar los tiempos de repetici&oacute;n.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Bucle de Paletizado</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Ejecute los comandos c&iacute;clicamente estableciendo el n&uacute;mero de veces en el total de puntos del palet.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Aproximación a la Carga</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot se desplaza de forma r&aacute;pida sobre el punto seguro o de recogida (P1).</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Bajar a Recogida (Picking)</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot desciende linealmente a velocidad controlada hasta el punto de picking (P2).</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">6</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Sujetar Material</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Ponga la salida digital DO1 en ON (1) para controlar la pinza/ventosa y sujetar el material.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">7</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Retorno Seguro</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot regresa linealmente sobre el punto de recogida seguro (P1).</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">8</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Aproximación al Destino</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot se mueve a 100 mm sobre el punto de paleta actual calculado.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">9</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Descender a Descarga (Placing)</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot se desplaza al punto de descarga de palet calculado para esa repetici&oacute;n.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">10</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Liberar Material</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Ajuste la salida digital DO1 a OFF (0) para apagar la ventosa/pinza y soltar el material.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">11</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Retorno del Destino</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">El robot regresa verticalmente a 100 mm sobre el punto de paleta actual.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">12</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#0f172a] dark:text-white uppercase tracking-wider">Siguiente Posición</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Los tiempos de repetici&oacute;n se incrementan en 1. El ciclo vuelve al paso 4 para el pr&oacute;ximo objeto.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Code Block LUA -->
+            <div class="lg:col-span-5 w-full">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1">
+                    <i class="fas fa-code text-emerald-500"></i> LUA Script Equivalente
+                </h4>
+                <pre class="text-[11px] font-mono text-slate-300 bg-slate-900 border border-slate-700/50 p-4 rounded-xl overflow-x-auto leading-relaxed shadow-lg">
+-- Algoritmo 3D de Paletizado
+ResetCMD()
+SetCollisionLevel(2)
+
+local total_puntos = 8 -- Matriz 2x2x2
+local repetidos = 1
+
+while repetidos &lt;= total_puntos do
+  -- Ir a P_Seguro sobre Picking
+  MovJ(P_Seguro, {SpeedJ=60})
+  
+  -- Bajar a Pick
+  MovL(P_Pick, {SpeedL=30})
+  
+  -- Sujetar (DO1 en ON)
+  DO(1, 1)
+  Sleep(500)
+  
+  -- Subir a P_Seguro
+  MovL(P_Seguro, {SpeedL=50})
+  
+  -- Obtener punto de palet calculando offset
+  local p_dest = GetPalletPoint(pallet1, repetidos)
+  
+  -- Aproximarse sobre destino (+100mm Z)
+  local p_aprox = OffsetPoint(p_dest, 0, 0, 100)
+  MovJ(p_aprox, {SpeedJ=60})
+  
+  -- Bajar a descargar
+  MovL(p_dest, {SpeedL=30})
+  
+  -- Soltar (DO1 en OFF)
+  DO(1, 0)
+  Sleep(500)
+  
+  -- Retornar a aproximacion
+  MovL(p_aprox, {SpeedL=50})
+  
+  -- Siguiente ciclo
+  repetidos = repetidos + 1
+end
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+"@
+
+$paletizadoHTML = Get-PageWrapper -levelPath "../../" -content $paletizadoContent -pageTitle "Pr&aacute;ctica Industrial: Paletizado de Objetos"
+[System.IO.File]::WriteAllText("$projectRoot\practicas\paletizado\index.html", $paletizadoHTML, $utf8NoBOM)
+
+# 13.6 Home de Prácticas (practicas/index.html)
+Write-Host "Generating Practicas Home page..."
+$practicasHomeContent = @"
+<div class="max-w-6xl mx-auto px-4 py-12 relative z-10 animate-[fadeIn_0.6s_ease-out]">
+    <div class="text-center mb-12">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto">Selecciona una categor&iacute;a de laboratorio para ver las gu&iacute;as multimedia de inducci&oacute;n, el proceso de paletizado o resolver los retos sugeridos.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href="ejemplos/index.html" class="glass-card bg-white dark:bg-slate-900/50 p-6 border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 flex flex-col items-center text-center group transition-all duration-300">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i class="fas fa-tasks text-emerald-500 dark:text-emerald-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-[#0f172a] dark:text-white mb-2 font-tech group-hover:text-emerald-505 transition-colors">Ejemplos Pr&aacute;cticos</h3>
+            <p class="text-xs text-slate-550 dark:text-slate-400 leading-relaxed mb-4">Programas reales explicados paso a paso con su correspondiente c&oacute;digo Blockly y gu&iacute;a multimedia.</p>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 mt-auto">Entrar <i class="fas fa-arrow-right text-[10px]"></i></span>
+        </a>
+
+        <a href="paletizado/index.html" class="glass-card bg-white dark:bg-slate-900/50 p-6 border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 flex flex-col items-center text-center group transition-all duration-300">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i class="fas fa-th text-emerald-500 dark:text-emerald-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-[#0f172a] dark:text-white mb-2 font-tech group-hover:text-emerald-400 transition-colors">Pr&aacute;ctica de Paletizado</h3>
+            <p class="text-xs text-slate-550 dark:text-slate-400 leading-relaxed mb-4">Gu&iacute;a secuencial completa con capturas de pantalla para configurar variables, matrices e &iacute;ndices de paletizado.</p>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 mt-auto">Entrar <i class="fas fa-arrow-right text-[10px]"></i></span>
+        </a>
+
+        <a href="sugeridas/index.html" class="glass-card bg-white dark:bg-slate-900/50 p-6 border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 flex flex-col items-center text-center group transition-all duration-300">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i class="fas fa-graduation-cap text-emerald-500 dark:text-emerald-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-[#0f172a] dark:text-white mb-2 font-tech group-hover:text-emerald-400 transition-colors">Pr&aacute;cticas Sugeridas</h3>
+            <p class="text-xs text-slate-555 dark:text-slate-400 leading-relaxed mb-4">Retos acad&eacute;micos avanzados dise&ntilde;ados para laboratorios de rob&iacute;tica industrial, integraci&oacute;n Modbus y visi&oacute;n artificial.</p>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 mt-auto">Entrar <i class="fas fa-arrow-right text-[10px]"></i></span>
+        </a>
+    </div>
+</div>
+"@
+$practicasHomeHTML = Get-PageWrapper -levelPath "../" -content $practicasHomeContent -pageTitle "Laboratorio de Pr&aacute;cticas y Aplicaciones"
+[System.IO.File]::WriteAllText("$projectRoot\practicas\index.html", $practicasHomeHTML, $utf8NoBOM)
+
+# 14. Sync changes to root folder
+Write-Host "Copying all built files to the root workspace directory..."
+$items = Get-ChildItem -Path $projectRoot
+foreach ($item in $items) {
+    Copy-Item -Path $item.FullName -Destination "c:\Users\garci\Videos\amanual_mg400\" -Force -Recurse | Out-Null
+}
+
+Write-Host "DONE! Rebuilt manual successfully with automatic sub-section display."

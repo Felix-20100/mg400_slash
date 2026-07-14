@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual T&eacute;cnico - Dobot MG400</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dobot: { blue: '#1e40af', light: '#3b82f6', dark: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --primary: #8b5cf6;
+            --hotspot-pulse: rgba(139, 92, 246, 0.4);
+            --tooltip-bg: rgba(255, 255, 255, 0.95);
+        }
+        .dark {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --primary: #a78bfa;
+            --hotspot-pulse: rgba(167, 139, 250, 0.4);
+            --tooltip-bg: rgba(30, 41, 59, 0.95);
+        }
+        .dark .logo-upt,
+        .dark .logo-roco,
+        .dark .logo-maria {
+            filter: brightness(0) invert(1) !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            max-width: 100vw;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1, h2, h3, h4, h5, h6, .font-tech {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        /* Hide English elements globally */
+        .lang-en { display: none !important; }
+        .lang-es { display: inline !important; }
+
+        /* Font size adjustments for readability */
+        .text-sm { font-size: 0.95rem !important; }
+        .text-xs { font-size: 0.85rem !important; }
+        .glass-card p, .glass-card li {
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        /* High contrast warning blocks in light mode */
+        html:not(.dark) .bg-red-500\/10 {
+            background-color: #fee2e2 !important; /* light red */
+            border-color: #ef4444 !important;
+        }
+        html:not(.dark) .bg-yellow-500\/40,
+        html:not(.dark) .bg-black\/60 {
+            background-color: #fffbeb !important; /* light yellow */
+            border-color: #f59e0b !important;
+        }
+
+        /* Readability overrides for Light Mode */
+        html:not(.dark) body .text-white {
+            color: #0f172a !important; /* slate-900 */
+        }
+        html:not(.dark) body .text-slate-200,
+        html:not(.dark) body .text-slate-300, 
+        html:not(.dark) body .text-slate-400,
+        html:not(.dark) body .text-slate-400 {
+            color: #334155 !important; /* slate-700 */
+        }
+        html:not(.dark) body .text-violet-350,
+        html:not(.dark) body .text-violet-300,
+        html:not(.dark) body .text-violet-400 {
+            color: #5b21b6 !important; /* violet-800 */
+        }
+        html:not(.dark) body .text-cyan-300,
+        html:not(.dark) body .text-cyan-400 {
+            color: #0369a1 !important; /* cyan-700 */
+        }
+        html:not(.dark) body .text-emerald-250\/60,
+        html:not(.dark) body .text-emerald-200,
+        html:not(.dark) body .text-emerald-300,
+        html:not(.dark) body .text-emerald-400 {
+            color: #065f46 !important; /* emerald-800 */
+        }
+        html:not(.dark) body .text-yellow-200,
+        html:not(.dark) body .text-yellow-300,
+        html:not(.dark) body .text-yellow-400 {
+            color: #92400e !important; /* amber-800 */
+        }
+        html:not(.dark) body .text-pink-200,
+        html:not(.dark) body .text-pink-300,
+        html:not(.dark) body .text-pink-400 {
+            color: #9d174d !important; /* pink-800 */
+        }
+        html:not(.dark) body .text-red-200,
+        html:not(.dark) body .text-red-300,
+        html:not(.dark) body .text-red-400 {
+            color: #991b1b !important; /* red-850 */
+        }
+
+        /* Block Cards in Light Mode */
+        html:not(.dark) body .bg-slate-900\/60,
+        html:not(.dark) body .bg-slate-950\/60,
+        html:not(.dark) body .bg-slate-900\/50,
+        html:not(.dark) body .bg-slate-900\/40,
+        html:not(.dark) body .bg-slate-800\/60,
+        html:not(.dark) body .bg-slate-900,
+        html:not(.dark) body .bg-slate-950,
+        html:not(.dark) body .bg-slate-950\/60,
+        html:not(.dark) body .bg-slate-950,
+        html:not(.dark) body .bg-slate-800,
+        html:not(.dark) body .from-slate-850,
+        html:not(.dark) body .from-slate-800,
+        html:not(.dark) body .from-slate-900 {
+            background-image: none !important;
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        html:not(.dark) body .bg-black\/60,
+        html:not(.dark) body .bg-black\/50,
+        html:not(.dark) body .bg-black\/40,
+        html:not(.dark) body .bg-white\/5 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .glass-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        /* Hotspot and Tooltips Z-INDEX FIX */
+        .hotspot {
+            position: absolute; width: 24px; height: 24px;
+            background: var(--primary); border-radius: 50%; cursor: pointer;
+            transform: translate(-50%, -50%); border: 3px solid white;
+            animation: pulse-ring 2s infinite; z-index: 10;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 var(--hotspot-pulse); }
+            70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .hotspot:hover, .hotspot.active {
+            z-index: 1000 !important;
+        }
+        .tooltip-content {
+            visibility: hidden; opacity: 0; position: absolute; top: -10px; left: 40px;
+            width: 300px; background: var(--tooltip-bg); backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border); border-radius: 12px; padding: 15px;
+            color: var(--text-color); transform: translateY(-50%) scale(0.95);
+            transition: all 0.2s ease; z-index: 2000 !important; pointer-events: none;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .hotspot:hover .tooltip-content {
+            visibility: visible; opacity: 1; transform: translateY(-50%) scale(1); left: 40px;
+        }
+        .hotspot.active .tooltip-content {
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: translateY(-50%) scale(1) !important;
+            left: 40px !important;
+            pointer-events: auto !important;
+            display: block !important;
+        }
+
+        @media (max-width: 1024px) {
+            .tooltip-content {
+                position: fixed !important;
+                bottom: 20px !important;
+                left: 16px !important;
+                right: 16px !important;
+                top: auto !important;
+                width: calc(100% - 32px) !important;
+                max-width: 500px !important;
+                margin: 0 auto !important;
+                transform: scale(0.95) !important;
+                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45) !important;
+                z-index: 9999 !important;
+            }
+        }
+
+        /* Floating background bubbles ("circulitos") */
+        .bubbles-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(167, 139, 250, 0.2) 60%, rgba(6, 182, 212, 0.1) 80%);
+            border-radius: 50%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 10px rgba(167, 139, 250, 0.3);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            animation: rise 15s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0) rotate(0deg);
+            }
+            100% {
+                bottom: 100vh;
+                transform: translateX(100px) rotate(360deg);
+            }
+        }
+
+        /* Estilos de Enlaces Activos en Barras Laterales */
+        .active-sub {
+            transition: all 0.2s ease-in-out;
+            padding-left: 1rem !important;
+            border-radius: 0.75rem;
+        }
+        .active-sub.hw-active {
+            color: #a78bfa !important; /* violet-400 */
+            background-color: rgba(139, 92, 246, 0.15);
+            border-left: 4px solid #a78bfa;
+        }
+        .active-sub.sw-active {
+            color: #22d3ee !important; /* cyan-400 */
+            background-color: rgba(6, 182, 212, 0.15);
+            border-left: 4px solid #22d3ee;
+        }
+        .active-sub.blk-active {
+            color: #f472b6 !important; /* pink-400 */
+            background-color: rgba(244, 114, 182, 0.15);
+            border-left: 4px solid #f472b6;
+        }
+        /* Light mode overrides for active states */
+        html:not(.dark) .active-sub.hw-active {
+            color: #6d28d9 !important; /* violet-700 */
+            background-color: rgba(139, 92, 246, 0.08);
+            border-left: 4px solid #6d28d9;
+        }
+        html:not(.dark) .active-sub.sw-active {
+            color: #0891b2 !important; /* cyan-600 */
+            background-color: rgba(6, 182, 212, 0.08);
+            border-left: 4px solid #0891b2;
+        }
+        html:not(.dark) .active-sub.blk-active {
+            color: #db2777 !important; /* pink-600 */
+            background-color: rgba(244, 114, 182, 0.08);
+            border-left: 4px solid #db2777;
+        }
+        .active-sub.ex-active {
+            color: #34d399 !important; /* emerald-400 */
+            background-color: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid #34d399;
+        }
+        .active-sub.sug-active {
+            color: #fbbf24 !important; /* amber-400 */
+            background-color: rgba(245, 158, 11, 0.15);
+            border-left: 4px solid #fbbf24;
+        }
+
+        /* Touch Targets for Mobile Devices */
+        button, a, input, select {
+            min-height: 44px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* INTERACTIVE MASCOT DEM ANIMATION STYLES              */
+        /* ---------------------------------------------------- */
+        #lumi-container {
+            transition: transform 0.25s ease, filter 0.25s ease;
+            touch-action: none;
+        }
+        #lumi-container.dem-dragging {
+            transition: none;
+        }
+        #lumi-svg {
+            animation: lumi-float 4s ease-in-out infinite;
+            transform-origin: 50% 72%;
+        }
+        @keyframes lumi-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .lumi-tail-wag {
+            transform-origin: 125px 120px;
+            animation: lumi-wag 2.5s ease-in-out infinite;
+        }
+        @keyframes lumi-wag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(12deg); }
+        }
+        .lumi-eye {
+            transform-origin: center;
+        }
+        .lumi-eye-blink {
+            animation: lumi-blink 6s infinite;
+        }
+        @keyframes lumi-blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        .lumi-pupil {
+            transition: transform 0.1s ease-out;
+        }
+        /* State Toggles */
+        .dizzy-eye { display: none; }
+        .dizzy .dizzy-eye {
+            display: block;
+            transform-origin: 80px 82px;
+            animation: lumi-spin 1.5s linear infinite;
+        }
+        .dizzy #lumi-right-eye .dizzy-eye {
+            transform-origin: 120px 82px;
+        }
+        .dizzy .normal-eye-content { display: none; }
+        @keyframes lumi-spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .sleeping-eye-line { display: none; }
+        .sleeping .sleeping-eye-line { display: block; }
+        .sleeping .normal-eye-content { display: none; }
+        .dem-thinking #lumi-svg {
+            animation: dem-think 1.8s ease-in-out infinite;
+        }
+        @keyframes dem-think {
+            0%, 100% { transform: rotate(-4deg) translateY(0); }
+            50% { transform: rotate(6deg) translateY(-5px); }
+        }
+        .dem-happy #lumi-svg,
+        .dem-celebrating #lumi-svg {
+            animation: dem-hop 0.65s ease-in-out infinite;
+        }
+        @keyframes dem-hop {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-14px) scale(1.04); }
+        }
+        .dem-surprised #lumi-svg {
+            animation: dem-surprise 0.75s ease-in-out infinite;
+        }
+        @keyframes dem-surprise {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.09); }
+        }
+        .dem-waving #lumi-svg {
+            animation: dem-wave 1.1s ease-in-out infinite;
+        }
+        @keyframes dem-wave {
+            0%, 100% { transform: rotate(0deg); }
+            30% { transform: rotate(-8deg); }
+            65% { transform: rotate(7deg); }
+        }
+        .dem-sleeping #lumi-svg {
+            animation: dem-lie-down 3s ease-in-out infinite;
+        }
+        @keyframes dem-lie-down {
+            0%, 100% { transform: rotate(82deg) translate(16px, 12px) scale(0.86); }
+            50% { transform: rotate(82deg) translate(16px, 8px) scale(0.88); }
+        }
+        .dem-perspective-left #lumi-svg {
+            animation: none;
+            transform: rotateY(-22deg);
+        }
+        .dem-perspective-right #lumi-svg {
+            animation: none;
+            transform: scaleX(-1) rotateY(-22deg);
+        }
+        .dem-perspective-back #lumi-svg {
+            animation: none;
+            transform: rotateY(180deg) scale(0.94);
+            filter: saturate(0.85);
+        }
+        .dem-perspective-back .normal-eye-content,
+        .dem-perspective-back .sleeping-eye-line,
+        .dem-perspective-back .dizzy-eye {
+            opacity: 0.08;
+        }
+        .dem-chat-panel {
+            width: min(340px, calc(100vw - 32px));
+            max-height: min(520px, calc(100vh - 210px));
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 30px;
+            border: 3px solid rgba(251, 191, 36, 0.4);
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+        .dark .dem-chat-panel {
+            background: #0f172a;
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        /* Cloud thought puffs pointing towards Dem */
+        .dem-chat-panel::after {
+            content: '';
+            position: absolute;
+            bottom: 25px;
+            right: -8px;
+            width: 14px;
+            height: 14px;
+            background: inherit;
+            border: inherit;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .dem-chat-panel::before {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            right: -16px;
+            width: 8px;
+            height: 8px;
+            background: inherit;
+            border: inherit;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .dem-chat-panel.dem-hidden {
+            display: none;
+        }
+        #lumi-wrapper {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom center;
+        }
+        /* Shrink Dem when chat is active */
+        #lumi-container:not(.dem-chat-closed) #lumi-wrapper {
+            transform: scale(0.75);
+        }
+        .dem-chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .dem-msg {
+            border-radius: 16px;
+            padding: 10px 12px;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+        .dem-msg-user {
+            background: #eef2ff;
+            color: #312e81;
+            margin-left: 38px;
+        }
+        .dem-msg-bot {
+            background: #fff7ed;
+            color: #3f2d12;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            margin-right: 28px;
+        }
+        .dark .dem-msg-user {
+            background: rgba(49, 46, 129, 0.8);
+            color: #ffffff;
+        }
+        .dark .dem-msg-bot {
+            background: rgba(43, 58, 85, 0.9);
+            color: #ffffff;
+            border-color: rgba(212, 175, 55, 0.45);
+        }
+        .dem-control-btn {
+            width: 36px;
+            height: 36px;
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            background: rgba(255, 255, 255, 0.9);
+            color: #2b3a55;
+            transition: transform 0.18s ease, background 0.18s ease;
+        }
+        .dem-control-btn:hover {
+            transform: translateY(-2px);
+            background: #f7f6f2;
+        }
+        .dem-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 20001;
+            color: #d4af37;
+            font-size: 16px;
+            animation: dem-spark 850ms ease-out forwards;
+        }
+        @keyframes dem-spark {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(1.35); opacity: 0; }
+        }
+        
+        .sleep-z {
+            position: absolute;
+            color: #d4af37;
+            font-size: 13px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            animation: sleep-z-float 2.5s ease-in-out forwards;
+        }
+        @keyframes sleep-z-float {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+            40% { opacity: 0.8; }
+            100% { transform: translate(-20px, -45px) scale(1.4); opacity: 0; }
+        }
+        
+        /* Force speech bubble text color to be white */
+        #lumi-bubble {
+            color: #ffffff !important;
+            background-color: rgba(15, 23, 42, 0.95) !important;
+            border-color: rgba(212, 175, 55, 0.55) !important;
+        }
+    </style>
+</head>
+<body class="pt-24 pb-12">
+
+    <!-- Fixed Header Navbar -->
+    <nav class="fixed top-0 left-0 w-full h-16 bg-white/80 dark:bg-slate-900/90 border-b border-slate-200 dark:border-white/10 flex justify-between items-center px-6 z-[9999] backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <a href="../../index.html" class="flex items-center gap-2">
+                <img src="../../media/logo_upt.png" alt="Logo UPT" class="logo-upt h-8 w-auto object-contain">
+                <img src="../../media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-8 w-auto object-contain">
+                <span class="text-[#0f172a] dark:text-white font-tech font-bold text-sm tracking-widest uppercase ml-1">Roco Lab</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="../../index.html" class="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-500 transition-all flex items-center gap-1">
+                <i class="fas fa-home"></i> <span class="lang-es">Inicio</span>
+            </a>
+            <button onclick="toggleMenu()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-white transition-all shadow-md">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dropdown Menu -->
+    <div id="main-dropdown" class="fixed top-20 right-6 w-72 bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col gap-2 z-[9999] hidden opacity-0 transition-all duration-300 backdrop-blur-md shadow-2xl max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div class="flex items-center justify-center gap-4 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700/50">
+            <img src="../../media/logo_upt.png" alt="Logo UPT" class="logo-upt h-10 w-auto object-contain">
+            <img src="../../media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-10 w-auto object-contain">
+            <img src="../../media/logo_maria.png" alt="Logo MFG" class="logo-maria h-10 w-auto object-contain rounded-full">
+        </div>
+        
+        <h4 class="text-[10px] text-slate-500 uppercase tracking-widest px-2 mb-1">
+            <span class="lang-es">Navegaci&oacute;n</span>
+        </h4>
+        <a href="../../index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+            <i class="fas fa-home text-blue-500 w-5 text-center"></i> 
+            <span class="lang-es">Inicio</span>
+        </a>
+        <a href="../../hardware/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+            <i class="fas fa-robot text-purple-500 w-5 text-center"></i> 
+            <span class="lang-es">MG400 Robot y Red</span>
+        </a>
+        <a href="../../software/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+            <i class="fas fa-desktop text-cyan-500 w-5 text-center"></i>
+            <span class="lang-es">Software General</span>
+        </a>
+        <a href="../../blockly/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+            <i class="fas fa-cubes text-pink-500 w-5 text-center"></i> 
+            <span class="lang-es">C&oacute;digos por Bloques</span>
+        </a>
+        <a href="../../practicas/index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
+            <i class="fas fa-tasks text-emerald-500 w-5 text-center"></i> 
+            <span class="lang-es">Pr&aacute;cticas de Ejemplos</span>
+        </a>
+        
+        <hr class="border-slate-200 dark:border-slate-800 my-1">
+        
+        <button onclick="toggleTheme()" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-850 dark:hover:text-white text-xs transition-all flex items-center gap-2">
+            <i id="theme-icon" class="fas fa-moon w-4 text-center"></i> 
+            <span id="theme-text-es" class="lang-es">Modo Oscuro</span>
+        </button>
+    </div>
+
+        <!-- Page Title Header (Updated dynamically by sidebar clicks) -->
+    <div class="max-w-[1400px] mx-auto pt-20 px-6">
+        <h1 id="page-section-title" class="text-3xl sm:text-5xl font-black text-[#0f172a] dark:text-white transition-all duration-300 border-b border-slate-200 dark:border-white/10 pb-4">
+            Diccionario Interactivo de Bloques Blockly
+        </h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-[1500px] mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-10">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto font-medium">Explora las especificaciones t&eacute;cnicas, rangos de par&aacute;metros y funciones l&oacute;gicas de cada bloque de programaci&oacute;n Dobot en nuestra base de conocimientos.</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <aside class="lg:w-80 flex-shrink-0 w-full">
+            <div class="glass-card p-4 sticky top-24 border-l-4 border-l-pink-500 flex flex-col gap-2">
+                <h4 class="font-bold text-xs uppercase text-slate-400 mb-4 tracking-widest border-b border-slate-200 dark:border-slate-700 pb-2 hidden lg:block">Categor&iacute;as de Bloques</h4>
+                <div class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+                        <button onclick="showTab(1)" id="tab-btn-1" class="w-full text-left p-3.5 rounded-xl border-l-4 bg-pink-600/20 dark:bg-pink-600/30 text-[#0f172a] dark:text-white border-pink-500 transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Modbus</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(2)" id="tab-btn-2" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Cadena</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(3)" id="tab-btn-3" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Comandos tcp</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(4)" id="tab-btn-4" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Control</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(5)" id="tab-btn-5" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Entradas y salidas</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(6)" id="tab-btn-6" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Movimiento</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(7)" id="tab-btn-7" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Operador</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(8)" id="tab-btn-8" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Personalizacion</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(9)" id="tab-btn-9" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Postura</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>    <button onclick="showTab(10)" id="tab-btn-10" class="w-full text-left p-3.5 rounded-xl border-l-4 text-slate-505 dark:text-slate-400 border-transparent hover:text-[#0f172a] dark:hover:text-white transition-all font-bold text-xs sm:text-sm flex items-center justify-between group">
+        <span>Movimiento Avanzado</span>
+        <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+    </button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 glass-card p-6 md:p-8 min-h-[60vh]">
+                <div id="tab-content-1" class="tab-pane  space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Modbus
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Modbus</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164509.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164509.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164657.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164657.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164706.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164706.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164715.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164715.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164728.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164728.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #6</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164736.png" alt="Bloque 6" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164736.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #7</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164745.png" alt="Bloque 7" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164745.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Modbus #8</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164800.png" alt="Bloque 8" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de  modbus/Screenshot 2026-06-27 164800.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Modbus</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-2" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Cadena
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Cadena</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Cadena #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162928.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162928.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Cadena</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Cadena #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162936.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162936.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Cadena</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Cadena #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162944.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162944.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Cadena</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Cadena #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162951.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de cadena/Screenshot 2026-06-27 162951.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Cadena</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Cadena #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de cadena/Screenshot 2026-06-27 163000.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de cadena/Screenshot 2026-06-27 163000.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Cadena</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-3" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Comandos tcp
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Comandos tcp</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Comandos tcp #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164851.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164851.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Comandos tcp</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Comandos tcp #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164857.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164857.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Comandos tcp</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Comandos tcp #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164908.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164908.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Comandos tcp</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Comandos tcp #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164914.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de comandos tcp/Screenshot 2026-06-27 164914.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Comandos tcp</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-4" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Control
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Control</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162431.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162431.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162446.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162446.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162501.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162501.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162515.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162515.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162528.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162528.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #6</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162542.png" alt="Bloque 6" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162542.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #7</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162600.png" alt="Bloque 7" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162600.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #8</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162613.png" alt="Bloque 8" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162613.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #9</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162623.png" alt="Bloque 9" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162623.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #10</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162635.png" alt="Bloque 10" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162635.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #11</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162653.png" alt="Bloque 11" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162653.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Control #12</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de control/Screenshot 2026-06-27 162706.png" alt="Bloque 12" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de control/Screenshot 2026-06-27 162706.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Control</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-5" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Entradas y salidas
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Entradas y salidas</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Entradas y salidas #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de entradas y salidas/Screenshot 2026-06-27 163225.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de entradas y salidas/Screenshot 2026-06-27 163225.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Entradas y salidas</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Entradas y salidas #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de entradas y salidas/Screenshot 2026-06-27 163239.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de entradas y salidas/Screenshot 2026-06-27 163239.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Entradas y salidas</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-6" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Movimiento
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Movimiento</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163323.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163323.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163330.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163330.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163348.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163348.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163356.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163356.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163402.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163402.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #6</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163411.png" alt="Bloque 6" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163411.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento #7</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163416.png" alt="Bloque 7" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de movimiento/Screenshot 2026-06-27 163416.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-7" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Operador
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Operador</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Operador #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de operador/Screenshot 2026-06-27 162810.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de operador/Screenshot 2026-06-27 162810.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Operador</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Operador #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de operador/Screenshot 2026-06-27 162838.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de operador/Screenshot 2026-06-27 162838.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Operador</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Operador #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de operador/Screenshot 2026-06-27 162846.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de operador/Screenshot 2026-06-27 162846.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Operador</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-8" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Personalizacion
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Personalizacion</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163041.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163041.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163047.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163047.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163053.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163053.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163100.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163100.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163106.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163106.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #6</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163111.png" alt="Bloque 6" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163111.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #7</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163118.png" alt="Bloque 7" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163118.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #8</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163128.png" alt="Bloque 8" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163128.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #9</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163135.png" alt="Bloque 9" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163135.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Personalizacion #10</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163140.png" alt="Bloque 10" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de personalizacion/Screenshot 2026-06-27 163140.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Personalizacion</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-9" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Postura
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Postura</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Postura #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de postura/Screenshot 2026-06-27 164154.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de postura/Screenshot 2026-06-27 164154.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Postura</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Postura #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de postura/Screenshot 2026-06-27 164200.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de postura/Screenshot 2026-06-27 164200.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Postura</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Postura #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de postura/Screenshot 2026-06-27 164207.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de postura/Screenshot 2026-06-27 164207.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Postura</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Postura #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de postura/Screenshot 2026-06-27 164213.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de postura/Screenshot 2026-06-27 164213.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Postura</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Postura #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/bloques de postura/Screenshot 2026-06-27 164219.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/bloques de postura/Screenshot 2026-06-27 164219.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Postura</strong>.
+            </p>
+        </div>
+        </div>
+    </div>    <div id="tab-content-10" class="tab-pane hidden space-y-6 animate-[fadeIn_0.5s_ease-out]">
+        <h3 class="text-2xl font-tech font-bold text-[#0f172a] dark:text-white border-b border-slate-200 dark:border-white/10 pb-3 flex items-center gap-2">
+            <i class="fas fa-book text-pink-500"></i> Categor&iacute;a: Movimiento Avanzado
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-350 leading-normal">
+            Cat&aacute;logo e instrucciones de bloques para la categor&iacute;a <strong>Movimiento Avanzado</strong>. Haz clic sobre cualquier captura para ampliar sus detalles.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento Avanzado #1</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164009.png" alt="Bloque 1" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164009.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento Avanzado</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento Avanzado #2</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164017.png" alt="Bloque 2" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164017.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento Avanzado</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento Avanzado #3</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164024.png" alt="Bloque 3" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164024.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento Avanzado</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento Avanzado #4</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164030.png" alt="Bloque 4" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164030.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento Avanzado</strong>.
+            </p>
+        </div>        <div class="bg-white dark:bg-black/30 border border-slate-200 dark:border-white/5 p-5 rounded-2xl flex flex-col gap-4 shadow-lg group hover:border-pink-500/30 transition-all">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-tech text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider">Bloque de Movimiento Avanzado #5</span>
+                <span class="text-[9px] bg-pink-500/10 text-pink-500 px-2 py-0.5 rounded font-mono">PNG Visual</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl flex items-center justify-center overflow-hidden aspect-[16/9] border border-slate-100 dark:border-white/5">
+                <img src="../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164037.png" alt="Bloque 5" class="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300 cursor-zoom-in" onclick="openModal('../../media/bloques/configuracion avanada de movimineto/Screenshot 2026-06-27 164037.png')">
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Especificaci&oacute;n visual y par&aacute;metros del bloque de programaci&oacute;n para la estructura de <strong>Movimiento Avanzado</strong>.
+            </p>
+        </div>
+        </div>
+    </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    const totalTabs = 10;
+    
+    function showTab(tabIdx) {
+        for (let i = 1; i <= totalTabs; i++) {
+            const btn = document.getElementById('tab-btn-' + i);
+            const content = document.getElementById('tab-content-' + i);
+            if (btn && content) {
+                if (i === tabIdx) {
+                    btn.classList.remove('text-slate-500', 'dark:text-slate-400', 'border-transparent');
+                    btn.classList.add('bg-pink-600/20', 'dark:bg-pink-600/30', 'text-[#0f172a]', 'dark:text-white', 'border-pink-500');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.add('text-slate-500', 'dark:text-slate-400', 'border-transparent');
+                    btn.classList.remove('bg-pink-600/20', 'dark:bg-pink-600/30', 'text-[#0f172a]', 'dark:text-white', 'border-pink-500');
+                    content.classList.add('hidden');
+                }
+            }
+        }
+    }
+</script>
+
+    <!-- Interactive Mascot Dem -->
+    <div id="lumi-container" class="fixed bottom-6 right-6 z-[9990] flex flex-row items-end gap-4 dem-chat-closed group pointer-events-none select-none">
+        <section id="dem-chat-panel" class="dem-chat-panel dem-hidden pointer-events-auto mb-0 rounded-2xl border border-amber-400/40 bg-white/95 dark:bg-slate-900/95 shadow-2xl backdrop-blur-md">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 px-4 py-3">
+                <div class="min-w-0">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white leading-tight">Dem</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-300">Gu&iacute;a de ayuda del manual</p>
+                </div>
+                <button id="dem-chat-close" type="button" class="dem-control-btn" title="Cerrar chat" aria-label="Cerrar chat">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+            <div id="dem-chat-messages" class="dem-chat-messages flex flex-col gap-2 p-3">
+                <div class="dem-msg dem-msg-bot">Hola, soy Dem. Preg&uacute;ntame sobre el manual, o elige uno de estos accesos r&aacute;pidos y te llevar&eacute; all&iacute;:</div>
+                <div class="dem-msg dem-msg-bot bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 p-2.5 rounded-xl">
+                    <p class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-2">Temas del Manual:</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="handleDemOption('hardware')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#9881;&#65039; Especificaciones</button>
+                        <button type="button" onclick="handleDemOption('ip')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#127760; Conectar IP</button>
+                        <button type="button" onclick="handleDemOption('coordenadas')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128208; Coordenadas</button>
+                        <button type="button" onclick="handleDemOption('blockly')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#129513; DobotBlockly</button>
+                        <button type="button" onclick="handleDemOption('pick-place')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128230; Pick & Place</button>
+                        <button type="button" onclick="handleDemOption('sensor')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128065;&#65039; Banda & Sensor</button>
+                        <button type="button" onclick="handleDemOption('paletizado')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128290; Paletizado</button>
+                    </div>
+                </div>
+            </div>
+            <form id="dem-chat-form" class="flex gap-2 border-t border-slate-200 dark:border-slate-700 p-3">
+                <input id="dem-chat-input" type="text" autocomplete="off" class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-amber-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white" placeholder="Preg&uacute;ntale a Dem..." aria-label="Preg&uacute;ntale a Dem">
+                <button type="submit" class="dem-control-btn" title="Enviar" aria-label="Enviar">
+                    <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </section>
+        
+        <!-- Right Column wrapper for Dem's vertical stack -->
+        <div class="flex flex-col items-center pointer-events-auto gap-2">
+            <!-- Speech Bubble -->
+            <div id="lumi-bubble" class="bg-slate-900/95 border border-amber-500/50 text-white text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-[0_0_25px_rgba(212,175,55,0.4)] mb-0 max-w-[220px] text-center font-semibold transition-all duration-300 transform scale-0 translate-y-2 opacity-0 select-text backdrop-blur-md">
+                &iexcl;Hola! Soy Dem. &#10024;
+            </div>
+            <div class="mb-0 flex flex-wrap justify-center gap-2 max-w-[220px]" aria-label="Controles de Dem">
+                <button id="dem-chat-toggle" type="button" class="dem-control-btn shadow-lg" title="Chat de ayuda" aria-label="Chat de ayuda">
+                    <i class="fas fa-comments"></i>
+                </button>
+            </div>
+        <!-- Dem SVG Wrapper (White/Gold Chibi Bull!) -->
+        <div id="lumi-wrapper" class="w-32 h-32 sm:w-40 sm:h-40 pointer-events-auto cursor-pointer filter drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-transform duration-300 active:scale-95 hover:scale-105">
+            <svg id="lumi-svg" viewBox="0 0 200 200" class="w-full h-full">
+                <defs>
+                    <linearGradient id="lumi-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="100%" stop-color="#f1f5f9" />
+                    </linearGradient>
+                    <linearGradient id="lumi-horn-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f7d99c" />
+                        <stop offset="55%" stop-color="#d4af37" />
+                        <stop offset="100%" stop-color="#8a5f1c" />
+                    </linearGradient>
+                    <linearGradient id="lumi-ear-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#f0dcc0" />
+                        <stop offset="100%" stop-color="#d7a78f" />
+                    </linearGradient>
+                    <linearGradient id="lumi-cape-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f7f6f2" />
+                        <stop offset="65%" stop-color="#e6e2d9" />
+                        <stop offset="100%" stop-color="#bdaecd" />
+                    </linearGradient>
+                    <filter id="lumi-shadow">
+                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#d4af37" flood-opacity="0.5"/>
+                    </filter>
+                </defs>
+                <!-- Magic Sparkles around Dem -->
+                <circle cx="24" cy="45" r="2" fill="#d4af37" opacity="0.8" class="animate-ping" />
+                <circle cx="178" cy="42" r="2.5" fill="#bdaecd" opacity="0.8" class="animate-pulse" />
+                <circle cx="17" cy="123" r="1.5" fill="#d4af37" opacity="0.7" />
+                
+                <!-- Background Bushes & Flowers (adds depth) -->
+                <g id="lumi-bg-bush">
+                    <!-- Left bush -->
+                    <path d="M 45 145 Q 25 130, 28 152 Q 32 168, 58 158 Z" fill="#8bc34a" stroke="#386641" stroke-width="1.2" />
+                    <circle cx="34" cy="146" r="6" fill="#ffffff" stroke="#bfb6a6" stroke-width="1" />
+                    <circle cx="34" cy="146" r="2" fill="#fbbf24" />
+                    <!-- Right bush -->
+                    <path d="M 155 145 Q 175 130, 172 152 Q 168 168, 142 158 Z" fill="#8bc34a" stroke="#386641" stroke-width="1.2" />
+                    <circle cx="166" cy="146" r="6" fill="#ffffff" stroke="#bfb6a6" stroke-width="1" />
+                    <circle cx="166" cy="146" r="2" fill="#fbbf24" />
+                </g>
+
+                <!-- Tail -->
+                <g class="lumi-tail-wag">
+                    <path d="M 129 134 Q 155 148, 150 162" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
+                    <!-- Tail tip -->
+                    <path d="M 150 162 C 145 162, 143 170, 150 173 C 157 170, 155 162, 150 162 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1" />
+                </g>
+                
+                <!-- Body -->
+                <ellipse cx="100" cy="142" rx="42" ry="22" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="2" />
+                
+                <!-- Cape / Robe on chest -->
+                <path d="M 72 122 C 78 128, 85 132, 100 132 C 115 132, 122 128, 128 122 C 132 142, 120 158, 100 158 C 80 158, 68 142, 72 122 Z" fill="url(#lumi-cape-grad)" stroke="#d4af37" stroke-width="1.5" />
+                <path d="M 82 126 C 88 132, 112 132, 118 126 L 110 154 L 90 154 Z" fill="#2b3a55" opacity="0.9" />
+                <path d="M 78 127 C 82 138, 88 148, 96 153" fill="none" stroke="#d4af37" stroke-width="1.3" opacity="0.9" />
+                <path d="M 122 127 C 118 138, 112 148, 104 153" fill="none" stroke="#d4af37" stroke-width="1.3" opacity="0.9" />
+                
+                <!-- Compass Jewel -->
+                <circle cx="100" cy="142" r="5" fill="#d4af37" filter="url(#lumi-shadow)" />
+                <path d="M 100 137 L 102 142 L 100 147 L 98 142 Z" fill="#f7f6f2" opacity="0.9" />
+
+                <!-- Front Legs/Paws (Puppy/Calf sitting style) -->
+                <path d="M 74 130 C 74 158, 88 158, 88 130 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="1.5" />
+                <path d="M 74 148 C 74 158, 88 158, 88 148 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1.5" />
+                
+                <path d="M 112 130 C 112 158, 126 158, 126 130 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="1.5" />
+                <path d="M 112 148 C 112 158, 126 158, 126 148 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1.5" />
+                
+                <!-- Horns -->
+                <path d="M 68 50 C 60 38, 70 30, 78 42 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.5" />
+                <path d="M 132 50 C 140 38, 130 30, 122 42 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.5" />
+                
+                <!-- Ears -->
+                <!-- Left ear -->
+                <path d="M 52 75 C 25 70, 25 90, 48 95 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="2" />
+                <path d="M 48 78 C 30 76, 30 88, 45 90 Z" fill="url(#lumi-ear-grad)" />
+                <!-- Right ear -->
+                <path d="M 148 75 C 175 70, 175 90, 152 95 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="2" />
+                <path d="M 152 78 C 170 76, 170 88, 155 90 Z" fill="url(#lumi-ear-grad)" />
+                
+                <!-- Head -->
+                <ellipse cx="100" cy="85" rx="55" ry="46" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="2" />
+                <!-- Forehead marking -->
+                <path d="M 100 51 L 103 58 L 110 58 L 104 62 L 107 70 L 100 65 L 95 70 L 97 62 L 91 58 L 98 58 Z" fill="#d4af37" opacity="0.9" />
+                <circle cx="88" cy="63" r="1.4" fill="#d4af37" opacity="0.75" />
+                <circle cx="112" cy="63" r="1.4" fill="#d4af37" opacity="0.75" />
+
+                <!-- Left Eye -->
+                <g id="lumi-left-eye" class="lumi-eye lumi-eye-blink">
+                    <circle cx="74" cy="84" r="9" fill="#2b1d14" />
+                    <g class="normal-eye-content">
+                        <circle cx="71" cy="81" r="2.5" fill="#ffffff" />
+                        <circle cx="76" cy="87" r="1" fill="#ffffff" />
+                    </g>
+                    <g class="dizzy-eye">
+                        <path d="M 70 84 A 4 4 0 0 1 74 80 A 4 4 0 0 1 78 84 A 4 4 0 0 1 74 88 A 2 2 0 0 1 71 85" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                    <g class="sleeping-eye-line">
+                        <path d="M 66 84 Q 74 91, 82 84" fill="none" stroke="#2b1d14" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                </g>
+                
+                <!-- Right Eye -->
+                <g id="lumi-right-eye" class="lumi-eye lumi-eye-blink">
+                    <circle cx="126" cy="84" r="9" fill="#2b1d14" />
+                    <g class="normal-eye-content">
+                        <circle cx="123" cy="81" r="2.5" fill="#ffffff" />
+                        <circle cx="128" cy="87" r="1" fill="#ffffff" />
+                    </g>
+                    <g class="dizzy-eye">
+                        <path d="M 122 84 A 4 4 0 0 1 126 80 A 4 4 0 0 1 130 84 A 4 4 0 0 1 126 88 A 2 2 0 0 1 123 85" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                    <g class="sleeping-eye-line">
+                        <path d="M 118 84 Q 126 91, 134 84" fill="none" stroke="#2b1d14" stroke-width="2" stroke-linecap="round" />
+                    </g>
+                </g>
+                
+                <!-- Cheeks -->
+                <ellipse cx="58" cy="91" rx="8" ry="5" fill="#ff9999" opacity="0.6" />
+                <ellipse cx="142" cy="91" rx="8" ry="5" fill="#ff9999" opacity="0.6" />
+
+                <!-- Muzzle -->
+                <ellipse cx="100" cy="95" rx="18" ry="11" fill="#f0dcc0" stroke="#bfb6a6" stroke-width="1.5" />
+                <!-- Nostrils -->
+                <ellipse cx="94" cy="95" rx="2.5" ry="1.5" fill="#bfb6a6" />
+                <ellipse cx="106" cy="95" rx="2.5" ry="1.5" fill="#bfb6a6" />
+                <!-- Smile mouth -->
+                <path d="M 97 97 Q 100 101, 103 97" fill="none" stroke="#8b5e3c" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        </div>
+    </div>
+
+
+    <!-- Zoom Modal -->
+    <div id="image-modal" class="fixed inset-0 bg-black/95 z-[20000] hidden items-center justify-center p-4 cursor-pointer" onclick="closeModal()">
+        <button class="absolute top-6 right-6 text-white text-3xl hover:text-slate-350"><i class="fas fa-times"></i></button>
+        <img id="modal-img" src="" alt="Zoom Image" class="max-w-full max-h-[90vh] rounded-xl object-contain shadow-2xl">
+    </div>
+
+    <!-- Scripting for Sub-section index toggling and Lumi bubble unicode rendering -->
+    <script>
+        function navigateToHash(hash) {
+            if (!hash) return;
+            const targetElement = document.querySelector(hash);
+            if (!targetElement) return;
+
+            // Find parent main container
+            const mainContainer = targetElement.closest('main');
+            if (mainContainer) {
+                // Hide all sections in this main
+                mainContainer.querySelectorAll('section').forEach(sec => {
+                    sec.style.display = 'none';
+                    sec.classList.remove('active-sub-section');
+                });
+            }
+
+            // Show selected section
+            targetElement.style.display = 'block';
+            targetElement.classList.add('active-sub-section');
+
+            // Update active state in sidebar
+            const aside = document.querySelector('aside');
+            if (aside) {
+                aside.querySelectorAll('a').forEach(a => {
+                    const href = a.getAttribute('href');
+                    if (href === hash) {
+                        a.classList.add('active-sub', 'hw-active', 'sw-active', 'blk-active', 'ex-active', 'sug-active');
+                        a.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        
+                        // Dynamically update page section title!
+                        const titleEl = document.getElementById('page-section-title');
+                        if (titleEl) {
+                            const linkText = a.textContent.trim();
+                            titleEl.innerHTML = linkText;
+                        }
+                    } else {
+                        a.classList.remove('active-sub', 'hw-active', 'sw-active', 'blk-active', 'ex-active', 'sug-active');
+                    }
+                });
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Listen to clicks on hash links
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const hash = link.getAttribute('href');
+                    if (hash && hash !== '#') {
+                        e.preventDefault();
+                        navigateToHash(hash);
+                        history.pushState(null, null, hash);
+                    }
+                });
+            });
+
+            // Listen to popstate
+            window.addEventListener('popstate', () => {
+                if (window.location.hash) {
+                    navigateToHash(window.location.hash);
+                }
+            });
+
+            // Initial load check: Automatically display the first sub-section if no hash is present!
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToHash(window.location.hash);
+                }, 200);
+            } else {
+                const firstLink = document.querySelector('aside a[href^="#"]');
+                if (firstLink) {
+                    const firstHash = firstLink.getAttribute('href');
+                    navigateToHash(firstHash);
+                } else {
+                    document.querySelectorAll('main section').forEach((sec, idx) => {
+                        if (idx === 0) {
+                            sec.style.display = 'block';
+                            sec.classList.add('active-sub-section');
+                        } else {
+                            sec.style.display = 'none';
+                        }
+                    });
+                }
+            }
+            
+            // Handle hotspot tooltip toggling
+            document.querySelectorAll('.hotspot').forEach(hotspot => {
+                hotspot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const wasActive = hotspot.classList.contains('active');
+                    document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'));
+                    if (!wasActive) {
+                        hotspot.classList.add('active');
+                    }
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.hotspot')) {
+                    document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'));
+                }
+            });
+
+            // Bubble generator script
+            const bubbleContainer = document.getElementById('bubbles');
+            if (bubbleContainer) {
+                const bubbleCount = 25;
+                for (let i = 0; i < bubbleCount; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    
+                    const size = Math.random() * 60 + 25; // 25px to 85px
+                    const left = Math.random() * 100;
+                    const delay = Math.random() * 8;
+                    const duration = Math.random() * 10 + 10;
+                    
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+                    bubble.style.left = left + '%';
+                    bubble.style.animationDelay = delay + 's';
+                    bubble.style.animationDuration = duration + 's';
+                    
+                    bubbleContainer.appendChild(bubble);
+                }
+            }
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('main-dropdown');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('opacity-0');
+                    menu.classList.add('opacity-100');
+                }, 10);
+            } else {
+                menu.classList.remove('opacity-100');
+                menu.classList.add('opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+            }
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                if (icon) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            } else {
+                html.classList.add('dark');
+                if (icon) {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
+        }
+
+        // Image Zoom Modal controls
+        function openModal(src) {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('modal-img');
+            if (modal && img) {
+                img.src = src;
+                modal.style.display = 'flex';
+            }
+        }
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function handleImageError(img, filename) {
+            if (!img.dataset.attempt) {
+                img.dataset.attempt = "0";
+            }
+            const paths = [
+                filename,
+                '../' + filename,
+                '../../' + filename,
+                'media/' + filename,
+                '../media/' + filename,
+                '../../media/' + filename,
+                'manual-mg400/media/' + filename,
+                '../manual-mg400/media/' + filename
+            ];
+            let attempt = parseInt(img.dataset.attempt);
+            if (attempt < paths.length) {
+                img.dataset.attempt = (attempt + 1).toString();
+                img.src = paths[attempt];
+            } else {
+                img.style.display = 'none';
+                const errorId = img.getAttribute('data-error-id');
+                if (errorId) {
+                    const errEl = document.getElementById(errorId);
+                    if (errEl) {
+                        errEl.style.display = 'block';
+                    }
+                }
+                // Hide hotspots in the same container to avoid overlapping dots on error
+                const container = img.closest('.relative');
+                if (container) {
+                    container.querySelectorAll('.hotspot').forEach(hs => {
+                        hs.style.display = 'none';
+                    });
+                }
+            }
+        }
+
+        // Mascot Dem Interaction script
+        document.addEventListener('DOMContentLoaded', () => {
+            const lumi = document.getElementById('lumi-wrapper');
+            const bubble = document.getElementById('lumi-bubble');
+            const container = document.getElementById('lumi-container');
+            const chatPanel = document.getElementById('dem-chat-panel');
+            const chatToggle = document.getElementById('dem-chat-toggle');
+            const chatClose = document.getElementById('dem-chat-close');
+            const chatForm = document.getElementById('dem-chat-form');
+            const chatInput = document.getElementById('dem-chat-input');
+            const chatMessages = document.getElementById('dem-chat-messages');
+            if (!lumi || !bubble || !container) return;
+            
+            let clickCount = 0;
+            let clickTimeout = null;
+            let bubbleTimeout = null;
+            let sleepTimeout = null;
+            let emotionTimeout = null;
+            let isSleeping = false;
+            let isDizzy = false;
+            let isDragging = false;
+            let dragOffsetX = 0;
+            let dragOffsetY = 0;
+            let perspectiveIndex = 0;
+            const perspectiveClasses = ['', 'dem-perspective-left', 'dem-perspective-right', 'dem-perspective-back'];
+            const emotionClasses = ['dem-thinking', 'dem-happy', 'dem-celebrating', 'dem-surprised', 'dem-waving', 'dem-sleeping'];
+            
+            const messages = [
+                "\u00a1Soy Dem! Estoy listo para ayudarte con el manual.",
+                "\u00a1El Dobot MG400 es incre\u00edble cuando lo usamos con seguridad!",
+                "\u00bfBuscas Blockly, coordenadas o movimientos? Abre mi chat.",
+                "\u00a1Puedo buscar secciones del sitio por ti!",
+                "Recuerda revisar el bot\u00f3n de paro de emergencia antes de operar.",
+                "Arr\u00e1strame si estorbo; me acomodo contigo.",
+                "Si escribes una pregunta, busco pistas dentro de este manual."
+            ];
+            
+            const quickReplies = {
+                seguridad: "Para seguridad: revisa paro de emergencia, zona libre de obst\u00e1culos y no manipules el robot mientras ejecuta movimientos.",
+                blockly: "Blockly y c\u00f3digo por bloques son lo mismo en este manual: programaci\u00f3n visual por bloques para crear acciones del robot.",
+                dobot: "El Dobot MG400 es el robot central del manual. Puedo ayudarte a ubicar partes, pasos y ejercicios.",
+                movimiento: "Para movimiento o trayectorias, busca puntos, coordenadas, home, velocidad y ejecuci\u00f3n segura.",
+                ayuda: "Puedo responder con lo que aparece en la p\u00e1gina, buscar coincidencias y llevarte a una secci\u00f3n del manual."
+            };
+            
+            const conceptMap = {
+                blockly: ['blockly', 'bloques', 'bloque', 'codigo por bloques', 'programacion por bloques', 'programacion visual', 'programar con bloques'],
+                codigo: ['codigo', 'programacion', 'script', 'instrucciones', 'bloques', 'blockly', 'python'],
+                seguridad: ['seguridad', 'paro', 'emergencia', 'riesgo', 'cuidado', 'proteger', 'proteccion'],
+                movimiento: ['movimiento', 'mover', 'trayectoria', 'trayectorias', 'coordenadas', 'puntos', 'home', 'velocidad'],
+                dobot: ['dobot', 'mg400', 'robot', 'brazo', 'manipulador'],
+                paletizado: ['paletizado', 'pallet', 'pallets', 'paletizar'],
+                hardware: ['hardware', 'partes', 'componentes', 'conexion', 'cables'],
+                software: ['software', 'dobotstudio', 'dobot studio', 'instalar', 'app']
+            };
+            
+            const manualDatabase = [
+                { page: 'index.html', id: 'view-home', title: 'Inicio / Manual Tecnico Dobot MG400', text: 'Pagina de inicio del manual de Dobot MG400 de la Universidad Politecnica de Tulancingo. Contiene informacion sobre la desarrolladora Maria Fernanda Garcia Garcia, estudiante de Ingenieria en Robotica.' },
+                { page: 'hardware/index.html', id: 'hw-robot', title: 'MG400 Robot y Anatomia', text: 'Especificaciones tecnicas del robot industrial Dobot MG400. Ultra compacto, disenado para aprendizaje y manufactura de escritorio. Carga maxima de 500g, alcance de 440mm, peso de 8kg. Boton de paro de emergencia, servo controladores integrados, articulaciones J1 (-160 a 160), J2 (-85 a 85), J3 (-10 a 110), J4 (-360 a 360), freno mecanico y deteccion de colisiones.' },
+                { page: 'hardware/index.html', id: 'hw-red', title: 'Conexion de Red y Configuracion IP', text: 'Instrucciones para configurar la red y la comunicacion IP del Dobot MG400. La direccion IP por defecto es 192.168.1.6. Debe conectarse a traves del puerto LAN1 con cable Ethernet. Se debe configurar la tarjeta de red de la PC en el mismo segmento 192.168.1.X con mascara de subred 255.255.255.0.' },
+                { page: 'software/index.html', id: 'sw-puesta-marcha', title: 'Puesta en Marcha and Conexion WiFi', text: 'Puesta en marcha de DobotStudio Pro. Conexion inalambrica WiFi o cable Ethernet LAN. Creacion del sistema de coordenadas de usuario (User Coordinate System) y de herramienta (Tool Coordinate System / TCP). Configuracion de salto (Jump) y parametros de limite de colision.' },
+                { page: 'software/index.html', id: 'sw-coordenadas', title: 'Sistemas de Coordenadas (Joint y Cartesianas)', text: 'Explicacion detallada de los sistemas de coordenadas del MG400. Coordenadas de Articulaciones (Joint): J1, J2, J3, J4 correspondientes a los servomotores fisicos del brazo. Coordenadas Cartesianas (User/World): ejes X, Y, Z (en mm) y rotacion R (en grados) medidos desde el centro de la base del robot. Tool Coordinate System (TCP) para calibrar el offset de la herramienta montada.' },
+                { page: 'software/index.html', id: 'sw-teaching', title: 'Panel de Puntos (Teaching Points)', text: 'El panel de puntos permite registrar las coordenadas espaciales exactas del robot. Operacion Add para anadir la posicion actual al final de la lista de puntos, Cover para sobrescribir y actualizar el valor del punto seleccionado, y Run To para forzar al robot a moverse fisicamente a ese punto.' },
+                { page: 'software/index.html', id: 'sw-paletizado', title: 'Procesos de Paletizado', text: 'El paletizado consiste en apilar piezas de forma ordenada en matrices. Dimensiones de Paletizado: 1D (fila lineal), 2D (matriz plana XY) y 3D (matriz volumetrica XYZ). Bloques Blockly relacionados: Create Palletizing para definir la matriz y las esquinas, Get Point Coordinates para calcular el punto del indice, y Get Palletizing Count para saber el recuento total.' },
+                { page: 'software/index.html', id: 'sw-comunicaciones', title: 'Comunicaciones y Modbus TCP/RTU', text: 'Integracion del robot en redes industriales mediante Modbus TCP y Modbus RTU para comunicar con PLCs, interfaces HMI y sistemas SCADA. Registro de bobinas (Coils) de un bit, registros de entrada (Input Registers) y registros de retencion (Holding Registers) para intercambiar datos de control.' },
+                { page: 'blockly/index.html', id: 'blk-eventos', title: 'Bloques de Eventos en DobotBlockly', text: 'Los bloques de eventos controlan el inicio y flujo de los programas. Cuando el programa inicia, inicia la ejecucion secuencial. Tambien manejan la deteccion de hilos de ejecucion paralelos.' },
+                { page: 'blockly/index.html', id: 'blk-control', title: 'Bloques de Control y Logicas', text: 'Bloques de control logico en Blockly: Condicionales (si ... entonces ... si no), bucles y ciclos repetitivos (repetir X veces, repetir mientras), esperas de tiempo (Sleep en ms), y bloques para detener programas.' },
+                { page: 'blockly/index.html', id: 'blk-movimiento', title: 'Bloques de Movimiento (MovJ, MovL, Jump, Arc3)', text: 'Configuracion de trayectorias y movimientos del robot: MovJ (movimiento de interpolacion de articulacion punto a punto rapido pero con trayectoria curva), MovL (movimiento lineal interpolado en linea recta lenta), Jump (movimiento de compuerta en arco de salto para Pick and Place), Arc3 (arco circular de tres puntos).' },
+                { page: 'blockly/index.html', id: 'blk-io', title: 'Bloques de Entradas y Salidas (I/O)', text: 'Control de senales electricas digitales y analogicas: Leer entradas digitales (DI), establecer salidas digitales (DO), leer entradas analÃ³gicas (AI) y escribir salidas analÃ³gicas (AO) para activar ventosas de vacio, pinzas neumaticas y sensores opticos.' },
+                { page: 'blockly/index.html', id: 'blk-postura', title: 'Bloques de Postura y Desfase', text: 'Bloques para manipular coordenadas de postura y RelPoint (calcular desfase relativo sumando milimetros a un punto origen para apilado o barrido), obtener el valor decimal de un eje cartesiano especifico con GetPose()[3] para Z.' },
+                { page: 'blockly/index.html', id: 'blk-modbus', title: 'Bloques de Modbus e Integracion', text: 'Bloques para leer y escribir registros Modbus (coils y registers) en redes TCP y RTU, interactuar con esclavos Modbus industriales, enviar comandos de control y recibir estados del PLC.' },
+                { page: 'blockly/index.html', id: 'blk-tcp', title: 'Bloques de Comandos TCP', text: 'Bloques para establecer conexiones Socket de red TCP/IP (cliente o servidor), enviar cadenas de texto formateadas y recibir comandos remotos de PC, PLC u otros equipos externos.' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-pick-place', title: 'Ejemplo: Pick and Place Basico', text: 'Logica para mover piezas de un punto a otro. Inicia en P_Seguro, va a P_Pick_Arriba y baja linealmente a P_Pick_Abajo. Activa la salida digital DO(1,1) y apaga DO(2,0) para sujetar la pieza con la pinza. Espera 500ms, sube, va a P_Place_Arriba y baja a P_Place_Abajo. Apaga DO(1,0) y enciende DO(2,1) para soltar la pieza.' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-sensor', title: 'Ejemplo: Clasificacion con Sensor Optico', text: 'El robot espera en P_Espera_Banda a que el sensor DI(1) detecte una pieza (DI1 == 1). Detiene la cinta con DO(3,0), baja a P_Pick_Banda y activa la ventosa DO(1,1). Sube y evalua la senal de camara en DI(2). Si DI2 es 1, lleva la pieza correcta a Rampa A, si no, a Rampa B. Al final enciende la banda con DO(3,1).' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-curva', title: 'Ejemplo: Trayectoria Continua y Curvas', text: 'Configuracion de trayectoria fluida usando CP(50) para suavizar esquinas sin detenerse. Dibuja arcos circulares continuos usando la instruccion Arc3 pasando por P_Centro hacia P_Fin. Apaga la herramienta al finalizar con DO(1,0) y desactiva CP con CP(0).' }
+            ];
+            
+            function showMessage(text, duration = 4000) {
+                bubble.textContent = text;
+                bubble.classList.remove('scale-0', 'opacity-0', 'translate-y-2');
+                bubble.classList.add('scale-100', 'opacity-100', 'translate-y-0');
+                
+                if (bubbleTimeout) clearTimeout(bubbleTimeout);
+                bubbleTimeout = setTimeout(() => {
+                    bubble.classList.remove('scale-100', 'opacity-100', 'translate-y-0');
+                    bubble.classList.add('scale-0', 'opacity-0', 'translate-y-2');
+                }, duration);
+            }
+            
+            function setEmotion(name, duration = 3200) {
+                container.classList.remove(...emotionClasses);
+                if (name) container.classList.add('dem-' + name);
+                if (emotionTimeout) clearTimeout(emotionTimeout);
+                if (name && name !== 'sleeping') {
+                    emotionTimeout = setTimeout(() => {
+                        container.classList.remove(...emotionClasses);
+                    }, duration);
+                }
+            }
+            
+            function addChatMessage(text, who = 'bot') {
+                if (!chatMessages) return;
+                const msg = document.createElement('div');
+                msg.className = 'dem-msg ' + (who === 'user' ? 'dem-msg-user' : 'dem-msg-bot');
+                msg.textContent = text;
+                chatMessages.appendChild(msg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function normalizeText(text) {
+                return (text || '')
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^\w\s#-]/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            
+            function expandQuery(query) {
+                const normalized = normalizeText(query);
+                const expanded = new Set(normalized.split(' ').filter(term => term.length > 2));
+                Object.entries(conceptMap).forEach(([concept, words]) => {
+                    const matched = words.some(word => normalized.includes(normalizeText(word)));
+                    if (matched) {
+                        expanded.add(concept);
+                        words.forEach(word => normalizeText(word).split(' ').forEach(part => {
+                            if (part.length > 2) expanded.add(part);
+                        }));
+                    }
+                });
+                return Array.from(expanded);
+            }
+            
+            function findBestSection(query) {
+                const terms = expandQuery(query);
+                if (!terms.length) return null;
+                let best = null;
+                manualDatabase.forEach(item => {
+                    let score = 0;
+                    const haystack = normalizeText(item.title + ' ' + item.text);
+                    terms.forEach(term => {
+                        if (haystack.includes(term)) {
+                            score += normalizeText(item.title).includes(term) ? 5 : 1;
+                        }
+                    });
+                    if (!best || score > best.score) best = Object.assign({}, item, { score: score });
+                });
+                return best && best.score > 0 ? best : null;
+            }
+            
+            function redirectToSection(match) {
+                const currentLevelPath = '../../';
+                const targetUrl = currentLevelPath + match.page + '#' + match.id;
+                
+                setTimeout(() => {
+                    const targetHash = '#' + match.id;
+                    if (window.location.hash === targetHash) {
+                        navigateToHash(targetHash);
+                    } else {
+                        window.location.href = targetUrl;
+                        if (window.location.pathname.includes(match.page)) {
+                            navigateToHash(targetHash);
+                        }
+                    }
+                }, 1000);
+            }
+            
+            function answerQuestion(question) {
+                const normalized = normalizeText(question);
+                setEmotion('thinking', 1300);
+                
+                // Define specialized intents for mini AI responses
+                const intents = [
+                    {
+                        keywords: ['ip', 'red', 'conexion', 'conectar', 'lan1', 'ethernet', 'segmento'],
+                        answer: "\u00a1Hola! La direcci\u00f3n IP por defecto del Dobot MG400 es 192.168.1.6. Con\u00e9ctalo a la entrada LAN1 y configura la red local de tu PC en el segmento 192.168.1.X (ej. 192.168.1.10) con m\u00e1scara 255.255.255.0.",
+                        sectionId: 'hw-red'
+                    },
+                    {
+                        keywords: ['blockly', 'bloques', 'programar', 'codigo por bloques', 'programacion visual'],
+                        answer: "DobotBlockly es la plataforma de programaci\u00f3n visual por bloques. Te permite arrastrar y configurar bloques de eventos, movimientos (como MovJ, MovL o Jump) y Entradas/Salidas (I/O) f\u00e1cilmente.",
+                        sectionId: 'blk-eventos'
+                    },
+                    {
+                        keywords: ['pick and place', 'agarrar', 'colocar', 'sujetar', 'ventosa', 'pinza', 'do1', 'do2'],
+                        answer: "La rutina de Pick and Place sirve para mover piezas. Consiste en ir sobre la pieza, bajar, activar la ventosa o pinza (DO 1 en 1, DO 2 en 0), subir, ir al destino, bajar y apagarla (DO 2 en 1, DO 1 en 0) para soltar.",
+                        sectionId: 'ej-pick-place'
+                    },
+                    {
+                        keywords: ['sensor', 'cinta', 'banda', 'sensor optico', 'clasificar', 'clasificacion'],
+                        answer: "Para clasificar con sensor, el robot espera en la banda. Al activarse el sensor (DI 1 == 1), detiene la banda (DO 3 en 0), baja y toma la pieza con la ventosa, eval\u00faa la entrada de c\u00e1mara y la coloca en la rampa A o B.",
+                        sectionId: 'ej-sensor'
+                    },
+                    {
+                        keywords: ['cp', 'curva', 'suavizado', 'trayectoria continua', 'esquinas', 'arc3'],
+                        answer: "La funci\u00f3n CP (Continuous Path) suaviza las esquinas para que el robot se mueva sin detenerse bruscamente. Por ejemplo, CP(50) permite trayectorias fluidas y continuas ideales junto a arcos Arc3.",
+                        sectionId: 'ej-curva'
+                    },
+                    {
+                        keywords: ['coordenadas', 'ejes', 'joint', 'cartesianas', 'world', 'user', 'x y z', 'movj', 'movl', 'jump', 'mover', 'movimiento', 'home', 'velocidad', 'trayectoria'],
+                        answer: "El Dobot MG400 tiene dos coordenadas: Joint (J1-J4, articulaciones de los motores) y Cartesianas (ejes X, Y, Z en mm y rotaci\u00f3n R en grados). MovJ es interpolado curvo y MovL es lineal recto.",
+                        sectionId: 'sw-coordenadas'
+                    },
+                    {
+                        keywords: ['seguridad', 'paro', 'emergencia', 'colision', 'riesgo', 'cuidado', 'obstaculo'],
+                        answer: "\u00a1La seguridad es prioridad! Revisa que el Paro de Emergencia est\u00e9 liberado y al alcance, la zona est\u00e9 libre de obst\u00e1culos y no toques el robot mientras est\u00e9 ejecutando movimientos.",
+                        sectionId: 'hw-robot'
+                    },
+                    {
+                        keywords: ['maria', 'fernanda', 'desarrolladora', 'creadora', 'autor', 'creo', 'hizo', 'tulancingo', 'garcia', 'estudiante'],
+                        answer: "Â¡Este incre\u00edble manual t\u00e9cnico interactivo y mi dise\u00f1o chibi fueron creados por Mar\u00eda Fernanda Garc\u00eda Garc\u00eda, estudiante de Ingenier\u00eda en Rob\u00f3tica de la Universidad Polit\u00e9cnica de Tulancingo! \ud83c\udf93",
+                        sectionId: 'view-home'
+                    }
+                ];
+                
+                // Match against specialized intents using length-based scoring (hybrid matcher)
+                let bestIntent = null;
+                let highestIntentScore = 0;
+                
+                for (const intent of intents) {
+                    let intentScore = 0;
+                    intent.keywords.forEach(kw => {
+                        if (kw.length <= 3) {
+                            // Word boundary matching for short acronyms/codes to prevent false substring matches
+                            const escapedKw = kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                            const regex = new RegExp('\\b' + escapedKw + '\\b', 'i');
+                            if (regex.test(normalized)) {
+                                intentScore += kw.length;
+                            }
+                        } else {
+                            // Substring matching for longer keywords to handle Spanish plurals, conjugations, and clitics
+                            if (normalized.includes(kw)) {
+                                intentScore += kw.length;
+                            }
+                        }
+                    });
+                    if (intentScore > highestIntentScore) {
+                        highestIntentScore = intentScore;
+                        bestIntent = intent;
+                    }
+                }
+                
+                if (bestIntent && highestIntentScore > 0) {
+                    const dbMatch = manualDatabase.find(item => item.id === bestIntent.sectionId);
+                    if (dbMatch) {
+                        redirectToSection(dbMatch);
+                        setEmotion('happy');
+                        return bestIntent.answer + " Te estoy llevando a la secci\u00f3n: " + dbMatch.title + ".";
+                    }
+                }
+                
+                // Fallback to fuzzy database search
+                const match = findBestSection(question);
+                if (!match) {
+                    setEmotion('thinking');
+                    return "No encontr\u00e9 una secci\u00f3n exacta. Preg\u00fantame sobre Blockly, la IP (192.168.1.6), Pick and Place, el sensor \u00f3ptico, o la seguridad del Dobot MG400 y te guiar\u00e9 f\u00e1cilmente.";
+                }
+                redirectToSection(match);
+                setEmotion('happy');
+                const preview = match.text.slice(0, 200);
+                return 'Encontr\u00e9 la secci\u00f3n "' + match.title + '": ' + preview + '... \u00a1Te estoy redirigiendo all\u00ed!';
+            }
+            
+            // Drag and drop logic
+            container.addEventListener('mousedown', (e) => {
+                if (e.button !== 0 || e.target.closest('button') || e.target.closest('input') || e.target.closest('form')) return;
+                const rect = container.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                isDragging = true;
+                container.classList.add('dem-dragging');
+                resetSleepTimer();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const left = e.clientX - dragOffsetX;
+                    const top = e.clientY - dragOffsetY;
+                    container.style.left = left + 'px';
+                    container.style.top = top + 'px';
+                    container.style.bottom = 'auto';
+                    container.style.right = 'auto';
+                    return;
+                }
+                
+                resetSleepTimer();
+                if (isSleeping || isDizzy) return;
+                
+                const rect = lumi.getBoundingClientRect();
+                const lumiX = rect.left + rect.width / 2;
+                const lumiY = rect.top + rect.height / 2;
+                const dx = e.clientX - lumiX;
+                const dy = e.clientY - lumiY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                const maxOffset = 3;
+                const offset = Math.min(maxOffset, dist / 80);
+                const angle = Math.atan2(dy, dx);
+                const px = Math.cos(angle) * offset;
+                const py = Math.sin(angle) * offset;
+                
+                const pupils = document.querySelectorAll('.lumi-pupil');
+                pupils.forEach(pupil => {
+                    pupil.style.transform = 'translate(' + px + 'px, ' + py + 'px)';
+                });
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.classList.remove('dem-dragging');
+                }
+            });
+            
+            // Toggle Chat Panel
+            if (chatToggle) {
+                chatToggle.addEventListener('click', () => {
+                    const isClosed = chatPanel.classList.toggle('dem-hidden');
+                    if (isClosed) {
+                        container.classList.add('dem-chat-closed');
+                    } else {
+                        container.classList.remove('dem-chat-closed');
+                        setEmotion('happy');
+                        if (chatInput) chatInput.focus();
+                    }
+                    resetSleepTimer();
+                });
+            }
+            if (chatClose) {
+                chatClose.addEventListener('click', () => {
+                    chatPanel.classList.add('dem-hidden');
+                    container.classList.add('dem-chat-closed');
+                    resetSleepTimer();
+                });
+            }
+            
+            // Handle Chat Submission
+            if (chatForm && chatInput) {
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const text = chatInput.value.trim();
+                    if (!text) return;
+                    
+                    addChatMessage(text, 'user');
+                    chatInput.value = '';
+                    resetSleepTimer();
+                    
+                    setTimeout(() => {
+                        const botAns = answerQuestion(text);
+                        addChatMessage(botAns, 'bot');
+                    }, 500);
+                });
+            }
+
+            window.handleDemOption = function(key) {
+                let question = "";
+                if (key === 'hardware') question = "Especificaciones del Robot MG400 y sus articulaciones";
+                else if (key === 'ip') question = "C\u00f3mo configurar la direcci\u00f3n IP y la conexi\u00f3n a la red";
+                else if (key === 'coordenadas') question = "Cu\u00e1les son los sistemas de coordenadas Joint y Cartesianas";
+                else if (key === 'blockly') question = "Qu\u00e9 es DobotBlockly y c\u00f3mo programar por bloques";
+                else if (key === 'pick-place') question = "Explicaci\u00f3n del ejemplo Pick and Place b\u00e1sico";
+                else if (key === 'sensor') question = "Explicaci\u00f3n del ejemplo de Clasificaci\u00f3n con Sensor \u00d3ptico y banda";
+                else if (key === 'paletizado') question = "Procesos y bloques de Paletizado 1D, 2D y 3D";
+                
+                if (!question) return;
+                
+                addChatMessage(question, 'user');
+                resetSleepTimer();
+                
+                setTimeout(() => {
+                    const botAns = answerQuestion(question);
+                    addChatMessage(botAns, 'bot');
+                }, 400);
+            };
+            
+            // Click interactions (clicks change perspective/emotion)
+            lumi.addEventListener('click', () => {
+                if (isDragging) return;
+                resetSleepTimer();
+                
+                if (isSleeping) {
+                    wakeUp();
+                    showMessage("\u00a1Ah! Me he despertado. \ud83e\udd71", 3000);
+                    return;
+                }
+                
+                clickCount++;
+                lumi.classList.add('scale-95');
+                setTimeout(() => lumi.classList.remove('scale-95'), 100);
+                
+                // Spawn particle sparkles
+                for (let i = 0; i < 6; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'dem-particle';
+                    spark.textContent = 'âœ¨';
+                    const rect = lumi.getBoundingClientRect();
+                    const originX = rect.left + rect.width / 2;
+                    const originY = rect.top + rect.height / 2;
+                    spark.style.left = originX + 'px';
+                    spark.style.top = originY + 'px';
+                    spark.style.setProperty('--dx', ((Math.random() - 0.5) * 95) + 'px');
+                    spark.style.setProperty('--dy', (-25 - Math.random() * 75) + 'px');
+                    document.body.appendChild(spark);
+                    setTimeout(() => spark.remove(), 850);
+                }
+                
+                if (clickCount >= 6) {
+                    triggerDizzy();
+                } else {
+                    const randMsg = messages[Math.floor(Math.random() * messages.length)];
+                    showMessage(randMsg, 4000);
+                    setEmotion('celebrating');
+                }
+                
+                if (clickTimeout) clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    clickCount = 0;
+                }, 4000);
+            });
+            
+            // Double click rotates Dem to change perspective
+            lumi.addEventListener('dblclick', () => {
+                if (isSleeping || isDizzy) return;
+                perspectiveIndex = (perspectiveIndex + 1) % perspectiveClasses.length;
+                container.classList.remove(...perspectiveClasses.filter(c => c !== ''));
+                if (perspectiveClasses[perspectiveIndex]) {
+                    container.classList.add(perspectiveClasses[perspectiveIndex]);
+                }
+                showMessage("\u00bfTe gusta mi otra pose? \ud83e\udd2d", 3000);
+            });
+            
+            function triggerDizzy() {
+                isDizzy = true;
+                container.classList.add('dizzy');
+                showMessage("\u00a1Uuuuh... todo da vueltas! \ud83d\ude35\u200d\ud83d\udcab", 5000);
+                
+                setTimeout(() => {
+                    isDizzy = false;
+                    container.classList.remove('dizzy');
+                    clickCount = 0;
+                }, 5000);
+            }
+            
+            function resetSleepTimer() {
+                if (isSleeping) {
+                    wakeUp();
+                }
+                if (sleepTimeout) clearTimeout(sleepTimeout);
+                sleepTimeout = setTimeout(goToSleep, 40000);
+            }
+            
+            function goToSleep() {
+                if (isDizzy || isDragging) return;
+                isSleeping = true;
+                container.classList.add('sleeping');
+                setEmotion('sleeping');
+                createZzzEffect();
+            }
+            
+            function wakeUp() {
+                isSleeping = false;
+                container.classList.remove('sleeping');
+                container.classList.remove('dem-sleeping');
+                const oldZ = document.querySelectorAll('.sleep-z');
+                oldZ.forEach(el => el.remove());
+            }
+            
+            function createZzzEffect() {
+                if (!isSleeping) return;
+                
+                const z = document.createElement('div');
+                z.className = 'sleep-z';
+                z.textContent = 'z';
+                
+                z.style.right = '45px';
+                z.style.bottom = '95px';
+                
+                container.appendChild(z);
+                
+                setTimeout(() => z.remove(), 2500);
+                setTimeout(createZzzEffect, 1200);
+            }
+            
+            setTimeout(() => {
+                showMessage("\u00a1Bienvenido a Roco Lab! \u2728 Preg\u00fantame lo que quieras.", 5000);
+            }, 1000);
+            
+            resetSleepTimer();
+        });
+    </script>
+</body>
+</html>

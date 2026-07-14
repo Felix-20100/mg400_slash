@@ -41,6 +41,11 @@
             --hotspot-pulse: rgba(167, 139, 250, 0.4);
             --tooltip-bg: rgba(30, 41, 59, 0.95);
         }
+        .dark .logo-upt,
+        .dark .logo-roco,
+        .dark .logo-maria {
+            filter: brightness(0) invert(1) !important;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -84,7 +89,7 @@
         }
         html:not(.dark) body .text-slate-200,
         html:not(.dark) body .text-slate-300, 
-        html:not(.dark) body .text-slate-405,
+        html:not(.dark) body .text-slate-400,
         html:not(.dark) body .text-slate-400 {
             color: #334155 !important; /* slate-700 */
         }
@@ -126,8 +131,8 @@
         html:not(.dark) body .bg-slate-900\/40,
         html:not(.dark) body .bg-slate-800\/60,
         html:not(.dark) body .bg-slate-900,
-        html:not(.dark) body .bg-slate-955,
-        html:not(.dark) body .bg-slate-955\/60,
+        html:not(.dark) body .bg-slate-950,
+        html:not(.dark) body .bg-slate-950\/60,
         html:not(.dark) body .bg-slate-950,
         html:not(.dark) body .bg-slate-800,
         html:not(.dark) body .from-slate-850,
@@ -410,9 +415,52 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            border-radius: 30px;
+            border: 3px solid rgba(251, 191, 36, 0.4);
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+        .dark .dem-chat-panel {
+            background: #0f172a;
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        /* Cloud thought puffs pointing towards Dem */
+        .dem-chat-panel::after {
+            content: '';
+            position: absolute;
+            bottom: 25px;
+            right: -8px;
+            width: 14px;
+            height: 14px;
+            background: inherit;
+            border: inherit;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .dem-chat-panel::before {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            right: -16px;
+            width: 8px;
+            height: 8px;
+            background: inherit;
+            border: inherit;
+            border-radius: 50%;
+            z-index: 10;
         }
         .dem-chat-panel.dem-hidden {
             display: none;
+        }
+        #lumi-wrapper {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom center;
+        }
+        /* Shrink Dem when chat is active */
+        #lumi-container:not(.dem-chat-closed) #lumi-wrapper {
+            transform: scale(0.75);
         }
         .dem-chat-messages {
             max-height: 300px;
@@ -503,7 +551,7 @@
 <body class="pt-16 pb-0">
 
     <!-- Fixed Header Navbar -->
-    <nav class="fixed top-0 left-0 w-full h-16 bg-white/80 dark:bg-slate-955/90 border-b border-slate-200 dark:border-white/10 flex justify-between items-center px-6 z-[9999] backdrop-blur-md">
+    <nav class="fixed top-0 left-0 w-full h-16 bg-white/80 dark:bg-slate-900/90 border-b border-slate-200 dark:border-white/10 flex justify-between items-center px-6 z-[9999] backdrop-blur-md">
         <div class="flex items-center gap-3">
             <a href="index.html" class="flex items-center gap-2">
                 <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-8 w-auto object-contain">
@@ -530,7 +578,7 @@
             <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-10 w-auto object-contain rounded-full">
         </div>
         
-        <h4 class="text-[10px] text-slate-550 uppercase tracking-widest px-2 mb-1">
+        <h4 class="text-[10px] text-slate-500 uppercase tracking-widest px-2 mb-1">
             <span class="lang-es">Navegaci&oacute;n</span>
         </h4>
         <a href="index.html" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white font-bold transition-all flex items-center gap-3 text-sm">
@@ -556,7 +604,7 @@
         
         <hr class="border-slate-200 dark:border-slate-800 my-1">
         
-        <button onclick="toggleTheme()" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-505 dark:text-slate-400 hover:text-slate-850 dark:hover:text-white text-xs transition-all flex items-center gap-2">
+        <button onclick="toggleTheme()" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-850 dark:hover:text-white text-xs transition-all flex items-center gap-2">
             <i id="theme-icon" class="fas fa-moon w-4 text-center"></i> 
             <span id="theme-text-es" class="lang-es">Modo Oscuro</span>
         </button>
@@ -572,10 +620,10 @@
             <div class="flex items-center justify-center gap-8 mb-6 w-full">
                 <img src="media/logo_upt.png" alt="Logo UPT" class="logo-upt h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
                 <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300">
-                <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300 rounded-full border-2 border-cyan-500/20 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                <img src="media/logo_maria.png" alt="Logo MFG" class="logo-maria h-20 sm:h-24 w-auto object-contain hover:scale-105 transition-transform duration-300 rounded-full">
             </div>
             
-            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight text-[#0f172a] dark:text-white transition-colors duration-300 drop-shadow-[0_0_20px_rgba(139,92,246,0.1)]">
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight text-[#0f172a] dark:text-white transition-colors duration-300 drop-shadow-[0_0_20px_rgba(139,92,246,0.3)]">
                 <span class="lang-es">Manual T&eacute;cnico</span> <br class="sm:hidden">
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500">Dobot MG400</span>
             </h1>
@@ -584,36 +632,59 @@
             </p>
         </div>
 
-        <div class="z-20 mt-1 mb-10 flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-            <span class="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/35 px-3 py-1.5 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
-                <img src="media/logo_maria.png" alt="Maria Fernanda Logo" class="logo-maria h-5 w-5 rounded-full object-cover opacity-80">
-                <span><strong class="font-semibold text-slate-700 dark:text-slate-200">Maria Fernanda Garcia Garcia</strong> · Ingenier&iacute;a en Rob&oacute;tica</span>
-            </span>
-            <a href="https://instagram.com/fernylix_" target="_blank" class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-slate-500 transition-colors hover:text-violet-500 dark:text-slate-400">
-                <i class="fab fa-instagram"></i> @fernylix_
-            </a>
+        <!-- Redesigned Developer Card (Stunning & Premium!) -->
+        <div class="relative group bg-white/60 dark:bg-slate-900/70 border border-slate-200/50 dark:border-white/10 rounded-3xl p-6 mt-6 mb-16 z-20 backdrop-blur-xl max-w-sm w-full shadow-[0_15px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-5px_rgba(139,92,246,0.15)] hover:border-violet-500/30 transition-all duration-500 transform hover:-translate-y-1">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-3xl opacity-0 group-hover:opacity-10 transition duration-500 blur"></div>
+            <div class="relative flex items-center gap-4">
+                <div class="relative flex-shrink-0">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur-[2px] opacity-75 group-hover:scale-105 transition-transform duration-500"></div>
+                    <img src="media/logo_maria.png" alt="Maria Fernanda Garcia Garcia" class="relative dev-avatar w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white dark:border-slate-900 shadow-lg object-cover">
+                </div>
+                <div class="text-left flex-1 min-w-0">
+                    <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest text-violet-600 dark:text-violet-400 font-extrabold bg-violet-500/10 dark:bg-violet-400/10 px-2 py-0.5 rounded-full mb-1">
+                        <i class="fas fa-code text-[8px]"></i> Desarrolladora
+                    </span>
+                    <h4 class="text-[#0f172a] dark:text-white font-black text-lg leading-tight tracking-tight truncate">
+                        Maria Fernanda Garcia Garcia
+                    </h4>
+                    <p class="text-xs text-slate-505 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-1.5">
+                        <i class="fas fa-graduation-cap text-violet-500"></i> Ingenier&iacute;a en Rob&oacute;tica
+                    </p>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-550 font-medium">
+                        Universidad Polit&eacute;cnica de Tulancingo
+                    </p>
+                    <div class="mt-2.5">
+                        <a href="https://instagram.com/fernylix_" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-pink-655 dark:text-pink-400 hover:text-pink-500 font-extrabold transition-colors">
+                            <span class="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </span>
+                            @fernylix_
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <footer class="w-full bg-violet-650/10 dark:bg-violet-955/20 text-[#0f172a] dark:text-white pt-12 pb-6 px-6 sm:px-12 relative z-25 border-t border-violet-500/10 backdrop-blur-md">
+    <footer class="w-full bg-violet-500/10 dark:bg-violet-950/20 text-[#0f172a] dark:text-white pt-12 pb-6 px-6 sm:px-12 relative z-25 border-t border-slate-200 dark:border-white/10 backdrop-blur-md">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200 dark:border-white/10">
             <div class="flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-12 w-auto object-contain dark:filter dark:invert dark:brightness-200">
+                    <img src="media/logo_roco.png" alt="Logo RoCo" class="logo-roco h-12 w-auto object-contain">
                     <span class="font-tech font-bold text-lg tracking-wider text-violet-600 dark:text-violet-400">ROCO LAB</span>
                 </div>
-                <p class="text-xs text-slate-655 dark:text-slate-355 leading-relaxed mb-4 max-w-xs">
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4 max-w-xs">
                     Universidad Polit&eacute;cnica de Tulancingo<br>
                     Camino a San Isidro s/n, Col. Las Presas,<br>
                     Tulancingo de Bravo, Hidalgo, M&eacute;xico.
                 </p>
-                <div class="text-xs text-slate-655 dark:text-slate-300">
+                <div class="text-xs text-slate-500 dark:text-slate-300">
                     <strong>Contacto:</strong> <a href="https://instagram.com/fernylix_" target="_blank" class="text-violet-600 dark:text-violet-400 hover:underline">@fernylix_</a>
                 </div>
             </div>
 
             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-450 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Instituci&oacute;n</h5>
+                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Instituci&oacute;n</h5>
                 <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
                     <li><a href="https://www.upt.edu.mx" target="_blank" class="hover:text-violet-500 transition-colors">Universidad Polit&eacute;cnica de Tulancingo</a></li>
                     <li><a href="#" class="hover:text-violet-500 transition-colors">Ingenier&iacute;a en Rob&oacute;tica</a></li>
@@ -622,7 +693,7 @@
             </div>
 
             <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-455 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Secciones</h5>
+                <h5 class="font-tech font-bold text-xs uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-4 pb-1 border-b-2 border-violet-500/20 w-32">Secciones</h5>
                 <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
                     <li><a href="hardware/index.html" class="hover:text-violet-500 transition-colors">MG400 Robot y Anatom&iacute;a</a></li>
                     <li><a href="software/index.html" class="hover:text-violet-500 transition-colors">DobotStudio Pro (SW)</a></li>
@@ -634,9 +705,9 @@
 
         <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
             <div class="flex items-center gap-6 text-lg">
-                <a href="#" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://instagram.com/fernylix_" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors"><i class="fab fa-github"></i></a>
+                <a href="mailto:ggfelix256@gmail.com" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Email"><i class="fas fa-envelope"></i></a>
+                <a href="https://instagram.com/fernylix_" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://github.com/Felix-20100/mg400_slash" target="_blank" class="text-slate-500 dark:text-slate-400 hover:text-violet-500 transition-colors" title="GitHub"><i class="fab fa-github"></i></a>
             </div>
             <p class="text-center sm:text-right font-medium tracking-wide">
                 &copy; 2026 Maria Fernanda Garcia Garcia. Todos los derechos reservados.
@@ -645,43 +716,58 @@
     </footer>
 
     <!-- Interactive Mascot Dem -->
-    <div id="lumi-container" class="fixed bottom-6 right-6 z-[9990] flex flex-col items-end group pointer-events-none select-none">
-        <section id="dem-chat-panel" class="dem-chat-panel dem-hidden pointer-events-auto mb-3 rounded-2xl border border-amber-400/40 bg-white/95 dark:bg-slate-900/95 shadow-2xl backdrop-blur-md">
+    <div id="lumi-container" class="fixed bottom-6 right-6 z-[9990] flex flex-row items-end gap-4 dem-chat-closed group pointer-events-none select-none">
+        <section id="dem-chat-panel" class="dem-chat-panel dem-hidden pointer-events-auto mb-0 rounded-2xl border border-amber-400/40 bg-white/95 dark:bg-slate-900/95 shadow-2xl backdrop-blur-md">
             <div class="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 px-4 py-3">
                 <div class="min-w-0">
                     <h3 class="text-sm font-black text-slate-900 dark:text-white leading-tight">Dem</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-300">Guia de ayuda del manual</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-300">Gu&iacute;a de ayuda del manual</p>
                 </div>
                 <button id="dem-chat-close" type="button" class="dem-control-btn" title="Cerrar chat" aria-label="Cerrar chat">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-times text-xs"></i>
                 </button>
             </div>
             <div id="dem-chat-messages" class="dem-chat-messages flex flex-col gap-2 p-3">
-                <div class="dem-msg dem-msg-bot">Hola, soy Dem. Preguntame sobre el manual, el Dobot MG400, Blockly, seguridad o cualquier seccion y te ayudo a encontrarla.</div>
+                <div class="dem-msg dem-msg-bot">Hola, soy Dem. Preg&uacute;ntame sobre el manual, o elige uno de estos accesos r&aacute;pidos y te llevar&eacute; all&iacute;:</div>
+                <div class="dem-msg dem-msg-bot bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 p-2.5 rounded-xl">
+                    <p class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-2">Temas del Manual:</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="handleDemOption('hardware')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#9881;&#65039; Especificaciones</button>
+                        <button type="button" onclick="handleDemOption('ip')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#127760; Conectar IP</button>
+                        <button type="button" onclick="handleDemOption('coordenadas')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128208; Coordenadas</button>
+                        <button type="button" onclick="handleDemOption('blockly')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#129513; DobotBlockly</button>
+                        <button type="button" onclick="handleDemOption('pick-place')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128230; Pick & Place</button>
+                        <button type="button" onclick="handleDemOption('sensor')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128065;&#65039; Banda & Sensor</button>
+                        <button type="button" onclick="handleDemOption('paletizado')" class="bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-all text-left">&#128290; Paletizado</button>
+                    </div>
+                </div>
             </div>
             <form id="dem-chat-form" class="flex gap-2 border-t border-slate-200 dark:border-slate-700 p-3">
-                <input id="dem-chat-input" type="text" autocomplete="off" class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-amber-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white" placeholder="Preguntale a Dem..." aria-label="Preguntale a Dem">
+                <input id="dem-chat-input" type="text" autocomplete="off" class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-amber-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white" placeholder="Preg&uacute;ntale a Dem..." aria-label="Preg&uacute;ntale a Dem">
                 <button type="submit" class="dem-control-btn" title="Enviar" aria-label="Enviar">
-                    <i class="fas fa-paper-plane"></i>
+                    <i class="fas fa-paper-plane text-xs"></i>
                 </button>
             </form>
         </section>
-        <!-- Speech Bubble -->
-        <div id="lumi-bubble" class="bg-slate-900/95 border border-violet-500/50 text-white text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-[0_0_25px_rgba(139,92,246,0.4)] mb-3 max-w-[220px] text-center font-semibold pointer-events-auto transition-all duration-300 transform scale-0 translate-y-2 opacity-0 select-text backdrop-blur-md">
-            Hola, soy Dem.
-        </div>
-        <div class="pointer-events-auto mb-2 flex flex-wrap justify-end gap-2 max-w-[220px]" aria-label="Controles de Dem">
-            <button id="dem-chat-toggle" type="button" class="dem-control-btn" title="Chat de ayuda" aria-label="Chat de ayuda">
-                <i class="fas fa-comments"></i>
-            </button>
-        </div>
-        <!-- Dem SVG Wrapper -->
-        <div id="lumi-wrapper" class="w-32 h-32 sm:w-40 sm:h-40 pointer-events-auto cursor-pointer filter drop-shadow-[0_0_20px_rgba(167,139,250,0.6)] transition-transform duration-300 active:scale-95 hover:scale-105">
+        
+        <!-- Right Column wrapper for Dem's vertical stack -->
+        <div class="flex flex-col items-center pointer-events-auto gap-2">
+            <!-- Speech Bubble -->
+            <div id="lumi-bubble" class="bg-slate-900/95 border border-amber-500/50 text-white text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-[0_0_25px_rgba(212,175,55,0.4)] mb-0 max-w-[220px] text-center font-semibold transition-all duration-300 transform scale-0 translate-y-2 opacity-0 select-text backdrop-blur-md">
+                &iexcl;Hola! Soy Dem. &#10024;
+            </div>
+            <div class="mb-0 flex flex-wrap justify-center gap-2 max-w-[220px]" aria-label="Controles de Dem">
+                <button id="dem-chat-toggle" type="button" class="dem-control-btn shadow-lg" title="Chat de ayuda" aria-label="Chat de ayuda">
+                    <i class="fas fa-comments"></i>
+                </button>
+            </div>
+        <!-- Dem SVG Wrapper (White/Gold Chibi Bull!) -->
+        <div id="lumi-wrapper" class="w-32 h-32 sm:w-40 sm:h-40 pointer-events-auto cursor-pointer filter drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-transform duration-300 active:scale-95 hover:scale-105">
             <svg id="lumi-svg" viewBox="0 0 200 200" class="w-full h-full">
                 <defs>
                     <linearGradient id="lumi-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#fffdf8" />
-                        <stop offset="100%" stop-color="#e6e2d9" />
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="100%" stop-color="#f1f5f9" />
                     </linearGradient>
                     <linearGradient id="lumi-horn-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#f7d99c" />
@@ -706,99 +792,110 @@
                 <circle cx="178" cy="42" r="2.5" fill="#bdaecd" opacity="0.8" class="animate-pulse" />
                 <circle cx="17" cy="123" r="1.5" fill="#d4af37" opacity="0.7" />
                 
+                <!-- Background Bushes & Flowers (adds depth) -->
+                <g id="lumi-bg-bush">
+                    <!-- Left bush -->
+                    <path d="M 45 145 Q 25 130, 28 152 Q 32 168, 58 158 Z" fill="#8bc34a" stroke="#386641" stroke-width="1.2" />
+                    <circle cx="34" cy="146" r="6" fill="#ffffff" stroke="#bfb6a6" stroke-width="1" />
+                    <circle cx="34" cy="146" r="2" fill="#fbbf24" />
+                    <!-- Right bush -->
+                    <path d="M 155 145 Q 175 130, 172 152 Q 168 168, 142 158 Z" fill="#8bc34a" stroke="#386641" stroke-width="1.2" />
+                    <circle cx="166" cy="146" r="6" fill="#ffffff" stroke="#bfb6a6" stroke-width="1" />
+                    <circle cx="166" cy="146" r="2" fill="#fbbf24" />
+                </g>
+
                 <!-- Tail -->
                 <g class="lumi-tail-wag">
-                    <path d="M 128 135 C 153 145, 171 132, 166 108 C 162 92, 148 109, 134 124" fill="none" stroke="#bfb6a6" stroke-width="4.5" stroke-linecap="round" />
-                    <path d="M 163 107 C 172 101, 176 109, 170 116 C 165 122, 156 115, 163 107 Z" fill="#f7f6f2" stroke="#bfb6a6" stroke-width="1.3" />
+                    <path d="M 129 134 Q 155 148, 150 162" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
+                    <!-- Tail tip -->
+                    <path d="M 150 162 C 145 162, 143 170, 150 173 C 157 170, 155 162, 150 162 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1" />
                 </g>
                 
-                <!-- Chibi body, arms and robe -->
-                <path d="M 78 113 C 83 103, 117 103, 122 113 C 130 129, 128 155, 117 166 C 108 174, 92 174, 83 166 C 72 155, 70 129, 78 113 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.5"/>
-                <path d="M 75 121 C 61 128, 57 143, 65 151 C 73 159, 84 145, 86 129 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.4"/>
-                <path d="M 125 121 C 139 128, 143 143, 135 151 C 127 159, 116 145, 114 129 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.4"/>
-                <circle cx="66" cy="150" r="5.2" fill="#fffdf8" stroke="#bfb6a6" stroke-width="1.1"/>
-                <circle cx="134" cy="150" r="5.2" fill="#fffdf8" stroke="#bfb6a6" stroke-width="1.1"/>
-                <path d="M 76 113 C 88 105, 112 105, 124 113 C 128 131, 124 157, 113 169 C 105 174, 95 174, 87 169 C 76 157, 72 131, 76 113 Z" fill="url(#lumi-cape-grad)" stroke="#d4af37" stroke-width="1.4" />
-                <path d="M 86 116 C 92 126, 108 126, 114 116 L 111 162 C 104 166, 96 166, 89 162 Z" fill="#2b3a55" opacity="0.92" />
-                <path d="M 91 113 Q 100 123, 109 113" fill="none" stroke="#d4af37" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M 80 121 C 84 136, 89 151, 96 163" fill="none" stroke="#d4af37" stroke-width="1.2" opacity="0.9" />
-                <path d="M 120 121 C 116 136, 111 151, 104 163" fill="none" stroke="#d4af37" stroke-width="1.2" opacity="0.9" />
+                <!-- Body -->
+                <ellipse cx="100" cy="142" rx="42" ry="22" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="2" />
+                
+                <!-- Cape / Robe on chest -->
+                <path d="M 72 122 C 78 128, 85 132, 100 132 C 115 132, 122 128, 128 122 C 132 142, 120 158, 100 158 C 80 158, 68 142, 72 122 Z" fill="url(#lumi-cape-grad)" stroke="#d4af37" stroke-width="1.5" />
+                <path d="M 82 126 C 88 132, 112 132, 118 126 L 110 154 L 90 154 Z" fill="#2b3a55" opacity="0.9" />
+                <path d="M 78 127 C 82 138, 88 148, 96 153" fill="none" stroke="#d4af37" stroke-width="1.3" opacity="0.9" />
+                <path d="M 122 127 C 118 138, 112 148, 104 153" fill="none" stroke="#d4af37" stroke-width="1.3" opacity="0.9" />
                 
                 <!-- Compass Jewel -->
-                <circle cx="100" cy="139" r="7.5" fill="#d4af37" filter="url(#lumi-shadow)" />
-                <path d="M 100 128 L 103 139 L 100 150 L 97 139 Z" fill="#f7f6f2" opacity="0.9" />
+                <circle cx="100" cy="142" r="5" fill="#d4af37" filter="url(#lumi-shadow)" />
+                <path d="M 100 137 L 102 142 L 100 147 L 98 142 Z" fill="#f7f6f2" opacity="0.9" />
 
-                <!-- Hooves -->
-                <path d="M 85 164 C 78 171, 92 176, 98 166 Z" fill="#5b4637" />
-                <path d="M 115 164 C 122 171, 108 176, 102 166 Z" fill="#5b4637" />
+                <!-- Front Legs/Paws (Puppy/Calf sitting style) -->
+                <path d="M 74 130 C 74 158, 88 158, 88 130 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="1.5" />
+                <path d="M 74 148 C 74 158, 88 158, 88 148 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1.5" />
+                
+                <path d="M 112 130 C 112 158, 126 158, 126 130 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="1.5" />
+                <path d="M 112 148 C 112 158, 126 158, 126 148 Z" fill="#5b4637" stroke="#bfb6a6" stroke-width="1.5" />
                 
                 <!-- Horns -->
-                <path d="M 73 56 C 61 36, 66 19, 84 13 C 78 31, 83 43, 90 54 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.3"/>
-                <path d="M 127 56 C 139 36, 134 19, 116 13 C 122 31, 117 43, 110 54 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.3"/>
+                <path d="M 68 50 C 60 38, 70 30, 78 42 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.5" />
+                <path d="M 132 50 C 140 38, 130 30, 122 42 Z" fill="url(#lumi-horn-grad)" stroke="#9a6b22" stroke-width="1.5" />
                 
                 <!-- Ears -->
-                <path d="M 66 73 C 47 65, 39 76, 49 88 C 60 101, 72 91, 76 80 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.4"/>
-                <path d="M 56 78 C 49 77, 48 83, 56 88 C 62 91, 67 87, 69 82 Z" fill="url(#lumi-ear-grad)" opacity="0.9" />
-                <path d="M 134 73 C 153 65, 161 76, 151 88 C 140 101, 128 91, 124 80 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.4"/>
-                <path d="M 144 78 C 151 77, 152 83, 144 88 C 138 91, 133 87, 131 82 Z" fill="url(#lumi-ear-grad)" opacity="0.9" />
+                <!-- Left ear -->
+                <path d="M 52 75 C 25 70, 25 90, 48 95 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="2" />
+                <path d="M 48 78 C 30 76, 30 88, 45 90 Z" fill="url(#lumi-ear-grad)" />
+                <!-- Right ear -->
+                <path d="M 148 75 C 175 70, 175 90, 152 95 Z" fill="#ffffff" stroke="#bfb6a6" stroke-width="2" />
+                <path d="M 152 78 C 170 76, 170 88, 155 90 Z" fill="url(#lumi-ear-grad)" />
                 
                 <!-- Head -->
-                <path d="M 61 78 C 62 50, 80 34, 100 34 C 120 34, 138 50, 139 78 C 141 109, 124 126, 100 126 C 76 126, 59 109, 61 78 Z" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="1.5"/>
-                <path d="M 84 45 C 91 35, 110 35, 117 45 C 112 42, 88 42, 84 45 Z" fill="#f7f6f2" opacity="0.95" />
-                
-                <!-- Muzzle and cheeks -->
-                <ellipse cx="100" cy="101" rx="25" ry="18" fill="#f0dcc0" stroke="#d7b59a" stroke-width="1" />
-                <ellipse cx="74" cy="103" rx="6" ry="4" fill="#d7a78f" opacity="0.45" />
-                <ellipse cx="126" cy="103" rx="6" ry="4" fill="#d7a78f" opacity="0.45" />
-                <ellipse cx="93" cy="98" rx="3" ry="2" fill="#8b5e3c" opacity="0.8" />
-                <ellipse cx="107" cy="98" rx="3" ry="2" fill="#8b5e3c" opacity="0.8" />
-
+                <ellipse cx="100" cy="85" rx="55" ry="46" fill="url(#lumi-body-grad)" stroke="#bfb6a6" stroke-width="2" />
                 <!-- Forehead marking -->
-                <path d="M 100 53 L 103 60 L 110 60 L 104 64 L 107 72 L 100 67 L 93 72 L 96 64 L 90 60 L 97 60 Z" fill="#d4af37" opacity="0.9" />
-                <circle cx="88" cy="65" r="1.4" fill="#d4af37" opacity="0.75" />
-                <circle cx="112" cy="65" r="1.4" fill="#d4af37" opacity="0.75" />
+                <path d="M 100 51 L 103 58 L 110 58 L 104 62 L 107 70 L 100 65 L 95 70 L 97 62 L 91 58 L 98 58 Z" fill="#d4af37" opacity="0.9" />
+                <circle cx="88" cy="63" r="1.4" fill="#d4af37" opacity="0.75" />
+                <circle cx="112" cy="63" r="1.4" fill="#d4af37" opacity="0.75" />
 
                 <!-- Left Eye -->
                 <g id="lumi-left-eye" class="lumi-eye lumi-eye-blink">
-                    <ellipse cx="80" cy="82" rx="11" ry="14" fill="#2b1d14" stroke="#d4af37" stroke-width="1.2" />
+                    <circle cx="74" cy="84" r="9" fill="#2b1d14" />
                     <g class="normal-eye-content">
-                        <ellipse cx="80" cy="82" rx="9" ry="12" fill="#6b3f18" />
-                        <ellipse cx="80" cy="82" rx="5" ry="8" fill="#1f130c" class="lumi-pupil" />
-                        <circle cx="77" cy="77" r="3" fill="white" />
-                        <circle cx="83" cy="87" r="1.3" fill="white" />
+                        <circle cx="71" cy="81" r="2.5" fill="#ffffff" />
+                        <circle cx="76" cy="87" r="1" fill="#ffffff" />
                     </g>
                     <g class="dizzy-eye">
-                        <path d="M 75 82 A 5 5 0 0 1 80 77 A 5 5 0 0 1 85 82 A 5 5 0 0 1 80 87 A 3 3 0 0 1 77 84" fill="none" stroke="#d4af37" stroke-width="2" stroke-linecap="round" />
+                        <path d="M 70 84 A 4 4 0 0 1 74 80 A 4 4 0 0 1 78 84 A 4 4 0 0 1 74 88 A 2 2 0 0 1 71 85" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
                     </g>
                     <g class="sleeping-eye-line">
-                        <path d="M 70 82 Q 80 90, 90 82" fill="none" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round" />
+                        <path d="M 66 84 Q 74 91, 82 84" fill="none" stroke="#2b1d14" stroke-width="2" stroke-linecap="round" />
                     </g>
                 </g>
                 
                 <!-- Right Eye -->
                 <g id="lumi-right-eye" class="lumi-eye lumi-eye-blink">
-                    <ellipse cx="120" cy="82" rx="11" ry="14" fill="#2b1d14" stroke="#d4af37" stroke-width="1.2" />
+                    <circle cx="126" cy="84" r="9" fill="#2b1d14" />
                     <g class="normal-eye-content">
-                        <ellipse cx="120" cy="82" rx="9" ry="12" fill="#6b3f18" />
-                        <ellipse cx="120" cy="82" rx="5" ry="8" fill="#1f130c" class="lumi-pupil" />
-                        <circle cx="117" cy="77" r="3" fill="white" />
-                        <circle cx="123" cy="87" r="1.3" fill="white" />
+                        <circle cx="123" cy="81" r="2.5" fill="#ffffff" />
+                        <circle cx="128" cy="87" r="1" fill="#ffffff" />
                     </g>
                     <g class="dizzy-eye">
-                        <path d="M 115 82 A 5 5 0 0 1 120 77 A 5 5 0 0 1 125 82 A 5 5 0 0 1 120 87 A 3 3 0 0 1 117 84" fill="none" stroke="#d4af37" stroke-width="2" stroke-linecap="round" />
+                        <path d="M 122 84 A 4 4 0 0 1 126 80 A 4 4 0 0 1 130 84 A 4 4 0 0 1 126 88 A 2 2 0 0 1 123 85" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
                     </g>
                     <g class="sleeping-eye-line">
-                        <path d="M 110 82 Q 120 90, 130 82" fill="none" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round" />
+                        <path d="M 118 84 Q 126 91, 134 84" fill="none" stroke="#2b1d14" stroke-width="2" stroke-linecap="round" />
                     </g>
                 </g>
                 
-                <!-- Mouth -->
-                <path d="M 91 106 Q 100 114, 109 106" fill="none" stroke="#8b5e3c" stroke-width="2" stroke-linecap="round"/>
-                <path d="M 68 72 Q 78 65, 88 70" fill="none" stroke="#8b6f54" stroke-width="3" stroke-linecap="round" opacity="0.85" />
-                <path d="M 132 72 Q 122 65, 112 70" fill="none" stroke="#8b6f54" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+                <!-- Cheeks -->
+                <ellipse cx="58" cy="91" rx="8" ry="5" fill="#ff9999" opacity="0.6" />
+                <ellipse cx="142" cy="91" rx="8" ry="5" fill="#ff9999" opacity="0.6" />
+
+                <!-- Muzzle -->
+                <ellipse cx="100" cy="95" rx="18" ry="11" fill="#f0dcc0" stroke="#bfb6a6" stroke-width="1.5" />
+                <!-- Nostrils -->
+                <ellipse cx="94" cy="95" rx="2.5" ry="1.5" fill="#bfb6a6" />
+                <ellipse cx="106" cy="95" rx="2.5" ry="1.5" fill="#bfb6a6" />
+                <!-- Smile mouth -->
+                <path d="M 97 97 Q 100 101, 103 97" fill="none" stroke="#8b5e3c" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
         </div>
+        </div>
     </div>
+
 
     <!-- Zoom Modal -->
     <div id="image-modal" class="fixed inset-0 bg-black/95 z-[20000] hidden items-center justify-center p-4 cursor-pointer" onclick="closeModal()">
@@ -806,7 +903,7 @@
         <img id="modal-img" src="" alt="Zoom Image" class="max-w-full max-h-[90vh] rounded-xl object-contain shadow-2xl">
     </div>
 
-    <!-- Scripting for Sub-section index toggling and Dem bubble unicode rendering -->
+    <!-- Scripting for Sub-section index toggling and Lumi bubble unicode rendering -->
     <script>
         function navigateToHash(hash) {
             if (!hash) return;
@@ -985,6 +1082,43 @@
             }
         }
 
+        function handleImageError(img, filename) {
+            if (!img.dataset.attempt) {
+                img.dataset.attempt = "0";
+            }
+            const paths = [
+                filename,
+                '../' + filename,
+                '../../' + filename,
+                'media/' + filename,
+                '../media/' + filename,
+                '../../media/' + filename,
+                'manual-mg400/media/' + filename,
+                '../manual-mg400/media/' + filename
+            ];
+            let attempt = parseInt(img.dataset.attempt);
+            if (attempt < paths.length) {
+                img.dataset.attempt = (attempt + 1).toString();
+                img.src = paths[attempt];
+            } else {
+                img.style.display = 'none';
+                const errorId = img.getAttribute('data-error-id');
+                if (errorId) {
+                    const errEl = document.getElementById(errorId);
+                    if (errEl) {
+                        errEl.style.display = 'block';
+                    }
+                }
+                // Hide hotspots in the same container to avoid overlapping dots on error
+                const container = img.closest('.relative');
+                if (container) {
+                    container.querySelectorAll('.hotspot').forEach(hs => {
+                        hs.style.display = 'none';
+                    });
+                }
+            }
+        }
+
         // Mascot Dem Interaction script
         document.addEventListener('DOMContentLoaded', () => {
             const lumi = document.getElementById('lumi-wrapper');
@@ -1009,8 +1143,6 @@
             let dragOffsetX = 0;
             let dragOffsetY = 0;
             let perspectiveIndex = 0;
-            let siteKnowledge = [];
-            let siteKnowledgeReady = false;
             const perspectiveClasses = ['', 'dem-perspective-left', 'dem-perspective-right', 'dem-perspective-back'];
             const emotionClasses = ['dem-thinking', 'dem-happy', 'dem-celebrating', 'dem-surprised', 'dem-waving', 'dem-sleeping'];
             
@@ -1021,15 +1153,17 @@
                 "\u00a1Puedo buscar secciones del sitio por ti!",
                 "Recuerda revisar el bot\u00f3n de paro de emergencia antes de operar.",
                 "Arr\u00e1strame si estorbo; me acomodo contigo.",
-                "Si escribes una pregunta, busco pistas dentro de esta p\u00e1gina."
+                "Si escribes una pregunta, busco pistas dentro de este manual."
             ];
+            
             const quickReplies = {
-                seguridad: "Para seguridad: revisa paro de emergencia, zona libre de obstaculos y no manipules el robot mientras ejecuta movimientos.",
-                blockly: "Blockly y codigo por bloques son lo mismo en este manual: programacion visual por bloques para crear acciones del robot.",
+                seguridad: "Para seguridad: revisa paro de emergencia, zona libre de obst\u00e1culos y no manipules el robot mientras ejecuta movimientos.",
+                blockly: "Blockly y c\u00f3digo por bloques son lo mismo en este manual: programaci\u00f3n visual por bloques para crear acciones del robot.",
                 dobot: "El Dobot MG400 es el robot central del manual. Puedo ayudarte a ubicar partes, pasos y ejercicios.",
-                movimiento: "Para movimiento o trayectorias, busca puntos, coordenadas, home, velocidad y ejecucion segura.",
-                ayuda: "Puedo responder con lo que aparece en la pagina, buscar coincidencias y llevarte a una seccion del manual."
+                movimiento: "Para movimiento o trayectorias, busca puntos, coordenadas, home, velocidad y ejecuci\u00f3n segura.",
+                ayuda: "Puedo responder con lo que aparece en la p\u00e1gina, buscar coincidencias y llevarte a una secci\u00f3n del manual."
             };
+            
             const conceptMap = {
                 blockly: ['blockly', 'bloques', 'bloque', 'codigo por bloques', 'programacion por bloques', 'programacion visual', 'programar con bloques'],
                 codigo: ['codigo', 'programacion', 'script', 'instrucciones', 'bloques', 'blockly', 'python'],
@@ -1040,6 +1174,27 @@
                 hardware: ['hardware', 'partes', 'componentes', 'conexion', 'cables'],
                 software: ['software', 'dobotstudio', 'dobot studio', 'instalar', 'app']
             };
+            
+            const manualDatabase = [
+                { page: 'index.html', id: 'view-home', title: 'Inicio / Manual Tecnico Dobot MG400', text: 'Pagina de inicio del manual de Dobot MG400 de la Universidad Politecnica de Tulancingo. Contiene informacion sobre la desarrolladora Maria Fernanda Garcia Garcia, estudiante de Ingenieria en Robotica.' },
+                { page: 'hardware/index.html', id: 'hw-robot', title: 'MG400 Robot y Anatomia', text: 'Especificaciones tecnicas del robot industrial Dobot MG400. Ultra compacto, disenado para aprendizaje y manufactura de escritorio. Carga maxima de 500g, alcance de 440mm, peso de 8kg. Boton de paro de emergencia, servo controladores integrados, articulaciones J1 (-160 a 160), J2 (-85 a 85), J3 (-10 a 110), J4 (-360 a 360), freno mecanico y deteccion de colisiones.' },
+                { page: 'hardware/index.html', id: 'hw-red', title: 'Conexion de Red y Configuracion IP', text: 'Instrucciones para configurar la red y la comunicacion IP del Dobot MG400. La direccion IP por defecto es 192.168.1.6. Debe conectarse a traves del puerto LAN1 con cable Ethernet. Se debe configurar la tarjeta de red de la PC en el mismo segmento 192.168.1.X con mascara de subred 255.255.255.0.' },
+                { page: 'software/index.html', id: 'sw-puesta-marcha', title: 'Puesta en Marcha and Conexion WiFi', text: 'Puesta en marcha de DobotStudio Pro. Conexion inalambrica WiFi o cable Ethernet LAN. Creacion del sistema de coordenadas de usuario (User Coordinate System) y de herramienta (Tool Coordinate System / TCP). Configuracion de salto (Jump) y parametros de limite de colision.' },
+                { page: 'software/index.html', id: 'sw-coordenadas', title: 'Sistemas de Coordenadas (Joint y Cartesianas)', text: 'Explicacion detallada de los sistemas de coordenadas del MG400. Coordenadas de Articulaciones (Joint): J1, J2, J3, J4 correspondientes a los servomotores fisicos del brazo. Coordenadas Cartesianas (User/World): ejes X, Y, Z (en mm) y rotacion R (en grados) medidos desde el centro de la base del robot. Tool Coordinate System (TCP) para calibrar el offset de la herramienta montada.' },
+                { page: 'software/index.html', id: 'sw-teaching', title: 'Panel de Puntos (Teaching Points)', text: 'El panel de puntos permite registrar las coordenadas espaciales exactas del robot. Operacion Add para anadir la posicion actual al final de la lista de puntos, Cover para sobrescribir y actualizar el valor del punto seleccionado, y Run To para forzar al robot a moverse fisicamente a ese punto.' },
+                { page: 'software/index.html', id: 'sw-paletizado', title: 'Procesos de Paletizado', text: 'El paletizado consiste en apilar piezas de forma ordenada en matrices. Dimensiones de Paletizado: 1D (fila lineal), 2D (matriz plana XY) y 3D (matriz volumetrica XYZ). Bloques Blockly relacionados: Create Palletizing para definir la matriz y las esquinas, Get Point Coordinates para calcular el punto del indice, y Get Palletizing Count para saber el recuento total.' },
+                { page: 'software/index.html', id: 'sw-comunicaciones', title: 'Comunicaciones y Modbus TCP/RTU', text: 'Integracion del robot en redes industriales mediante Modbus TCP y Modbus RTU para comunicar con PLCs, interfaces HMI y sistemas SCADA. Registro de bobinas (Coils) de un bit, registros de entrada (Input Registers) y registros de retencion (Holding Registers) para intercambiar datos de control.' },
+                { page: 'blockly/index.html', id: 'blk-eventos', title: 'Bloques de Eventos en DobotBlockly', text: 'Los bloques de eventos controlan el inicio y flujo de los programas. Cuando el programa inicia, inicia la ejecucion secuencial. Tambien manejan la deteccion de hilos de ejecucion paralelos.' },
+                { page: 'blockly/index.html', id: 'blk-control', title: 'Bloques de Control y Logicas', text: 'Bloques de control logico en Blockly: Condicionales (si ... entonces ... si no), bucles y ciclos repetitivos (repetir X veces, repetir mientras), esperas de tiempo (Sleep en ms), y bloques para detener programas.' },
+                { page: 'blockly/index.html', id: 'blk-movimiento', title: 'Bloques de Movimiento (MovJ, MovL, Jump, Arc3)', text: 'Configuracion de trayectorias y movimientos del robot: MovJ (movimiento de interpolacion de articulacion punto a punto rapido pero con trayectoria curva), MovL (movimiento lineal interpolado en linea recta lenta), Jump (movimiento de compuerta en arco de salto para Pick and Place), Arc3 (arco circular de tres puntos).' },
+                { page: 'blockly/index.html', id: 'blk-io', title: 'Bloques de Entradas y Salidas (I/O)', text: 'Control de senales electricas digitales y analogicas: Leer entradas digitales (DI), establecer salidas digitales (DO), leer entradas analÃ³gicas (AI) y escribir salidas analÃ³gicas (AO) para activar ventosas de vacio, pinzas neumaticas y sensores opticos.' },
+                { page: 'blockly/index.html', id: 'blk-postura', title: 'Bloques de Postura y Desfase', text: 'Bloques para manipular coordenadas de postura y RelPoint (calcular desfase relativo sumando milimetros a un punto origen para apilado o barrido), obtener el valor decimal de un eje cartesiano especifico con GetPose()[3] para Z.' },
+                { page: 'blockly/index.html', id: 'blk-modbus', title: 'Bloques de Modbus e Integracion', text: 'Bloques para leer y escribir registros Modbus (coils y registers) en redes TCP y RTU, interactuar con esclavos Modbus industriales, enviar comandos de control y recibir estados del PLC.' },
+                { page: 'blockly/index.html', id: 'blk-tcp', title: 'Bloques de Comandos TCP', text: 'Bloques para establecer conexiones Socket de red TCP/IP (cliente o servidor), enviar cadenas de texto formateadas y recibir comandos remotos de PC, PLC u otros equipos externos.' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-pick-place', title: 'Ejemplo: Pick and Place Basico', text: 'Logica para mover piezas de un punto a otro. Inicia en P_Seguro, va a P_Pick_Arriba y baja linealmente a P_Pick_Abajo. Activa la salida digital DO(1,1) y apaga DO(2,0) para sujetar la pieza con la pinza. Espera 500ms, sube, va a P_Place_Arriba y baja a P_Place_Abajo. Apaga DO(1,0) y enciende DO(2,1) para soltar la pieza.' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-sensor', title: 'Ejemplo: Clasificacion con Sensor Optico', text: 'El robot espera en P_Espera_Banda a que el sensor DI(1) detecte una pieza (DI1 == 1). Detiene la cinta con DO(3,0), baja a P_Pick_Banda y activa la ventosa DO(1,1). Sube y evalua la senal de camara en DI(2). Si DI2 es 1, lleva la pieza correcta a Rampa A, si no, a Rampa B. Al final enciende la banda con DO(3,1).' },
+                { page: 'practicas/ejemplos/index.html', id: 'ej-curva', title: 'Ejemplo: Trayectoria Continua y Curvas', text: 'Configuracion de trayectoria fluida usando CP(50) para suavizar esquinas sin detenerse. Dibuja arcos circulares continuos usando la instruccion Arc3 pasando por P_Centro hacia P_Fin. Apaga la herramienta al finalizar con DO(1,0) y desactiva CP con CP(0).' }
+            ];
             
             function showMessage(text, duration = 4000) {
                 bubble.textContent = text;
@@ -1052,10 +1207,10 @@
                     bubble.classList.add('scale-0', 'opacity-0', 'translate-y-2');
                 }, duration);
             }
-
+            
             function setEmotion(name, duration = 3200) {
                 container.classList.remove(...emotionClasses);
-                if (name) container.classList.add(`dem-${name}`);
+                if (name) container.classList.add('dem-' + name);
                 if (emotionTimeout) clearTimeout(emotionTimeout);
                 if (name && name !== 'sleeping') {
                     emotionTimeout = setTimeout(() => {
@@ -1063,16 +1218,16 @@
                     }, duration);
                 }
             }
-
+            
             function addChatMessage(text, who = 'bot') {
                 if (!chatMessages) return;
                 const msg = document.createElement('div');
-                msg.className = `dem-msg ${who === 'user' ? 'dem-msg-user' : 'dem-msg-bot'}`;
+                msg.className = 'dem-msg ' + (who === 'user' ? 'dem-msg-user' : 'dem-msg-bot');
                 msg.textContent = text;
                 chatMessages.appendChild(msg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-
+            
             function normalizeText(text) {
                 return (text || '')
                     .toLowerCase()
@@ -1082,7 +1237,7 @@
                     .replace(/\s+/g, ' ')
                     .trim();
             }
-
+            
             function expandQuery(query) {
                 const normalized = normalizeText(query);
                 const expanded = new Set(normalized.split(' ').filter(term => term.length > 2));
@@ -1097,191 +1252,160 @@
                 });
                 return Array.from(expanded);
             }
-
-            function getManualSections() {
-                return Array.from(document.querySelectorAll('main section[id]')).map(section => {
-                    const heading = section.querySelector('h1, h2, h3, h4');
-                    const title = heading ? heading.textContent.trim() : section.id;
-                    const text = section.textContent.replace(/\s+/g, ' ').trim();
-                    return { kind: 'section', section, title, text, haystack: normalizeText(`${title} ${text}`) };
-                }).filter(item => item.text.length > 20);
-            }
-
-            function getSiteTargets() {
-                return Array.from(document.querySelectorAll('a[href]')).map(link => {
-                    const href = link.getAttribute('href');
-                    const title = link.textContent.replace(/\s+/g, ' ').trim();
-                    return { href, title, haystack: normalizeText(`${title} ${href}`) };
-                }).filter(item => item.href && item.href !== '#' && item.title.length > 1);
-            }
-
-            function getKnowledgeSources() {
-                const sources = new Map();
-                getSiteTargets().forEach(item => {
-                    if (!item.href || item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href.startsWith('#')) return;
-                    if (!item.href.endsWith('.html') && !item.href.endsWith('/')) return;
-                    const url = new URL(item.href, window.location.href);
-                    if (url.origin !== window.location.origin) return;
-                    url.hash = '';
-                    sources.set(url.href, item.title);
-                });
-                return Array.from(sources.entries()).slice(0, 40).map(([href, title]) => ({ href, title }));
-            }
-
-            async function buildSiteKnowledge() {
-                if (siteKnowledgeReady) return siteKnowledge;
-                siteKnowledgeReady = true;
-                siteKnowledge = [...getManualSections()];
-                const parser = new DOMParser();
-                const sources = getKnowledgeSources();
-                const loaded = await Promise.allSettled(sources.map(async source => {
-                    const response = await fetch(source.href);
-                    if (!response.ok) throw new Error('No se pudo cargar');
-                    const html = await response.text();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    doc.querySelectorAll('script, style, nav, footer').forEach(el => el.remove());
-                    const heading = doc.querySelector('h1, h2, h3');
-                    const title = heading ? heading.textContent.trim() : source.title;
-                    const text = (doc.body ? doc.body.textContent : '').replace(/\s+/g, ' ').trim();
-                    return {
-                        kind: 'page',
-                        href: source.href,
-                        title,
-                        text,
-                        haystack: normalizeText(`${title} ${source.title} ${source.href} ${text}`)
-                    };
-                }));
-                loaded.forEach(result => {
-                    if (result.status === 'fulfilled' && result.value.text.length > 40) {
-                        siteKnowledge.push(result.value);
-                    }
-                });
-                return siteKnowledge;
-            }
-
-            function findBestKnowledge(query) {
+            
+            function findBestSection(query) {
                 const terms = expandQuery(query);
                 if (!terms.length) return null;
                 let best = null;
-                const knowledge = siteKnowledge.length ? siteKnowledge : getManualSections();
-                knowledge.forEach(item => {
+                manualDatabase.forEach(item => {
                     let score = 0;
+                    const haystack = normalizeText(item.title + ' ' + item.text);
                     terms.forEach(term => {
-                        if (item.haystack.includes(term)) score += normalizeText(item.title).includes(term) ? 5 : 1;
+                        if (haystack.includes(term)) {
+                            score += normalizeText(item.title).includes(term) ? 5 : 1;
+                        }
                     });
-                    if (!best || score > best.score) best = { ...item, score };
+                    if (!best || score > best.score) best = Object.assign({}, item, { score: score });
                 });
                 return best && best.score > 0 ? best : null;
             }
-
-            function findBestSiteTarget(query) {
-                const terms = expandQuery(query);
-                let best = null;
-                getSiteTargets().forEach(item => {
-                    let score = 0;
-                    terms.forEach(term => {
-                        if (item.haystack.includes(term)) score += normalizeText(item.title).includes(term) ? 5 : 2;
-                    });
-                    if (!best || score > best.score) best = { ...item, score };
-                });
-                return best && best.score > 0 ? best : null;
+            
+            function redirectToSection(match) {
+                const currentLevelPath = '';
+                const targetUrl = currentLevelPath + match.page + '#' + match.id;
+                
+                setTimeout(() => {
+                    const targetHash = '#' + match.id;
+                    if (window.location.hash === targetHash) {
+                        navigateToHash(targetHash);
+                    } else {
+                        window.location.href = targetUrl;
+                        if (window.location.pathname.includes(match.page)) {
+                            navigateToHash(targetHash);
+                        }
+                    }
+                }, 1000);
             }
-
-            async function answerQuestion(question) {
+            
+            function answerQuestion(question) {
                 const normalized = normalizeText(question);
                 setEmotion('thinking', 1300);
-                await buildSiteKnowledge();
-                for (const key in quickReplies) {
-                    if (conceptMap[key] && conceptMap[key].some(word => normalized.includes(normalizeText(word)))) {
-                        const match = findBestKnowledge(question);
-                        if (match) {
-                            if (match.kind === 'section') {
-                                navigateToHash(`#${match.section.id}`);
-                            } else if (match.href) {
-                                setTimeout(() => { window.location.href = match.href; }, 900);
+                
+                // Define specialized intents for mini AI responses
+                const intents = [
+                    {
+                        keywords: ['ip', 'red', 'conexion', 'conectar', 'lan1', 'ethernet', 'segmento'],
+                        answer: "\u00a1Hola! La direcci\u00f3n IP por defecto del Dobot MG400 es 192.168.1.6. Con\u00e9ctalo a la entrada LAN1 y configura la red local de tu PC en el segmento 192.168.1.X (ej. 192.168.1.10) con m\u00e1scara 255.255.255.0.",
+                        sectionId: 'hw-red'
+                    },
+                    {
+                        keywords: ['blockly', 'bloques', 'programar', 'codigo por bloques', 'programacion visual'],
+                        answer: "DobotBlockly es la plataforma de programaci\u00f3n visual por bloques. Te permite arrastrar y configurar bloques de eventos, movimientos (como MovJ, MovL o Jump) y Entradas/Salidas (I/O) f\u00e1cilmente.",
+                        sectionId: 'blk-eventos'
+                    },
+                    {
+                        keywords: ['pick and place', 'agarrar', 'colocar', 'sujetar', 'ventosa', 'pinza', 'do1', 'do2'],
+                        answer: "La rutina de Pick and Place sirve para mover piezas. Consiste en ir sobre la pieza, bajar, activar la ventosa o pinza (DO 1 en 1, DO 2 en 0), subir, ir al destino, bajar y apagarla (DO 2 en 1, DO 1 en 0) para soltar.",
+                        sectionId: 'ej-pick-place'
+                    },
+                    {
+                        keywords: ['sensor', 'cinta', 'banda', 'sensor optico', 'clasificar', 'clasificacion'],
+                        answer: "Para clasificar con sensor, el robot espera en la banda. Al activarse el sensor (DI 1 == 1), detiene la banda (DO 3 en 0), baja y toma la pieza con la ventosa, eval\u00faa la entrada de c\u00e1mara y la coloca en la rampa A o B.",
+                        sectionId: 'ej-sensor'
+                    },
+                    {
+                        keywords: ['cp', 'curva', 'suavizado', 'trayectoria continua', 'esquinas', 'arc3'],
+                        answer: "La funci\u00f3n CP (Continuous Path) suaviza las esquinas para que el robot se mueva sin detenerse bruscamente. Por ejemplo, CP(50) permite trayectorias fluidas y continuas ideales junto a arcos Arc3.",
+                        sectionId: 'ej-curva'
+                    },
+                    {
+                        keywords: ['coordenadas', 'ejes', 'joint', 'cartesianas', 'world', 'user', 'x y z', 'movj', 'movl', 'jump', 'mover', 'movimiento', 'home', 'velocidad', 'trayectoria'],
+                        answer: "El Dobot MG400 tiene dos coordenadas: Joint (J1-J4, articulaciones de los motores) y Cartesianas (ejes X, Y, Z en mm y rotaci\u00f3n R en grados). MovJ es interpolado curvo y MovL es lineal recto.",
+                        sectionId: 'sw-coordenadas'
+                    },
+                    {
+                        keywords: ['seguridad', 'paro', 'emergencia', 'colision', 'riesgo', 'cuidado', 'obstaculo'],
+                        answer: "\u00a1La seguridad es prioridad! Revisa que el Paro de Emergencia est\u00e9 liberado y al alcance, la zona est\u00e9 libre de obst\u00e1culos y no toques el robot mientras est\u00e9 ejecutando movimientos.",
+                        sectionId: 'hw-robot'
+                    },
+                    {
+                        keywords: ['maria', 'fernanda', 'desarrolladora', 'creadora', 'autor', 'creo', 'hizo', 'tulancingo', 'garcia', 'estudiante'],
+                        answer: "Â¡Este incre\u00edble manual t\u00e9cnico interactivo y mi dise\u00f1o chibi fueron creados por Mar\u00eda Fernanda Garc\u00eda Garc\u00eda, estudiante de Ingenier\u00eda en Rob\u00f3tica de la Universidad Polit\u00e9cnica de Tulancingo! \ud83c\udf93",
+                        sectionId: 'view-home'
+                    }
+                ];
+                
+                // Match against specialized intents using length-based scoring (hybrid matcher)
+                let bestIntent = null;
+                let highestIntentScore = 0;
+                
+                for (const intent of intents) {
+                    let intentScore = 0;
+                    intent.keywords.forEach(kw => {
+                        if (kw.length <= 3) {
+                            // Word boundary matching for short acronyms/codes to prevent false substring matches
+                            const escapedKw = kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                            const regex = new RegExp('\\b' + escapedKw + '\\b', 'i');
+                            if (regex.test(normalized)) {
+                                intentScore += kw.length;
                             }
-                            setEmotion('happy');
-                            return `${quickReplies[key]} Te lleve a: ${match.title}.`;
+                        } else {
+                            // Substring matching for longer keywords to handle Spanish plurals, conjugations, and clitics
+                            if (normalized.includes(kw)) {
+                                intentScore += kw.length;
+                            }
                         }
-                        const target = findBestSiteTarget(question);
-                        if (target) {
-                            setEmotion('happy');
-                            setTimeout(() => { window.location.href = target.href; }, 900);
-                            return `${quickReplies[key]} Te llevo a: ${target.title}.`;
-                        }
-                        return quickReplies[key];
+                    });
+                    if (intentScore > highestIntentScore) {
+                        highestIntentScore = intentScore;
+                        bestIntent = intent;
                     }
                 }
-                const match = findBestKnowledge(question);
-                if (!match) {
-                    const target = findBestSiteTarget(question);
-                    if (target) {
+                
+                if (bestIntent && highestIntentScore > 0) {
+                    const dbMatch = manualDatabase.find(item => item.id === bestIntent.sectionId);
+                    if (dbMatch) {
+                        redirectToSection(dbMatch);
                         setEmotion('happy');
-                        setTimeout(() => { window.location.href = target.href; }, 900);
-                        return `Creo que buscas ${target.title}. Te llevo a esa parte del manual.`;
+                        return bestIntent.answer + " Te estoy llevando a la secci\u00f3n: " + dbMatch.title + ".";
                     }
+                }
+                
+                // Fallback to fuzzy database search
+                const match = findBestSection(question);
+                if (!match) {
                     setEmotion('thinking');
-                    return "No tengo una coincidencia exacta todavia, pero puedo ayudarte si usas palabras como codigo por bloques, Blockly, seguridad, coordenadas, movimiento, hardware, software o MG400.";
+                    return "No encontr\u00e9 una secci\u00f3n exacta. Preg\u00fantame sobre Blockly, la IP (192.168.1.6), Pick and Place, el sensor \u00f3ptico, o la seguridad del Dobot MG400 y te guiar\u00e9 f\u00e1cilmente.";
                 }
-                if (match.kind === 'section') {
-                    navigateToHash(`#${match.section.id}`);
-                } else if (match.href) {
-                    setTimeout(() => { window.location.href = match.href; }, 900);
-                }
+                redirectToSection(match);
                 setEmotion('happy');
-                const preview = match.text.slice(0, 220).replace(/\s+/g, ' ');
-                return `Encontre una seccion relacionada: ${match.title}. ${preview}${match.text.length > 220 ? '...' : ''}`;
-            }
-
-            function toggleChat(forceOpen = null) {
-                if (!chatPanel) return;
-                const shouldOpen = forceOpen === null ? chatPanel.classList.contains('dem-hidden') : forceOpen;
-                chatPanel.classList.toggle('dem-hidden', !shouldOpen);
-                if (shouldOpen) {
-                    resetSleepTimer();
-                    setEmotion('waving', 1800);
-                    showMessage('Preguntame algo, soy Dem.', 2600);
-                    setTimeout(() => chatInput && chatInput.focus(), 80);
-                }
-            }
-
-            function createSparkles(originX, originY, count = 12) {
-                const symbols = ['*', '+', '.'];
-                for (let i = 0; i < count; i++) {
-                    const particle = document.createElement('span');
-                    particle.className = 'dem-particle';
-                    particle.textContent = symbols[i % symbols.length];
-                    particle.style.left = `${originX}px`;
-                    particle.style.top = `${originY}px`;
-                    particle.style.setProperty('--dx', `${(Math.random() - 0.5) * 95}px`);
-                    particle.style.setProperty('--dy', `${-25 - Math.random() * 75}px`);
-                    document.body.appendChild(particle);
-                    setTimeout(() => particle.remove(), 900);
-                }
-            }
-
-            function clampMascotToViewport(clientX, clientY) {
-                const rect = container.getBoundingClientRect();
-                const width = rect.width || 180;
-                const height = rect.height || 220;
-                const left = Math.max(8, Math.min(window.innerWidth - width - 8, clientX - dragOffsetX));
-                const top = Math.max(74, Math.min(window.innerHeight - height - 8, clientY - dragOffsetY));
-                container.style.left = `${left}px`;
-                container.style.top = `${top}px`;
-                container.style.right = 'auto';
-                container.style.bottom = 'auto';
+                const preview = match.text.slice(0, 200);
+                return 'Encontr\u00e9 la secci\u00f3n "' + match.title + '": ' + preview + '... \u00a1Te estoy redirigiendo all\u00ed!';
             }
             
-            setTimeout(() => {
-                showMessage("\u00a1Hola! Soy Dem, tu guia del manual.", 5000);
-            }, 1000);
+            // Drag and drop logic
+            container.addEventListener('mousedown', (e) => {
+                if (e.button !== 0 || e.target.closest('button') || e.target.closest('input') || e.target.closest('form')) return;
+                const rect = container.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                isDragging = true;
+                container.classList.add('dem-dragging');
+                resetSleepTimer();
+            });
             
             document.addEventListener('mousemove', (e) => {
-                resetSleepTimer();
                 if (isDragging) {
-                    clampMascotToViewport(e.clientX, e.clientY);
+                    const left = e.clientX - dragOffsetX;
+                    const top = e.clientY - dragOffsetY;
+                    container.style.left = left + 'px';
+                    container.style.top = top + 'px';
+                    container.style.bottom = 'auto';
+                    container.style.right = 'auto';
                     return;
                 }
+                
+                resetSleepTimer();
                 if (isSleeping || isDizzy) return;
                 
                 const rect = lumi.getBoundingClientRect();
@@ -1299,73 +1423,115 @@
                 
                 const pupils = document.querySelectorAll('.lumi-pupil');
                 pupils.forEach(pupil => {
-                    pupil.style.transform = `translate(${px}px, ${py}px)`;
+                    pupil.style.transform = 'translate(' + px + 'px, ' + py + 'px)';
                 });
             });
-
+            
             document.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                container.classList.remove('dem-dragging');
-                setEmotion('happy', 1200);
-            });
-
-            lumi.addEventListener('mousedown', (e) => {
-                if (e.button !== 0) return;
-                const rect = container.getBoundingClientRect();
-                dragOffsetX = e.clientX - rect.left;
-                dragOffsetY = e.clientY - rect.top;
-                isDragging = true;
-                container.classList.add('dem-dragging');
-                resetSleepTimer();
-            });
-
-            lumi.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                const rect = container.getBoundingClientRect();
-                dragOffsetX = touch.clientX - rect.left;
-                dragOffsetY = touch.clientY - rect.top;
-                isDragging = true;
-                container.classList.add('dem-dragging');
-                resetSleepTimer();
-            }, { passive: true });
-
-            document.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const touch = e.touches[0];
-                clampMascotToViewport(touch.clientX, touch.clientY);
-            }, { passive: true });
-
-            document.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                container.classList.remove('dem-dragging');
-                setEmotion('happy', 1200);
+                if (isDragging) {
+                    isDragging = false;
+                    container.classList.remove('dem-dragging');
+                }
             });
             
+            // Toggle Chat Panel
+            if (chatToggle) {
+                chatToggle.addEventListener('click', () => {
+                    const isClosed = chatPanel.classList.toggle('dem-hidden');
+                    if (isClosed) {
+                        container.classList.add('dem-chat-closed');
+                    } else {
+                        container.classList.remove('dem-chat-closed');
+                        setEmotion('happy');
+                        if (chatInput) chatInput.focus();
+                    }
+                    resetSleepTimer();
+                });
+            }
+            if (chatClose) {
+                chatClose.addEventListener('click', () => {
+                    chatPanel.classList.add('dem-hidden');
+                    container.classList.add('dem-chat-closed');
+                    resetSleepTimer();
+                });
+            }
+            
+            // Handle Chat Submission
+            if (chatForm && chatInput) {
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const text = chatInput.value.trim();
+                    if (!text) return;
+                    
+                    addChatMessage(text, 'user');
+                    chatInput.value = '';
+                    resetSleepTimer();
+                    
+                    setTimeout(() => {
+                        const botAns = answerQuestion(text);
+                        addChatMessage(botAns, 'bot');
+                    }, 500);
+                });
+            }
+
+            window.handleDemOption = function(key) {
+                let question = "";
+                if (key === 'hardware') question = "Especificaciones del Robot MG400 y sus articulaciones";
+                else if (key === 'ip') question = "C\u00f3mo configurar la direcci\u00f3n IP y la conexi\u00f3n a la red";
+                else if (key === 'coordenadas') question = "Cu\u00e1les son los sistemas de coordenadas Joint y Cartesianas";
+                else if (key === 'blockly') question = "Qu\u00e9 es DobotBlockly y c\u00f3mo programar por bloques";
+                else if (key === 'pick-place') question = "Explicaci\u00f3n del ejemplo Pick and Place b\u00e1sico";
+                else if (key === 'sensor') question = "Explicaci\u00f3n del ejemplo de Clasificaci\u00f3n con Sensor \u00d3ptico y banda";
+                else if (key === 'paletizado') question = "Procesos y bloques de Paletizado 1D, 2D y 3D";
+                
+                if (!question) return;
+                
+                addChatMessage(question, 'user');
+                resetSleepTimer();
+                
+                setTimeout(() => {
+                    const botAns = answerQuestion(question);
+                    addChatMessage(botAns, 'bot');
+                }, 400);
+            };
+            
+            // Click interactions (clicks change perspective/emotion)
             lumi.addEventListener('click', () => {
                 if (isDragging) return;
                 resetSleepTimer();
-                const rect = lumi.getBoundingClientRect();
-                createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
                 
                 if (isSleeping) {
                     wakeUp();
-                    showMessage("\u00a1Ya desperte! Soy Dem.", 3000);
+                    showMessage("\u00a1Ah! Me he despertado. \ud83e\udd71", 3000);
                     return;
                 }
                 
                 clickCount++;
-                
                 lumi.classList.add('scale-95');
                 setTimeout(() => lumi.classList.remove('scale-95'), 100);
+                
+                // Spawn particle sparkles
+                for (let i = 0; i < 6; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'dem-particle';
+                    spark.textContent = 'âœ¨';
+                    const rect = lumi.getBoundingClientRect();
+                    const originX = rect.left + rect.width / 2;
+                    const originY = rect.top + rect.height / 2;
+                    spark.style.left = originX + 'px';
+                    spark.style.top = originY + 'px';
+                    spark.style.setProperty('--dx', ((Math.random() - 0.5) * 95) + 'px');
+                    spark.style.setProperty('--dy', (-25 - Math.random() * 75) + 'px');
+                    document.body.appendChild(spark);
+                    setTimeout(() => spark.remove(), 850);
+                }
                 
                 if (clickCount >= 6) {
                     triggerDizzy();
                 } else {
                     const randMsg = messages[Math.floor(Math.random() * messages.length)];
-                    setEmotion(clickCount % 2 ? 'happy' : 'waving', 1800);
                     showMessage(randMsg, 4000);
+                    setEmotion('celebrating');
                 }
                 
                 if (clickTimeout) clearTimeout(clickTimeout);
@@ -1374,16 +1540,25 @@
                 }, 4000);
             });
             
+            // Double click rotates Dem to change perspective
+            lumi.addEventListener('dblclick', () => {
+                if (isSleeping || isDizzy) return;
+                perspectiveIndex = (perspectiveIndex + 1) % perspectiveClasses.length;
+                container.classList.remove(...perspectiveClasses.filter(c => c !== ''));
+                if (perspectiveClasses[perspectiveIndex]) {
+                    container.classList.add(perspectiveClasses[perspectiveIndex]);
+                }
+                showMessage("\u00bfTe gusta mi otra pose? \ud83e\udd2d", 3000);
+            });
+            
             function triggerDizzy() {
                 isDizzy = true;
-                lumi.classList.add('dizzy');
-                setEmotion('surprised', 5000);
-                showMessage("\u00a1Uuuuh... todo da vueltas!", 5000);
+                container.classList.add('dizzy');
+                showMessage("\u00a1Uuuuh... todo da vueltas! \ud83d\ude35\u200d\ud83d\udcab", 5000);
                 
                 setTimeout(() => {
                     isDizzy = false;
-                    lumi.classList.remove('dizzy');
-                    setEmotion('');
+                    container.classList.remove('dizzy');
                     clickCount = 0;
                 }, 5000);
             }
@@ -1393,21 +1568,20 @@
                     wakeUp();
                 }
                 if (sleepTimeout) clearTimeout(sleepTimeout);
-                sleepTimeout = setTimeout(goToSleep, 30000);
+                sleepTimeout = setTimeout(goToSleep, 40000);
             }
             
             function goToSleep() {
-                if (isDizzy) return;
+                if (isDizzy || isDragging) return;
                 isSleeping = true;
-                lumi.classList.add('sleeping');
+                container.classList.add('sleeping');
                 setEmotion('sleeping');
-                showMessage('Dem va a descansar un momento...', 2500);
                 createZzzEffect();
             }
             
             function wakeUp() {
                 isSleeping = false;
-                lumi.classList.remove('sleeping');
+                container.classList.remove('sleeping');
                 container.classList.remove('dem-sleeping');
                 const oldZ = document.querySelectorAll('.sleep-z');
                 oldZ.forEach(el => el.remove());
@@ -1418,7 +1592,7 @@
                 
                 const z = document.createElement('div');
                 z.className = 'sleep-z';
-                z.textContent = 'Z';
+                z.textContent = 'z';
                 
                 z.style.right = '45px';
                 z.style.bottom = '95px';
@@ -1428,58 +1602,10 @@
                 setTimeout(() => z.remove(), 2500);
                 setTimeout(createZzzEffect, 1200);
             }
-
-            if (chatToggle) chatToggle.addEventListener('click', () => toggleChat());
-            if (chatClose) chatClose.addEventListener('click', () => toggleChat(false));
-            if (chatForm) {
-                chatForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const question = chatInput ? chatInput.value.trim() : '';
-                    if (!question) return;
-                    addChatMessage(question, 'user');
-                    if (chatInput) chatInput.value = '';
-                    addChatMessage('Dem esta buscando en el manual...', 'bot');
-                    setTimeout(async () => {
-                        const typing = chatMessages ? chatMessages.lastElementChild : null;
-                        if (typing && typing.textContent === 'Dem esta buscando en el manual...') typing.remove();
-                        const answer = await answerQuestion(question);
-                        addChatMessage(answer, 'bot');
-                        showMessage('Ya revise el manual para ti.', 2800);
-                    }, 450);
-                });
-            }
-
-            document.querySelectorAll('[data-dem-action]').forEach(button => {
-                button.addEventListener('click', () => {
-                    const action = button.getAttribute('data-dem-action');
-                    if (action !== 'sleep') resetSleepTimer();
-                    if (action === 'happy') {
-                        setEmotion('celebrating', 2500);
-                        showMessage('Dem esta celebrando contigo.', 2500);
-                        const rect = lumi.getBoundingClientRect();
-                        createSparkles(rect.left + rect.width / 2, rect.top + 18, 18);
-                    }
-                    if (action === 'think') {
-                        setEmotion('thinking', 3000);
-                        showMessage('Estoy pensando... abre el chat y te ayudo.', 3000);
-                    }
-                    if (action === 'sleep') {
-                        if (isSleeping) {
-                            wakeUp();
-                            showMessage('Listo, Dem despierto.', 2500);
-                            resetSleepTimer();
-                        } else {
-                            goToSleep();
-                        }
-                    }
-                    if (action === 'perspective') {
-                        container.classList.remove(...perspectiveClasses.filter(Boolean));
-                        perspectiveIndex = (perspectiveIndex + 1) % perspectiveClasses.length;
-                        if (perspectiveClasses[perspectiveIndex]) container.classList.add(perspectiveClasses[perspectiveIndex]);
-                        showMessage(['Vista frontal', 'Vista izquierda', 'Vista derecha', 'Vista posterior'][perspectiveIndex], 1800);
-                    }
-                });
-            });
+            
+            setTimeout(() => {
+                showMessage("\u00a1Bienvenido a Roco Lab! \u2728 Preg\u00fantame lo que quieras.", 5000);
+            }, 1000);
             
             resetSleepTimer();
         });

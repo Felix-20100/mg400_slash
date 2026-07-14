@@ -42,6 +42,11 @@
             --hotspot-pulse: rgba(167, 139, 250, 0.4);
             --tooltip-bg: rgba(30, 41, 59, 0.95);
         }
+        .dark .logo-upt,
+        .dark .logo-roco,
+        .dark .logo-maria {
+            filter: brightness(0) invert(1) !important;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -739,137 +744,144 @@
                 </div>
 
                 <!-- Diagrama Interactivo GIGANTE -->
-                <section id="hw-diagrama" class="glass-card p-10 scroll-mt-32 active-sub-section">
-                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
+                <section id="hw-diagrama" class="glass-card p-6 md:p-10 scroll-mt-32 active-sub-section">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
                         <i class="fas fa-search-plus text-violet-400"></i>
-                        <span class="lang-es">Diagrama Interactivo de Gran Escala</span><span class="lang-en">Large Scale Interactive Diagram</span>
+                        <span class="lang-es">Diagrama Interactivo de la Anatomía del Robot</span><span class="lang-en">Interactive Robot Anatomy Diagram</span>
                     </h3>
-                    <p class="text-slate-300 mb-10 text-lg">
-                        <span class="lang-es">Este diagrama ampliado permite estudiar la estructura mecánica. <strong>Pasa el cursor sobre las esferas de energía parpadeantes</strong> para desglosar el hardware.</span>
-                        <span class="lang-en">This enlarged diagram allows studying the mechanical structure. <strong>Hover over the blinking energy spheres</strong> to break down the hardware.</span>
+                    <p class="text-slate-350 mb-8 text-base">
+                        <span class="lang-es">Explora la estructura mecánica y articulaciones del Dobot MG400. <strong>Pasa el cursor sobre los puntos interactivos</strong> en la imagen para ver los detalles, o haz clic en las tarjetas laterales para localizarlos.</span>
+                        <span class="lang-en">Explore the mechanical structure and joints of the Dobot MG400. <strong>Hover over the interactive points</strong> on the image to see details, or click the side cards to locate them.</span>
                     </p>
                     
-                    <div class="flex justify-center w-full">
-                        <!-- AUMENTO DE TAMAÑO MAX-W-5XL -->
-                        <div class="relative inline-block w-full max-w-5xl bg-white/5 p-4 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.3)]">
-                            <!-- La imagen del usuario -->
-                            <img src="robito.jpeg" alt="Robot MG400" class="w-full h-auto rounded-2xl" onerror="this.style.display='none'; document.getElementById('robito-error').style.display='block';" />
-                            <div id="robito-error" style="display:none" class="bg-black/80 p-20 text-center rounded-2xl border-2 border-dashed border-violet-500/50">
-                                <i class="fas fa-image text-8xl text-violet-500/50 mb-6"></i>
-                                <h4 class="text-white font-bold text-3xl mb-4">Falta imagen 'robito'</h4>
-                                <p class="text-slate-400 text-xl">Por favor asegúrate de que tu imagen se llame exactamente <code class="text-violet-400 bg-black/50 px-2 py-1 rounded">robito.jpeg</code>.</p>
-                            </div>
-                            
-                            <!-- Hotspots ajustados a robito.jpeg -->
-                            <div class="hotspot" style="top: 62%; left: 27%;">
-                                <div class="tooltip-content" style="width: 350px;">
-                                    <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-3 text-xl">
-                                        <span class="lang-es">Base y Módulo Central (J1)</span><span class="lang-en">Base & Central Module (J1)</span>
-                                    </h5>
-                                    <p class="text-base text-slate-300 mb-2">
-                                        <span class="lang-es"><strong>Cerebro del Sistema:</strong> Integra la controladora de movimiento, puertos de red, y la placa base de I/O de 24V. Pesa el 60% del equipo para dar estabilidad.</span>
-                                        <span class="lang-en"><strong>System Brain:</strong> Integrates the motion controller, network ports, and the 24V I/O motherboard. Weighs 60% of the unit for stability.</span>
-                                    </p>
-                                    <p class="text-sm text-slate-400">
-                                        <span class="lang-es"><strong>Eje J1:</strong> Rotación panorámica de ±160°. Velocidad máxima soportada: 300°/s. Impulsado por un servomotor sin escobillas con reductor armónico.</span>
-                                        <span class="lang-en"><strong>J1 Axis:</strong> Pan rotation of ±160°. Max supported speed: 300°/s. Driven by a brushless servo motor with harmonic reducer.</span>
-                                    </p>
+                    <div class="flex flex-col lg:flex-row gap-8 items-start w-full">
+                        <!-- Left Column: Large Image with Hotspots -->
+                        <div class="w-full lg:w-[58%] flex-shrink-0">
+                            <div class="relative inline-block w-full bg-white/5 p-3 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.3)]">
+                                <img src="robito.jpeg" alt="Robot MG400" class="w-full h-auto rounded-2xl object-contain" data-error-id="robito-error" onerror="handleImageError(this, 'robito.jpeg');" />
+                                <div id="robito-error" style="display:none" class="bg-black/80 p-12 text-center rounded-2xl border-2 border-dashed border-violet-500/50">
+                                    <i class="fas fa-image text-6xl text-violet-500/50 mb-4"></i>
+                                    <h4 class="text-white font-bold text-xl mb-2">Falta imagen 'robito'</h4>
+                                    <p class="text-xs text-slate-400">Por favor asegúrate de que tu imagen se llame exactamente <code class="text-violet-400 bg-black/50 px-2 py-1 rounded">robito.jpeg</code>.</p>
+                                </div>
+                                
+                                <!-- Hotspots -->
+                                <div class="hotspot" id="hs-j1" style="top: 62%; left: 27%;" onclick="highlightAnatomyCard('card-j1')">
+                                    <div class="tooltip-content" style="width: 320px;">
+                                        <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-2 text-base">Base y Módulo Central (J1)</h5>
+                                        <p class="text-xs text-slate-300 mb-1"><strong>Cerebro del Sistema:</strong> Integra la controladora de movimiento, puertos de red y placa base I/O de 24V. Pesa el 60% del robot para máxima estabilidad.</p>
+                                        <p class="text-[11px] text-slate-400"><strong>Límites:</strong> Rotación panorámica de ±160° impulsado por servomotor y reductor armónico.</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-j2" style="top: 47%; left: 36%;" onclick="highlightAnatomyCard('card-j2')">
+                                    <div class="tooltip-content" style="width: 320px;">
+                                        <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-2 text-base">Brazo Primario (J2)</h5>
+                                        <p class="text-xs text-slate-300 mb-1"><strong>Estructura de Fuerza:</strong> Soporta el torque de palanca cuando el robot se extiende por completo.</p>
+                                        <p class="text-[11px] text-slate-400"><strong>Límites:</strong> -25° a 85°. Cuenta con frenos electromagnéticos que bloquean el eje en caso de pérdida de energía.</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-j3" style="top: 17%; left: 45%;" onclick="highlightAnatomyCard('card-j3')">
+                                    <div class="tooltip-content" style="width: 320px;">
+                                        <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-2 text-base">Brazo Secundario (J3)</h5>
+                                        <p class="text-xs text-slate-300 mb-1"><strong>Dinamismo Ligero:</strong> Fabricado en aluminio aeroespacial para minimizar inercias y acelerar ciclos SCARA.</p>
+                                        <p class="text-[11px] text-slate-400"><strong>Límites:</strong> -10° a 95°. Su algoritmo TrueMotion mitiga vibraciones en paradas abruptas.</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-j4" style="top: 48%; left: 71%;" onclick="highlightAnatomyCard('card-j4')">
+                                    <div class="tooltip-content" style="left: auto; right: 40px; width: 320px;">
+                                        <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-2 text-base">Brida de Herramienta (J4 / TCP)</h5>
+                                        <p class="text-xs text-slate-300 mb-1"><strong>Acople Mecánico:</strong> Interfaz estándar ISO con rotación continua libre de ±360°.</p>
+                                        <p class="text-[11px] text-slate-400"><strong>Conector:</strong> Puerto tipo aviación integrado con 2 DI, 2 DO y 24VDC directo a la punta.</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-forearm" style="top: 22%; left: 54%;" onclick="highlightAnatomyCard('card-forearm')">
+                                    <div class="tooltip-content" style="width: 280px;">
+                                        <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-2 text-base">Forearm (Antebrazo)</h5>
+                                        <p class="text-xs text-slate-300">Protector del brazo secundario. Aloja internamente el cableado hacia la brida y resguarda la transmisión de la muñeca (J4).</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-hand-guide" style="top: 29%; left: 60%;" onclick="highlightAnatomyCard('card-hand-guide')">
+                                    <div class="tooltip-content" style="width: 280px;">
+                                        <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-2 text-base">Botón de Guiado Manual</h5>
+                                        <p class="text-xs text-slate-300">Libera los frenos de los servomotores al presionarse, permitiendo grabar trayectorias moviendo el robot con la mano (Drag-to-Teach).</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-tool-io" style="top: 35%; left: 63%;" onclick="highlightAnatomyCard('card-tool-io')">
+                                    <div class="tooltip-content" style="width: 280px;">
+                                        <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-2 text-base">Interfaz de I/O de Herramienta</h5>
+                                        <p class="text-xs text-slate-300">Conector de aviación rápido en el extremo del brazo para alimentar pinzas, ventosas o actuadores sin cables sueltos desde la base.</p>
+                                    </div>
+                                </div>
+                                <div class="hotspot" id="hs-air-interface" style="top: 39%; left: 66%;" onclick="highlightAnatomyCard('card-air-interface')">
+                                    <div class="tooltip-content" style="left: auto; right: 40px; width: 280px;">
+                                        <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-2 text-base">Interfaz de Tubería de Aire</h5>
+                                        <p class="text-xs text-slate-300">Acople de aire comprimido (conector rápido azul) integrado para activar herramientas neumáticas o ventosas de vacío.</p>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="hotspot" style="top: 47%; left: 36%;">
-                                <div class="tooltip-content" style="width: 350px;">
-                                    <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-3 text-xl">
-                                        <span class="lang-es">Brazo Primario (J2)</span><span class="lang-en">Primary Arm (J2)</span>
-                                    </h5>
-                                    <p class="text-base text-slate-300 mb-2">
-                                        <span class="lang-es"><strong>Columna Vertebral:</strong> Soporta las mayores fuerzas de palanca (Torque) cuando el robot está completamente extendido.</span>
-                                        <span class="lang-en"><strong>Backbone:</strong> Supports the greatest lever forces (Torque) when the robot is fully extended.</span>
-                                    </p>
-                                    <p class="text-sm text-slate-400">
-                                        <span class="lang-es"><strong>Límites Físicos:</strong> -25° a 85°. Crucial: Cuenta con frenos electromagnéticos que se activan al perder energía para evitar que el brazo caiga por gravedad y dañe la mesa.</span>
-                                        <span class="lang-en"><strong>Physical Limits:</strong> -25° to 85°. Crucial: Has electromagnetic brakes that activate on power loss to prevent the arm from falling and damaging the desk.</span>
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <!-- Right Column: Vertical detail cards -->
+                        <div class="flex-1 w-full space-y-3 max-h-[60vh] overflow-y-auto pr-2" id="anatomy-cards-container">
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-j1" onclick="focusAnatomyHotspot('hs-j1')">
+                                <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2"><i class="fas fa-microchip"></i> Base y Módulo Central (J1)</h4>
+                                <p class="text-xs text-slate-400 mt-1">Aloja la controladora de movimiento, la fuente de poder interna, y los puertos LAN/Ethernet.</p>
                             </div>
-
-                            <div class="hotspot" style="top: 17%; left: 45%;">
-                                <div class="tooltip-content" style="width: 350px;">
-                                    <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-3 text-xl">
-                                        <span class="lang-es">Brazo Secundario (J3)</span><span class="lang-en">Secondary Arm (J3)</span>
-                                    </h5>
-                                    <p class="text-base text-slate-300 mb-2">
-                                        <span class="lang-es"><strong>Alta Dinámica:</strong> Construido en aleación de aluminio aeroespacial para reducir la inercia, permitiendo movimientos rápidos de ensamblaje tipo SCARA.</span>
-                                        <span class="lang-en"><strong>High Dynamics:</strong> Built in aerospace aluminum alloy to reduce inertia, allowing for fast SCARA-like assembly movements.</span>
-                                    </p>
-                                    <p class="text-sm text-slate-400">
-                                        <span class="lang-es"><strong>Límites Físicos:</strong> -10° a 95°. Su algoritmo *TrueMotion* suprime la vibración armónica generada durante frenados abruptos.</span>
-                                        <span class="lang-en"><strong>Physical Limits:</strong> -10° to 95°. Its *TrueMotion* algorithm suppresses harmonic vibration generated during abrupt braking.</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-j2" onclick="focusAnatomyHotspot('hs-j2')">
+                                <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2"><i class="fas fa-arrows-alt-v"></i> Brazo Primario (J2)</h4>
+                                <p class="text-xs text-slate-400 mt-1">Eje de elevación principal con frenos electromagnéticos de emergencia ante fallos de energía.</p>
                             </div>
-
-                            <div class="hotspot" style="top: 48%; left: 71%;">
-                                <div class="tooltip-content" style="left: auto; right: 50px; width: 350px;">
-                                    <h5 class="text-pink-400 font-bold border-b border-pink-400/30 pb-2 mb-3 text-xl">
-                                        <span class="lang-es">Brida de Herramienta (J4 / TCP)</span><span class="lang-en">Tool Flange (J4 / TCP)</span>
-                                    </h5>
-                                    <p class="text-base text-slate-300 mb-2">
-                                        <span class="lang-es"><strong>Tool Center Point:</strong> Interfaz de acople mecánico estándar ISO. Permite rotación infinita de ±360°.</span>
-                                        <span class="lang-en"><strong>Tool Center Point:</strong> Standard ISO mechanical coupling interface. Allows infinite rotation of ±360°.</span>
-                                    </p>
-                                    <p class="text-sm text-slate-400">
-                                        <span class="lang-es"><strong>Conexión Rápida:</strong> Integra un puerto tipo aviación que provee 2 entradas, 2 salidas y alimentación 24VDC directo a la punta, evitando enredar cables largos.</span>
-                                        <span class="lang-en"><strong>Fast Connection:</strong> Integrates an aviation-type port providing 2 inputs, 2 outputs and 24VDC directly to the tip, avoiding long tangled wires.</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-j3" onclick="focusAnatomyHotspot('hs-j3')">
+                                <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2"><i class="fas fa-angle-double-right"></i> Brazo Secundario (J3)</h4>
+                                <p class="text-xs text-slate-400 mt-1">Eje de alcance en aluminio aeroespacial ligero, equipado con amortiguación TrueMotion.</p>
                             </div>
-
-                            <!-- Nuevos Hotspots Extras -->
-                            <div class="hotspot" style="top: 22%; left: 54%;">
-                                <div class="tooltip-content" style="width: 300px;">
-                                    <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-3 text-lg">
-                                        <span class="lang-es">Forearm (Antebrazo)</span><span class="lang-en">Forearm</span>
-                                    </h5>
-                                    <p class="text-sm text-slate-300">
-                                        <span class="lang-es">Cubierta protectora del brazo secundario. Aloja internamente el cableado hacia la brida y protege los mecanismos de transmisión de la muñeca (J4).</span>
-                                        <span class="lang-en">Protective cover of the secondary arm. Internally houses the wiring to the flange and protects the wrist transmission mechanisms (J4).</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-j4" onclick="focusAnatomyHotspot('hs-j4')">
+                                <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2"><i class="fas fa-sync-alt"></i> Brida de Herramienta (J4 / TCP)</h4>
+                                <p class="text-xs text-slate-400 mt-1">Brida de rotación de ±360° con alimentación interna integrada para grips y efectores.</p>
                             </div>
-
-                            <div class="hotspot" style="top: 29%; left: 60%;">
-                                <div class="tooltip-content" style="width: 300px;">
-                                    <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-3 text-lg">Hand Guiding Button</h5>
-                                    <p class="text-sm text-slate-300">
-                                        <span class="lang-es">Botón de enseñanza manual. Al presionarlo, libera los frenos de los servomotores permitiendo mover el robot libremente con la mano para grabar puntos de trayectoria (Drag-to-Teach) sin usar software.</span>
-                                        <span class="lang-en">Manual teaching button. Pressing it releases the servo brakes allowing you to move the robot freely by hand to record trajectory points (Drag-to-Teach) without software.</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-forearm" onclick="focusAnatomyHotspot('hs-forearm')">
+                                <h4 class="text-sm font-bold text-cyan-400 flex items-center gap-2"><i class="fas fa-shield-alt"></i> Forearm (Antebrazo)</h4>
+                                <p class="text-xs text-slate-400 mt-1">Carcasa protectora del brazo superior que aloja mangueras de aire y bus de datos.</p>
                             </div>
-
-                            <div class="hotspot" style="top: 35%; left: 63%;">
-                                <div class="tooltip-content" style="width: 300px;">
-                                    <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-3 text-lg">Tool I/O Interface</h5>
-                                    <p class="text-sm text-slate-300">
-                                        <span class="lang-es">Conector eléctrico rápido (aviación) ubicado estratégicamente cerca del efector final. Provee energía de 24V y señales I/O a grippers, ventosas o láseres sin pasar cables desde la base.</span>
-                                        <span class="lang-en">Fast electrical connector (aviation) strategically located near the end effector. Provides 24V power and I/O signals to grippers, suction cups, or lasers without routing cables from the base.</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-hand-guide" onclick="focusAnatomyHotspot('hs-hand-guide')">
+                                <h4 class="text-sm font-bold text-cyan-400 flex items-center gap-2"><i class="fas fa-hand-paper"></i> Botón de Guiado Manual</h4>
+                                <p class="text-xs text-slate-400 mt-1">Botón de enseñanza física (Drag-to-Teach) para programar por imitación manual sin usar código.</p>
                             </div>
-
-                            <div class="hotspot" style="top: 39%; left: 66%;">
-                                <div class="tooltip-content" style="left: auto; right: 50px; width: 300px;">
-                                    <h5 class="text-cyan-400 font-bold border-b border-cyan-400/30 pb-2 mb-3 text-lg">Air Pipe Interface</h5>
-                                    <p class="text-sm text-slate-300">
-                                        <span class="lang-es">Entrada neumática (conector azul). Permite conectar mangueras de aire comprimido desde el compresor directamente al brazo para accionar ventosas de vacío o pinzas neumáticas.</span>
-                                        <span class="lang-en">Pneumatic input (blue connector). Allows connecting compressed air hoses directly from the compressor to the arm to drive vacuum cups or pneumatic grippers.</span>
-                                    </p>
-                                </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-tool-io" onclick="focusAnatomyHotspot('hs-tool-io')">
+                                <h4 class="text-sm font-bold text-cyan-400 flex items-center gap-2"><i class="fas fa-plug"></i> Tool I/O Interface</h4>
+                                <p class="text-xs text-slate-400 mt-1">Puerto de acoplamiento eléctrico rápido para pinzas o válvulas de vacío de 24V.</p>
+                            </div>
+                            <div class="p-3 bg-slate-900/40 border border-slate-700/50 rounded-xl transition-all cursor-pointer hover:border-violet-500" id="card-air-interface" onclick="focusAnatomyHotspot('hs-air-interface')">
+                                <h4 class="text-sm font-bold text-cyan-400 flex items-center gap-2"><i class="fas fa-wind"></i> Interfaz de Aire Comprimido</h4>
+                                <p class="text-xs text-slate-400 mt-1">Acople rápido de 4mm para la manguera neumática interna del efector final.</p>
                             </div>
                         </div>
                     </div>
                 </section>
+                
+                <script>
+                    function highlightAnatomyCard(cardId) {
+                        const cards = document.querySelectorAll('#anatomy-cards-container > div');
+                        cards.forEach(c => {
+                            c.classList.remove('border-violet-500', 'bg-violet-500/10');
+                        });
+                        const targetCard = document.getElementById(cardId);
+                        if (targetCard) {
+                            targetCard.classList.add('border-violet-500', 'bg-violet-500/10');
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                    function focusAnatomyHotspot(hsId) {
+                        const hotspots = document.querySelectorAll('.hotspot');
+                        hotspots.forEach(h => h.classList.remove('active'));
+                        const hs = document.getElementById(hsId);
+                        if (hs) {
+                            hs.classList.add('active');
+                            const cardId = hsId.replace('hs-', 'card-');
+                            highlightAnatomyCard(cardId);
+                        }
+                    }
+                </script>
 
                 <!-- Ficha Técnica -->
                 <section id="hw-especificaciones" class="glass-card p-10 scroll-mt-32">
@@ -961,7 +973,7 @@
                     </p>
                     
                     <div class="bg-white/5 p-4 rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.1)] w-full flex justify-center">
-                        <img src="robocito.jpeg" alt="Imagen Extra del Robot" class="w-full max-w-4xl h-auto rounded-2xl hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('extra-error').style.display='block';" />
+                        <img src="robocito.jpeg" alt="Imagen Extra del Robot" class="w-full max-w-4xl h-auto rounded-2xl hover:scale-105 transition-transform duration-500" data-error-id="extra-error" onerror="handleImageError(this, 'robocito.jpeg');" />
                         <div id="extra-error" style="display:none" class="bg-black/60 p-12 text-center rounded-2xl border border-dashed border-slate-500/50 w-full max-w-4xl">
                             <i class="fas fa-image text-6xl text-slate-500/50 mb-4"></i>
                             <h4 class="text-slate-300 font-bold text-2xl mb-2">
@@ -1384,58 +1396,50 @@
                 </section>
 
                 <!-- Interfaz -->
-                <section id="sw-interfaz" class="glass-card p-10 scroll-mt-32">
-                    <h3 class="text-3xl font-tech font-bold text-white mb-6 flex items-center gap-3">
+                <section id="sw-interfaz" class="glass-card p-6 md:p-10 scroll-mt-32">
+                    <h3 class="text-3xl font-tech font-bold text-white mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
                         <i class="fas fa-desktop text-cyan-400"></i>
                         <span class="lang-es">Análisis de Interfaz (DobotStudio Pro)</span><span class="lang-en">Interface Analysis (DobotStudio Pro)</span>
                     </h3>
+                    <p class="text-slate-350 mb-8 text-base">
+                        <span class="lang-es">Explora la distribución de la interfaz del software DobotStudio Pro. <strong>Compara la captura de pantalla</strong> con las zonas de control y opciones clave.</span>
+                        <span class="lang-en">Explore the layout of the DobotStudio Pro software interface. <strong>Compare the screenshot</strong> with the control areas and key options.</span>
+                    </p>
                     
-                    <div class="w-full flex justify-center mb-8">
-                        <div class="relative inline-block w-full max-w-5xl bg-white/5 p-4 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(6,182,212,0.3)]">
-                            <img src="software.png.png" alt="DobotStudio Pro" class="w-full h-auto rounded-2xl" onerror="this.src='software.png'; this.onerror=function(){this.style.display='none'; document.getElementById('sw-placeholder-mega').style.display='block';};" />
-                            <div id="sw-placeholder-mega" style="display:none" class="bg-black/80 p-20 text-center rounded-2xl border-2 border-dashed border-cyan-500/50">
-                                <i class="fas fa-cloud-upload-alt text-8xl text-cyan-500/50 mb-6"></i>
-                                <h4 class="text-white font-bold text-3xl mb-4">
-                                    <span class="lang-es">Carga la captura de tu software</span><span class="lang-en">Upload your software capture</span>
-                                </h4>
-                                <p class="text-slate-400 text-xl">
-                                    <span class="lang-es">Por favor guarda la imagen del DobotStudio Pro exactamente con el nombre <code class="text-cyan-400 bg-black/50 px-2 py-1 rounded">software.png.png</code> (o .png).</span>
-                                    <span class="lang-en">Please save the DobotStudio Pro image exactly with the name <code class="text-cyan-400 bg-black/50 px-2 py-1 rounded">software.png.png</code> (or .png).</span>
-                                </p>
+                    <div class="flex flex-col xl:flex-row gap-8 items-start w-full">
+                        <!-- Left Column: Large Image -->
+                        <div class="w-full xl:w-[58%] flex-shrink-0">
+                            <div class="relative inline-block w-full bg-white/5 p-3 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(6,182,212,0.3)]">
+                                <img src="software.png.png" alt="DobotStudio Pro" class="w-full h-auto rounded-2xl object-contain" data-error-id="sw-placeholder-mega" onerror="handleImageError(this, 'software.png.png');" />
+                                <div id="sw-placeholder-mega" style="display:none" class="bg-black/80 p-12 text-center rounded-2xl border-2 border-dashed border-cyan-500/50">
+                                    <i class="fas fa-cloud-upload-alt text-6xl text-cyan-500/50 mb-4"></i>
+                                    <h4 class="text-white font-bold text-xl mb-2">Carga la captura de tu software</h4>
+                                    <p class="text-xs text-slate-450">Por favor guarda la imagen del DobotStudio Pro exactamente con el nombre <code class="text-cyan-400 bg-black/50 px-2 py-1 rounded">software.png.png</code>.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Interactive detail grid -->
+                        <div class="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-black/45 p-4 rounded-xl border-t-4 border-t-blue-500 hover:bg-black/60 transition-colors">
+                                <h4 class="text-base font-bold text-blue-400 mb-2"><i class="fas fa-sliders-h"></i> Barra Superior</h4>
+                                <p class="text-xs text-slate-400 leading-normal">Selector de conexión (ej. Virtual Controller o el robot real), IP (192.168.1.6), botón Connect, log de alarmas y el slider de Global Speed (0-100%).</p>
+                            </div>
+                            <div class="bg-black/45 p-4 rounded-xl border-t-4 border-t-purple-500 hover:bg-black/60 transition-colors">
+                                <h4 class="text-base font-bold text-purple-400 mb-2"><i class="fas fa-cubes"></i> DobotBlockly</h4>
+                                <p class="text-xs text-slate-400 leading-normal">Entorno visual de bloques tipo puzzle. Ideal para iniciación sin código complejo, con depuración paso a paso en tiempo real.</p>
+                            </div>
+                            <div class="bg-black/45 p-4 rounded-xl border-t-4 border-t-green-500 hover:bg-black/60 transition-colors">
+                                <h4 class="text-base font-bold text-green-400 mb-2"><i class="fas fa-code"></i> Script (LUA)</h4>
+                                <p class="text-xs text-slate-400 leading-normal">Entorno de código puro para lógicas avanzadas, bucles rápidos, operaciones matemáticas complejas e I/O industrial.</p>
+                            </div>
+                            <div class="bg-black/45 p-4 rounded-xl border-t-4 border-t-rose-500 hover:bg-black/60 transition-colors">
+                                <h4 class="text-base font-bold text-rose-400 mb-2"><i class="fas fa-project-diagram"></i> Ajustes de Proceso</h4>
+                                <p class="text-xs text-slate-400 leading-normal">Ajustes del brazo, configuración de carga de herramienta, calibración física del punto cero y lista de proyectos recientes.</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-8">
-                        <div class="bg-black/40 p-5 rounded-xl border-t-4 border-t-blue-500 hover:bg-black/60 transition-colors">
-                            <h4 class="text-lg font-bold text-blue-400 mb-2"><i class="fas fa-sliders-h"></i> <span class="lang-es">Barra Superior</span><span class="lang-en">Top Bar</span></h4>
-                            <p class="text-sm text-slate-400">
-                                <span class="lang-es">Selector de conexión (ej. <strong>Virtual Controller</strong> o el robot real), IP (192.168.1.6), botón <strong>Connect</strong>, log de alarmas y el slider de <strong>Global Speed (0-100%)</strong>.</span>
-                                <span class="lang-en">Connection selector (e.g. <strong>Virtual Controller</strong> or real robot), IP (192.168.1.6), <strong>Connect</strong> button, alarm log, and <strong>Global Speed slider (0-100%)</strong>.</span>
-                            </p>
-                        </div>
-                        <div class="bg-black/40 p-5 rounded-xl border-t-4 border-t-purple-500 hover:bg-black/60 transition-colors">
-                            <h4 class="text-lg font-bold text-purple-400 mb-2"><i class="fas fa-cubes"></i> DobotBlockly</h4>
-                            <p class="text-sm text-slate-400">
-                                <span class="lang-es">Entorno visual de bloques tipo puzzle. Ideal para iniciación sin código complejo, con depuración paso a paso.</span>
-                                <span class="lang-en">Visual puzzle block environment. Ideal for beginners without complex code, featuring step-by-step debugging.</span>
-                            </p>
-                        </div>
-                        <div class="bg-black/40 p-5 rounded-xl border-t-4 border-t-green-500 hover:bg-black/60 transition-colors">
-                            <h4 class="text-lg font-bold text-green-400 mb-2"><i class="fas fa-code"></i> Script (LUA)</h4>
-                            <p class="text-sm text-slate-400">
-                                <span class="lang-es">Entorno de código puro para lógicas avanzadas, bucles rápidos, operaciones matemáticas complejas e I/O industrial.</span>
-                                <span class="lang-en">Pure code environment for advanced logic, fast loops, complex math operations, and industrial I/O.</span>
-                            </p>
-                        </div>
-                        <div class="bg-black/40 p-5 rounded-xl border-t-4 border-t-rose-500 hover:bg-black/60 transition-colors">
-                            <h4 class="text-lg font-bold text-rose-400 mb-2"><i class="fas fa-project-diagram"></i> Process & Settings</h4>
-                            <p class="text-sm text-slate-400">
-                                <span class="lang-es">Ajustes del brazo, configuración de carga de herramienta, calibración física del punto cero, y la lista de proyectos recientes.</span>
-                                <span class="lang-en">Arm settings, tool payload configuration, zero-point physical calibration, and recent projects list.</span>
-                            </p>
-                        </div>
-                    </div>
+                </section>
 
                     <div class="bg-black/50 p-6 rounded-2xl border border-slate-700">
                         <h4 class="text-xl font-bold text-cyan-300 mb-4"><i class="fas fa-gamepad mr-2"></i> <span class="lang-es">Panel de Jogging y Control Manual</span><span class="lang-en">Jogging & Manual Control Panel</span></h4>
@@ -2028,8 +2032,8 @@
                         <span class="lang-es">Bloques de Eventos</span><span class="lang-en">Event Blocks</span>
                     </h3>
                     <p class="text-slate-300 text-base mb-8">
-                        <span class="lang-es">Definen las condiciones de arranque y los hilos de ejecución paralelos del robot, fundamentales para estructurar programas en DobotStudio Pro (desarrollado por los ingenieros Uriel Jovany Arellano Oliver y Daniel Aldahir Jardinez Aguilar).</span>
-                        <span class="lang-en">Define the starting conditions and parallel execution threads of the robot, fundamental for structuring programs in DobotStudio Pro (developed by engineers Uriel Jovany Arellano Oliver and Daniel Aldahir Jardinez Aguilar).</span>
+                        <span class="lang-es">Definen las condiciones de arranque y los hilos de ejecución paralelos del robot, fundamentales para estructurar programas en DobotStudio Pro.</span>
+                        <span class="lang-en">Define the starting conditions and parallel execution threads of the robot, fundamental for structuring programs in DobotStudio Pro.</span>
                     </p>
                     
                     <div class="space-y-6">
@@ -2071,16 +2075,16 @@
                     </div>
 
                     <!-- Visual del Entorno Blockly de las diapositivas -->
-                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image75.png" alt="Acceso a DobotBlockly" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Paso para acceder a la interfaz DobotBlockly desde DobotStudio Pro</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">Step to access the DobotBlockly interface from DobotStudio Pro</p>
+                    <div class="mt-8 grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image75.png" alt="Acceso a DobotBlockly" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image75.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Paso para acceder a la interfaz DobotBlockly desde DobotStudio Pro</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">Step to access the DobotBlockly interface from DobotStudio Pro</p>
                         </div>
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image79.png" alt="Construcción de Bloques" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Uso interactivo de arrastrar y soltar bloques de eventos y variables</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">Interactive use of drag-and-drop event and variable blocks</p>
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image79.png" alt="Construcción de Bloques" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image79.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Uso interactivo de arrastrar y soltar bloques de eventos y variables</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">Interactive use of drag-and-drop event and variable blocks</p>
                         </div>
                     </div>
                 </section>
@@ -2374,16 +2378,16 @@
                     </div>
 
                     <!-- Slide visuales -->
-                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image66.png" alt="Tabla de Puntos" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Módulo "Points" para gestionar y grabar las coordenadas cartesianas P1, P2...</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">"Points" module to manage and record Cartesian coordinates P1, P2...</p>
+                    <div class="mt-8 grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image66.png" alt="Tabla de Puntos" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image66.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Módulo "Points" para gestionar y grabar las coordenadas cartesianas P1, P2...</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">"Points" module to manage and record Cartesian coordinates P1, P2...</p>
                         </div>
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image77.png" alt="Añadir Punto" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Interfaz del panel de puntos para grabar la posición física actual del brazo robótico</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">Points panel interface to record the current physical position of the robot arm</p>
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image77.png" alt="Añadir Punto" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image77.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Interfaz del panel de puntos para grabar la posición física actual del brazo robótico</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">Points panel interface to record the current physical position of the robot arm</p>
                         </div>
                     </div>
                 </section>
@@ -2575,16 +2579,16 @@
                     </div>
 
                     <!-- Slide visuales -->
-                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image53.png" alt="Modbus UI" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Configuración de comunicación Modbus en la interfaz de DobotStudio Pro</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">Modbus communication configuration in DobotStudio Pro interface</p>
+                    <div class="mt-8 grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image53.png" alt="Modbus UI" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image53.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Configuración de comunicación Modbus en la interfaz de DobotStudio Pro</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">Modbus communication configuration in DobotStudio Pro interface</p>
                         </div>
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-700/50 flex flex-col items-center">
-                            <img src="./media/image56.png" alt="Esclavo Modbus" class="rounded-lg shadow-md max-w-full h-auto max-h-[220px] object-contain mb-3">
-                            <p class="text-xs text-slate-400 text-center lang-es">Definición conceptual y tasa de escaneo de Maestro y Esclavos Modbus</p>
-                            <p class="text-xs text-slate-400 text-center lang-en">Conceptual definition and scan rate of Modbus Master and Slaves</p>
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-700/50 flex flex-col items-center">
+                            <img src="./media/image56.png" alt="Esclavo Modbus" class="rounded-lg shadow-md max-w-full h-auto max-h-[500px] object-contain mb-3 cursor-zoom-in" onclick="openModal('./media/image56.png')">
+                            <p class="text-sm font-bold text-slate-300 text-center lang-es">Definición conceptual y tasa de escaneo de Maestro y Esclavos Modbus</p>
+                            <p class="text-sm font-bold text-slate-300 text-center lang-en">Conceptual definition and scan rate of Modbus Master and Slaves</p>
                         </div>
                     </div>
                 </section>
@@ -2664,7 +2668,7 @@
                         <span class="lang-es">Permiten la manipulación de texto e índices de arreglos de datos en memoria.</span>
                         <span class="lang-en">Allow manipulating text and data array indexes in memory.</span>
                     </p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div class="bg-slate-900/60 p-4 rounded-xl border-l-4 border-l-pink-500">
                             <strong class="text-white block mb-1">Operaciones de Cadenas</strong>
                             <p class="text-xs text-slate-300">Permite unir dos textos (conectar), obtener el número de letras (longitud), verificar si contiene una palabra clave o reemplazar caracteres.</p>
@@ -2672,6 +2676,56 @@
                         <div class="bg-slate-900/60 p-4 rounded-xl border-l-4 border-l-pink-500">
                             <strong class="text-white block mb-1">Conversión de Matrices</strong>
                             <p class="text-xs text-slate-300">Transforma un texto separado por comas en un arreglo indexable de datos (cadena a matriz) y viceversa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-slate-950/40 p-6 rounded-2xl border border-slate-700/30 flex flex-col md:flex-row gap-6 items-center">
+                        <div class="flex-1">
+                            <h4 class="text-base font-bold text-pink-400 mb-2 flex items-center gap-2"><i class="fas fa-project-diagram"></i> Funcionamiento de Conversión</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                En la programación del Dobot, es común recibir coordenadas o comandos en formato de texto plano (cadena/string). El bloque de conversión ayuda a convertir estos datos a matrices utilizables (arrays) y viceversa.
+                            </p>
+                        </div>
+                        <div class="w-full md:w-[48%] flex items-center justify-center p-3 bg-slate-900/40 rounded-xl border border-slate-700/50">
+                            <!-- SVG String to Array diagram -->
+                            <svg viewBox="0 0 380 180" class="w-full max-w-xs drop-shadow-lg text-slate-200">
+                                <!-- Input string card -->
+                                <rect x="10" y="25" width="130" height="40" rx="8" fill="#1e1b4b" stroke="#ec4899" stroke-width="1.5"/>
+                                <text x="75" y="49" fill="#f472b6" font-size="10" font-family="monospace" text-anchor="middle">"100,-250,45,0"</text>
+                                <text x="75" y="16" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle" font-weight="bold">Cadena (String)</text>
+                                
+                                <!-- Connection Arrow -->
+                                <path d="M 150 45 L 210 45" stroke="#f472b6" stroke-width="2" marker-end="url(#arrow-pink)"/>
+                                <text x="180" y="37" fill="#f472b6" font-size="8" font-family="sans-serif" text-anchor="middle" font-weight="bold">Split (",")</text>
+                                
+                                <!-- Output Array boxes -->
+                                <text x="300" y="16" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle" font-weight="bold">Matriz (Array / Tabla)</text>
+                                <g transform="translate(230, 25)">
+                                    <!-- Index 1 -->
+                                    <rect x="0" y="0" width="130" height="22" rx="4" fill="#111827" stroke="#4b5563" stroke-width="0.8"/>
+                                    <text x="10" y="14" fill="#ec4899" font-size="9" font-family="monospace" font-weight="bold">[1]</text>
+                                    <text x="75" y="14" fill="#f3f4f6" font-size="9" font-family="monospace">100</text>
+
+                                    <!-- Index 2 -->
+                                    <rect x="0" y="27" width="130" height="22" rx="4" fill="#111827" stroke="#4b5563" stroke-width="0.8"/>
+                                    <text x="10" y="41" fill="#ec4899" font-size="9" font-family="monospace" font-weight="bold">[2]</text>
+                                    <text x="75" y="41" fill="#f3f4f6" font-size="9" font-family="monospace">-250</text>
+
+                                    <!-- Index 3 -->
+                                    <rect x="0" y="54" width="130" height="22" rx="4" fill="#111827" stroke="#4b5563" stroke-width="0.8"/>
+                                    <text x="10" y="68" fill="#ec4899" font-size="9" font-family="monospace" font-weight="bold">[3]</text>
+                                    <text x="75" y="68" fill="#f3f4f6" font-size="9" font-family="monospace">45</text>
+
+                                    <!-- Index 4 -->
+                                    <rect x="0" y="67" width="130" height="22" rx="4" fill="#111827" stroke="#4b5563" stroke-width="0.8" style="display:none;"/>
+                                </g>
+                                
+                                <defs>
+                                    <marker id="arrow-pink" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f472b6"/>
+                                    </marker>
+                                </defs>
+                            </svg>
                         </div>
                     </div>
                 </section>
@@ -3211,6 +3265,43 @@ CP(0) -- Desactivar CP para retornar a movimientos de parada exacta</pre>
                 }
             });
         });
+
+        function handleImageError(img, filename) {
+            if (!img.dataset.attempt) {
+                img.dataset.attempt = "0";
+            }
+            const paths = [
+                filename,
+                '../' + filename,
+                '../../' + filename,
+                'media/' + filename,
+                '../media/' + filename,
+                '../../media/' + filename,
+                'manual-mg400/media/' + filename,
+                '../manual-mg400/media/' + filename
+            ];
+            let attempt = parseInt(img.dataset.attempt);
+            if (attempt < paths.length) {
+                img.dataset.attempt = (attempt + 1).toString();
+                img.src = paths[attempt];
+            } else {
+                img.style.display = 'none';
+                const errorId = img.getAttribute('data-error-id');
+                if (errorId) {
+                    const errEl = document.getElementById(errorId);
+                    if (errEl) {
+                        errEl.style.display = 'block';
+                    }
+                }
+                // Hide hotspots in the same container to avoid overlapping dots on error
+                const container = img.closest('.relative');
+                if (container) {
+                    container.querySelectorAll('.hotspot').forEach(hs => {
+                        hs.style.display = 'none';
+                    });
+                }
+            }
+        }
 
         // Tema y Lenguaje
         let currentLang = 'es';
