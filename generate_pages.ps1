@@ -1,4 +1,4 @@
-# Script to generate multi-page static site for Dobot Manual
+# Script to generate multi-page static site for Dobot Manual - Built: 2026-07-14T20:31
 Add-Type -AssemblyName System.Drawing
 
 $projectRoot = "c:\Users\garci\Videos\amanual_mg400\manual-mg400"
@@ -579,6 +579,7 @@ function Get-PageWrapper {
 
     return @"
 <!DOCTYPE html>
+<!-- Deploy: 2026-07-14T20:32 -->
 <html lang="es">
 <head>
     <link rel="manifest" href="${levelPath}manifest.json">
