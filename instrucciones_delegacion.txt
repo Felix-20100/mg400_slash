@@ -1,0 +1,51 @@
+INSTRUCCIONES DE TRASPASO Y DESARROLLO - MANUAL TECNICO DOBOT MG400
+
+Copia y pega el siguiente bloque completo a la nueva Inteligencia Artificial para que sepa exactamente en donde nos quedamos y como trabajar en el proyecto:
+
+=========================================
+INICIO DEL CONTEXTO DEL PROYECTO
+=========================================
+
+Este repositorio contiene un manual tecnico modular e interactivo del robot Dobot MG400.
+
+* Enlaces del Proyecto:
+  - Repositorio de Codigo (GitHub): https://github.com/Felix-20100/mg400_slash
+  - Sitio Web en Produccion (GitHub Pages): https://felix-20100.github.io/mg400_slash/
+
+* Estructura y Funcionamiento del Proyecto:
+  - El contenido fuente completo y estructurado se encuentra en el archivo unico:
+    index.html.html (ubicado en la raiz del proyecto).
+  - Contamos con un script compilador en PowerShell:
+    generate_pages.ps1 (ubicado en la raiz del proyecto).
+  - Al ejecutar este script, procesa index.html.html, extrae las secciones de informacion y compila las vistas HTML individuales dentro de sus respectivas subcarpetas (hardware/, software/, blockly/, practicas/). Luego, copia automaticamente todo el resultado a la raiz para que este listo para subirse a GitHub.
+  - IMPORTANTE: No edites los archivos HTML dentro de las subcarpetas de manera directa, ya que se sobreescribiran la proxima vez que se ejecute el compilador. Edita siempre index.html.html o generate_pages.ps1.
+
+* Cambios y Optimizaciones ya realizados:
+  1. Asistente Dem (Mascota Chibi):
+     - Rediseñado a formato horizontal: el panel de chat se despliega a la izquierda de la mascota para no ocupar espacio hacia arriba.
+     - El panel de chat tiene aspecto fisico de nube en CSS.
+     - Se configuro un efecto interactivo: Dem se encoge automaticamente al 75% de su tamaño original cuando el chat esta abierto para ahorrar espacio visual, y vuelve al 100% al cerrarse.
+     - Se integraron codigos Unicode en JS y entidades HTML en emojis para evitar que el compilador rompa los acentos y simbolos en las respuestas.
+  2. Diseño y Modo Oscuro:
+     - Eliminados brillos y colores neon.
+     - Se optimizo el modo oscuro y se configuro la inversion automatica de los logos (UPT, RoCo, MFG) para que sigan siendo legibles.
+  3. Imagenes y Textos de Ejemplos:
+     - Se eliminaron las capturas de pantalla de codigo en la seccion de paletizado y se transcribieron de forma completa en tablas HTML legibles.
+     - Se aumento de tamaño las capturas y diagramas de hardware y software para mejorar la lectura.
+  4. Copyright y Licencia:
+     - Se limpio el copyright asignándolo unicamente a: "© 2026 Maria Fernanda Garcia Garcia." y eliminando la frase de todos los derechos reservados.
+  5. Progressive Web App (PWA):
+     - Se agregaron manifest.json y sw.js para que el sitio sea instalable directamente en el escritorio de la computadora o pantalla de inicio del celular.
+     - Se coloco el archivo .nojekyll en la raiz para saltar la compilacion por defecto de GitHub Pages y evitar que se bloquee la PWA.
+
+* Flujo de Trabajo / Comandos Utiles:
+  - Para volver a compilar todas las paginas estaticas despues de hacer cambios en index.html.html:
+    powershell -ExecutionPolicy Bypass -File .\generate_pages.ps1
+  - Para sincronizar y subir los cambios a GitHub:
+    git add .
+    git commit -m "Descripcion de los cambios realizados"
+    git push origin main
+
+=========================================
+FIN DEL CONTEXTO DEL PROYECTO
+=========================================
