@@ -51,10 +51,8 @@ Durante el desarrollo se realizaron las siguientes optimizaciones de alto nivel:
    * Integración de `manifest.json` y Service Worker `sw.js` para permitir la instalación directa del manual en el escritorio de la computadora o en la pantalla de inicio del celular.
    * Añadido archivo `.nojekyll` en la raíz para asegurar que GitHub Pages cargue los assets y archivos PWA sin bloqueos del compilador por defecto de GitHub.
 
-5. **Privacidad y Copyright:**
-   * Eliminación absoluta de nombres de autores anteriores en el manual.
+5. **Copyright y Licencia:**
    * Eliminación de "Todos los derechos reservados". Copyright limpio asignado a: `© 2026 Maria Fernanda Garcia Garcia.`
-   * El historial de commits de Git se simplificó (Squash) para eliminar registros intermedios antiguos y conservar únicamente commits limpios de la versión final.
 
 ---
 
