@@ -1,0 +1,33 @@
+GUIA RAPIDA DE GIT: ¿QUE HACE Y COMO PEDIRLO A UNA IA?
+
+Esta guia explica de forma sencilla que es inicializar Git, que funcion cumple en tu proyecto y que instrucciones exactas puedes darle a una IA para manejarlo.
+
+==================================================
+1. ¿QUE HACE INICIALIZAR GIT ("git init")?
+==================================================
+Inicializar Git convierte una carpeta comun de tu computadora en un "Repositorio Local de Git". 
+Su funcion principal es actuar como un "sistema de puntos de guardado" (checkpoints) para tu codigo:
+
+* Control de Versiones: Registra y recuerda cada cambio, letra o archivo que agregas, modificas o eliminas.
+* Historial de Seguridad: Te permite regresar en el tiempo a cualquier version anterior si cometes un error o algo deja de funcionar.
+* Sincronizacion con la Nube: Permite conectar tu carpeta local con servidores remotos como GitHub para respaldar tu trabajo, colaborar con otros y publicar sitios web (como GitHub Pages).
+
+==================================================
+2. ¿COMO PEDIRLE A UNA IA QUE TRABAJE CON GIT?
+==================================================
+Aqui tienes las frases o instrucciones exactas (prompts) que puedes copiar y pegar para pedirle a una IA que realice tareas de Git por ti:
+
+A. Para iniciar Git por primera vez:
+   >>> "Inicia un repositorio de Git en la carpeta de mi proyecto para empezar a rastrear los archivos."
+
+B. Para guardar tu progreso (hacer un "Commit"):
+   >>> "Guarda mi progreso actual en Git con un commit limpio que describa las mejoras que acabamos de hacer."
+
+C. Para conectar tu carpeta local a tu cuenta de GitHub (Remoto) y subirlo:
+   >>> "Conecta mi repositorio local con el repositorio remoto de GitHub en [pega aqui la URL de tu repositorio de GitHub] y sube la rama principal (push)."
+
+D. Para limpiar el historial de commits (hacer Squash) y que no se vea feo:
+   >>> "Une (squashea) los ultimos commits de desarrollo en uno solo con un mensaje profesional para que el historial en GitHub se vea limpio."
+
+E. Para verificar el estado actual de los archivos:
+   >>> "Revisa el estado de Git (git status) y dime que archivos estan modificados o sin guardar."
