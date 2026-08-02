@@ -1,0 +1,49 @@
+GUIA DE PUBLICACION: SUBIR ARCHIVOS A GITHUB Y CREAR SITIOS WEB EN VIVO
+
+Esta guia te explica paso a paso como subir tus archivos locales a GitHub, como hacer publico tu repositorio si es privado y como activar GitHub Pages para tener un enlace web en vivo funcional.
+
+==================================================
+PASO 1: SUBIR CAMBIOS LOCALES A GITHUB (Git Push)
+==================================================
+Cuando haces cambios en los archivos de tu computadora y deseas subirlos a la nube en GitHub, debes seguir estos tres comandos en tu terminal de PowerShell:
+
+1. Preparar los archivos (Staging):
+   Le indica a Git que incluya los archivos nuevos o modificados.
+   >>> git add .
+
+2. Guardar los cambios localmente (Commit):
+   Crea un "punto de guardado" con un comentario explicativo.
+   >>> git commit -m "Escribe aqui una breve descripcion de tus cambios"
+
+3. Subir los cambios a internet (Push):
+   Envia tus commits locales a tu rama principal en GitHub.
+   >>> git push origin main
+
+==================================================
+PASO 2: HACER PUBLICO UN REPOSITORIO PRIVADO
+==================================================
+Si creaste un repositorio como "Privado", GitHub Pages no te dejara publicarlo de forma gratuita. Para cambiarlo a "Publico":
+
+1. Entra a tu repositorio en GitHub desde el navegador (ejemplo: https://github.com/tu-usuario/tu-proyecto).
+2. Haz clic en la pestaña "Settings" (Configuracion) con el icono de engranaje en la barra superior.
+3. Desplazate hasta el final de la pagina hasta la seccion llamada "Danger Zone" (Zona de Peligro).
+4. En el primer apartado, haz clic en el boton "Change visibility" (Cambiar visibilidad).
+5. Selecciona la opcion "Change to public" (Cambiar a publico).
+6. Sigue las instrucciones de confirmacion (usualmente te pedira escribir el nombre de tu repositorio) y haz clic en aceptar. ¡Listo! Tu repositorio ahora es de acceso publico.
+
+==================================================
+PASO 3: ACTIVAR GITHUB PAGES PARA TENER TU ENLACE EN VIVO
+==================================================
+Una vez que el repositorio es publico y tiene un archivo "index.html" en la raiz, puedes activar la pagina web en vivo:
+
+1. En la pestaña "Settings" (Configuracion) de tu repositorio.
+2. En la barra lateral izquierda, busca el menu "Code and automation" y haz clic en "Pages" (Paginas).
+3. Bajo la seccion "Build and deployment":
+   - Asegurate de que en "Source" este seleccionado "Deploy from a branch" (Desplegar desde una rama).
+   - En la opcion "Branch" (Rama), cambia "None" por la rama principal (usualmente "main").
+   - A la derecha de la rama, asegurate de que la carpeta este configurada en "/ (root)" (raiz).
+   - Haz clic en el boton "Save" (Guardar).
+4. Espera aproximadamente 1 o 2 minutos.
+5. Refresca la pagina de Settings -> Pages. Al principio del menu aparecera un recuadro verde con tu enlace listo:
+   "Your site is live at: https://tu-usuario.github.io/tu-proyecto/"
+6. Copia ese enlace para compartirlo con otras personas. ¡La web ya esta en linea!
