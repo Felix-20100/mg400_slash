@@ -1,17 +1,9 @@
 GUIA DE ENLACES: ¿QUE ES CADA ENLACE Y QUE HACE?
 
-Aqui tienes la descripcion detallada de los tres enlaces de tu proyecto y que funcion cumple cada uno, para que puedas explicarselos facilmente a cualquier persona o Inteligencia Artificial.
+Aqui tienes la descripcion detallada de los dos enlaces principales de tu proyecto y que funcion cumple cada uno, para que puedas explicarselos facilmente a cualquier persona o Inteligencia Artificial.
 
 ==================================================
-1. TU PERFIL DE GITHUB (Tu carta de presentacion)
-   Enlace: https://github.com/Felix-20100
-==================================================
-* ¿Que es? Es tu perfil personal en la plataforma de GitHub.
-* ¿Que hace? Funciona como tu "portafolio" de programador. Muestra tu foto, tu actividad y la lista de todos los proyectos que tienes guardados en la nube.
-* ¿Como describirlo? "Este es mi perfil general de GitHub".
-
-==================================================
-2. TU REPOSITORIO DE CODIGO (La carpeta del proyecto)
+1. TU REPOSITORIO DE CODIGO (La carpeta del proyecto)
    Enlace: https://github.com/Felix-20100/mg400_slash
 ==================================================
 * ¿Que es? Es el repositorio especifico donde se guarda el codigo de este proyecto.
@@ -19,7 +11,7 @@ Aqui tienes la descripcion detallada de los tres enlaces de tu proyecto y que fu
 * ¿Como describirlo? "Este es el repositorio con el codigo fuente de mi manual para editarlo".
 
 ==================================================
-3. TU SITIO WEB EN VIVO (El manual en internet)
+2. TU SITIO WEB EN VIVO (El manual en internet)
    Enlace: https://felix-20100.github.io/mg400_slash/
 ==================================================
 * ¿Que es? Es la publicacion en vivo del manual (alojado a traves del servicio GitHub Pages).
