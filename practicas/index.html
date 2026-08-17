@@ -1085,7 +1085,8 @@
 
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(30, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-                camera.position.set(0, 4.5, 12); // Adjust camera position for mascot view
+                camera.position.set(0, 0.5, 9); // Align camera position for centered mascot
+                camera.lookAt(0, 0, 0);
 
                 const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
                 renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
@@ -1118,6 +1119,16 @@
                 loader.load(levelPath + 'vaquita.glb', (gltf) => {
                     model = gltf.scene;
                     scene.add(model);
+
+                    // Filter out background objects, floor planes, lights, and cameras from Blender
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            const name = child.name.toLowerCase();
+                            if (name.includes('piso') || name.includes('floor') || name.includes('fondo') || name.includes('plane') || name.includes('background') || name.includes('camara') || name.includes('camera') || name.includes('light') || name.includes('luz')) {
+                                child.visible = false;
+                            }
+                        }
+                    });
 
                     const box = new THREE.Box3().setFromObject(model);
                     box.getCenter(center);
