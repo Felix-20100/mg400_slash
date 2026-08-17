@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Three.js & GLTFLoader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -1444,6 +1447,7 @@
             </div>
         <!-- Dem SVG Wrapper (White/Gold Chibi Bull!) -->
         <div id="lumi-wrapper" class="w-32 h-32 sm:w-40 sm:h-40 pointer-events-auto cursor-pointer filter drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-transform duration-300 active:scale-95 hover:scale-105">
+            <canvas id="lumi-canvas" class="w-full h-full hidden" style="pointer-events: auto;"></canvas>
             <svg id="lumi-svg" viewBox="0 0 200 200" class="w-full h-full">
                 <defs>
                     <linearGradient id="lumi-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1812,7 +1816,188 @@
             const chatInput = document.getElementById('dem-chat-input');
             const chatMessages = document.getElementById('dem-chat-messages');
             if (!lumi || !bubble || !container) return;
-            
+
+            // 3D Mascot Initialization
+            function init3DMascot() {
+                const canvas = document.getElementById('lumi-canvas');
+                const svg = document.getElementById('lumi-svg');
+                if (!canvas || !svg || typeof THREE === 'undefined') return;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(30, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+                camera.position.set(0, 4.5, 12); // Adjust camera position for mascot view
+
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+                scene.add(ambientLight);
+
+                const keyLight = new THREE.DirectionalLight(0xfff6ea, 1.2);
+                keyLight.position.set(-5, 6, 8.5);
+                scene.add(keyLight);
+
+                const fillLight = new THREE.DirectionalLight(0xebf2ff, 0.8);
+                fillLight.position.set(5, 4.5, 6);
+                scene.add(fillLight);
+
+                const rimLight = new THREE.DirectionalLight(0xfff5ec, 1.0);
+                rimLight.position.set(0, 3.5, -9);
+                scene.add(rimLight);
+
+                let model = null;
+                let mixer = null;
+                let activeAction = null;
+                const actions = {};
+                let center = new THREE.Vector3(0, 0, 0);
+                let size = new THREE.Vector3(1, 1, 1);
+
+                const levelPath = typeof window.levelPath !== 'undefined' ? window.levelPath : '';
+                const loader = new THREE.GLTFLoader();
+                loader.load(levelPath + 'vaquita.glb', (gltf) => {
+                    model = gltf.scene;
+                    scene.add(model);
+
+                    const box = new THREE.Box3().setFromObject(model);
+                    box.getCenter(center);
+                    box.getSize(size);
+
+                    model.position.y = -center.y - (size.y * 0.1);
+                    model.position.x = -center.x;
+                    model.position.z = -center.z;
+
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(model);
+                        gltf.animations.forEach((clip) => {
+                            const name = clip.name.toUpperCase();
+                            actions[name] = mixer.clipAction(clip);
+                        });
+                        const defaultAction = actions['REPOSO'] || actions['IDLE'] || Object.values(actions)[0];
+                        if (defaultAction) {
+                            activeAction = defaultAction;
+                            activeAction.play();
+                        }
+                    }
+
+                    svg.style.display = 'none';
+                    canvas.classList.remove('hidden');
+                }, undefined, (err) => {
+                    console.warn('3D model load failed, falling back to SVG:', err);
+                });
+
+                // Controls: click and drag to rotate the model
+                let isMouseDown = false;
+                let previousMousePosition = { x: 0, y: 0 };
+                
+                canvas.addEventListener('mousedown', (e) => {
+                    isMouseDown = true;
+                    previousMousePosition = { x: e.clientX, y: e.clientY };
+                });
+                
+                canvas.addEventListener('mousemove', (e) => {
+                    if (!isMouseDown || !model) return;
+                    const deltaMove = {
+                        x: e.clientX - previousMousePosition.x,
+                        y: e.clientY - previousMousePosition.y
+                    };
+                    
+                    model.rotation.y += deltaMove.x * 0.008;
+                    model.rotation.x += deltaMove.y * 0.008;
+                    
+                    previousMousePosition = { x: e.clientX, y: e.clientY };
+                });
+                
+                window.addEventListener('mouseup', () => {
+                    isMouseDown = false;
+                });
+
+                // Touch support
+                canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        isMouseDown = true;
+                        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                    }
+                });
+
+                canvas.addEventListener('touchmove', (e) => {
+                    if (!isMouseDown || !model || e.touches.length !== 1) return;
+                    const deltaMove = {
+                        x: e.touches[0].clientX - previousMousePosition.x,
+                        y: e.touches[0].clientY - previousMousePosition.y
+                    };
+                    
+                    model.rotation.y += deltaMove.x * 0.008;
+                    model.rotation.x += deltaMove.y * 0.008;
+                    
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                });
+
+                canvas.addEventListener('touchend', () => {
+                    isMouseDown = false;
+                });
+
+                // Observe classes on container
+                const classObserver = new MutationObserver(() => {
+                    if (!model) return;
+                    
+                    // Emotion animation mapping
+                    let targetActionName = 'REPOSO';
+                    if (container.classList.contains('dem-waving')) targetActionName = 'SALUDO';
+                    else if (container.classList.contains('dem-happy') || container.classList.contains('dem-celebrating')) targetActionName = 'SALUDO';
+                    
+                    const newAction = actions[targetActionName] || actions['REPOSO'] || actions['IDLE'] || Object.values(actions)[0];
+                    if (newAction && newAction !== activeAction) {
+                        newAction.reset();
+                        newAction.fadeIn(0.3);
+                        newAction.play();
+                        if (activeAction) activeAction.fadeOut(0.3);
+                        activeAction = newAction;
+                    }
+                });
+                classObserver.observe(container, { attributes: true });
+
+                const resizeObserver = new ResizeObserver(() => {
+                    const width = canvas.clientWidth;
+                    const height = canvas.clientHeight;
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(width, height, false);
+                });
+                resizeObserver.observe(canvas);
+
+                const clock = new THREE.Clock();
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    const delta = clock.getDelta();
+                    if (mixer) mixer.update(delta);
+
+                    if (model && !isMouseDown) {
+                        if (container.classList.contains('dem-sleeping') || isSleeping) {
+                            model.rotation.z = THREE.MathUtils.lerp(model.rotation.z, Math.PI / 2.2, 0.1);
+                            model.rotation.y = THREE.MathUtils.lerp(model.rotation.y, 0.4, 0.1);
+                            model.position.y = THREE.MathUtils.lerp(model.position.y, -center.y - (size.y * 0.3), 0.1);
+                        } else if (container.classList.contains('dizzy') || isDizzy) {
+                            model.rotation.y += 0.2;
+                            model.rotation.z = THREE.MathUtils.lerp(model.rotation.z, 0, 0.1);
+                            model.position.y = THREE.MathUtils.lerp(model.position.y, -center.y - (size.y * 0.1), 0.1);
+                        } else {
+                            let targetRotY = 0;
+                            if (container.classList.contains('dem-perspective-left')) targetRotY = -0.55;
+                            else if (container.classList.contains('dem-perspective-right')) targetRotY = 0.55;
+                            else if (container.classList.contains('dem-perspective-back')) targetRotY = Math.PI;
+
+                            model.rotation.y = THREE.MathUtils.lerp(model.rotation.y, targetRotY, 0.1);
+                            model.rotation.z = THREE.MathUtils.lerp(model.rotation.z, 0, 0.1);
+                            model.position.y = THREE.MathUtils.lerp(model.position.y, -center.y - (size.y * 0.1) + Math.sin(clock.getElapsedTime() * 1.8) * 0.05, 0.1);
+                        }
+                    }
+                    renderer.render(scene, camera);
+                };
+                animate();
+            }
+            init3DMascot();
+
             let clickCount = 0;
             let clickTimeout = null;
             let bubbleTimeout = null;
